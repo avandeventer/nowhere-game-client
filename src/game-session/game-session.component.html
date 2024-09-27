@@ -1,0 +1,10 @@
+<h2>Welcome to Nowhere!</h2>
+
+@if(!gameSessionCreated) {
+<button (click)="createGame()">Create Game</button>
+} @else {
+<div>Join game on your device with this code: {{ gameCode }}</div>
+}
+
+<p>Create Game</p>
+<input #gameCode (keyup)="getPlayers(gameCode.value)" />
