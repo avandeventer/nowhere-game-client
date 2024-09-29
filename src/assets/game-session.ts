@@ -1,13 +1,11 @@
 import { Player } from './player';
 
 export class GameSession {
-  id: number;
-  code: String;
+  gameCode: string;
   players: Player[];
 
-  constructor(id: number, code: String, players: Player[]) {
-    this.id = id;
-    this.code = code;
+  constructor(gameCode: string, players: Player[]) {
+    this.gameCode = gameCode;
     this.players = players;
   }
 }

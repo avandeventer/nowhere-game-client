@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GameSession } from 'src/assets/game-session';
 import { Player } from 'src/assets/player';
+import { GameState } from 'src/assets/game-state';
 
 @Component({
   selector: 'game-session',
@@ -10,23 +11,29 @@ import { Player } from 'src/assets/player';
   standalone: true,
 })
 export class GameSessionComponent {
-  constructor(private http: HttpClient) {
-    console.log('GameSessionComponent initialized');
-  }
 
   // player: Player[] = new List();
-  gameCode: String = '';
+  gameCode: string = '';
   gameSessionCreated: boolean = false;
+  gameState: GameState = GameState.init;
 
-  ngOnInit() {}
+  constructor(private http: HttpClient) {
+    console.log('GameSessionComponent initialized');
+    this.gameState = GameState.init;
+  }
+
+  ngOnInit() {
+    console.log(this.gameSessionCreated);
+  }
 
   createGame() {
     this.http
-      .post('https://nowhere-556057816518.us-east5.run.app/game', {})
+      .post<GameSession>('https://nowhere-556057816518.us-east5.run.app/game', {})
       .subscribe({
         next: (response) => {
           console.log('Game created!', response);
-          // this.gameCode = response['gameCode'] || null;  // assuming 'gameCode' is in the response
+          
+          this.gameCode = response.gameCode;  // assuming 'gameCode' is in the response
           this.gameSessionCreated = true;
         },
         error: (error) => {
