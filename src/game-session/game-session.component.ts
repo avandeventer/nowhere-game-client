@@ -15,11 +15,11 @@ export class GameSessionComponent {
   // player: Player[] = new List();
   gameCode: string = '';
   gameSessionCreated: boolean = false;
-  gameState: GameState = GameState.init;
+  gameState: GameState = GameState.INIT;
 
   constructor(private http: HttpClient) {
     console.log('GameSessionComponent initialized');
-    this.gameState = GameState.init;
+    this.gameState = GameState.INIT;
   }
 
   ngOnInit() {
@@ -43,7 +43,6 @@ export class GameSessionComponent {
   }
 
   getPlayers(gameCode: string) {
-    // this.player.name = playerName;
     console.log('Your game code! ' + gameCode);
   }
 }

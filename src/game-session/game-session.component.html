@@ -1,8 +1,8 @@
 <h2>Welcome to Nowhere!</h2>
 
 @if(!gameSessionCreated) {
-<button (click)="createGame()">Create Game</button>
-<p>Your game code should not be set yet {{gameCode}}</p>
+    <button (click)="createGame()">Create Game</button>
+    <p>Your game code should not be set yet {{gameCode}}</p>
 } @else {
-<div>Join game on your device with this code: {{gameCode}}</div>
+    <div>Join game on your device with this code: {{gameCode}}</div>
 }

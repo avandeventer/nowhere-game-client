@@ -1,7 +1,12 @@
 export enum GameState {
-    init, 
-    view, 
-    edit, 
-    create, 
-    wait
-  }  
+  INIT,
+  START,
+  WRITE_PROMPTS,
+  WRITE_OPTIONS,
+  ROUND1,
+  WRITE_PROMPTS_AGAIN,
+  WRITE_OPTIONS_AGAIN,
+  ROUND2,
+  WRITE_ENDINGS,
+  FINALE
+}  
