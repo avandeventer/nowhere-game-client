@@ -1,18 +1,18 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GameSession } from 'src/assets/game-session';
-import { Player } from 'src/assets/player';
 import { GameState } from 'src/assets/game-state';
+import { GameStateManagerComponent } from 'src/game-state-manager/game-state-manager.component';
 
 @Component({
   selector: 'game-session',
   styles: `.btn { padding: 5px; }`,
   templateUrl: './game-session.component.html',
   standalone: true,
+  imports: [GameStateManagerComponent]
 })
 export class GameSessionComponent {
 
-  // player: Player[] = new List();
   gameCode: string = '';
   gameSessionCreated: boolean = false;
   gameState: GameState = GameState.INIT;

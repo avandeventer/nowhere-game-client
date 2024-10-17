@@ -8,7 +8,16 @@
 
 import { ApplicationConfig } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environments';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient(),     
+    provideFirebaseApp(() => {
+      console.log('Initializing Firebase:', environment.firebaseConfig);
+      return initializeApp(environment.firebaseConfig);
+     }),
+    provideFirestore(() => getFirestore()),],
 };

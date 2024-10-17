@@ -5,4 +5,5 @@
     <p>Your game code should not be set yet {{gameCode}}</p>
 } @else {
     <div>Join game on your device with this code: {{gameCode}}</div>
+    <game-state-manager [gameCode]="gameCode"></game-state-manager>
 }
