@@ -54,6 +54,6 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameStarted() {
-    return this.gameState === GameState.WRITE_PROMPTS;
+    return this.gameState !== GameState.INIT && this.gameState !== GameState.START;
   }
 }
