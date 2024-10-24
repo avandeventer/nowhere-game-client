@@ -16,7 +16,7 @@ export class WritePromptComponent implements OnInit {
   private timerSubscription: Subscription = new Subscription;
   countDownTime: Observable<number> = new Observable;
   currentCountdown: number = 0;
-  timerStartValue: number = 10;
+  timerStartValue: number = 90;
 
   startTimer() {
     if (this.timerSubscription) {
