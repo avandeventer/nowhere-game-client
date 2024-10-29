@@ -5,6 +5,8 @@ export class Player {
   charisma: number;
   dexterity: number;
   wealth: number;
+  magic: number;
+  authorId: string;
 
   constructor() {
     this.name = '';
@@ -13,5 +15,7 @@ export class Player {
     this.charisma = 0;
     this.dexterity = 0;
     this.wealth = 0;
+    this.magic = 0;
+    this.authorId = "";
   }
 }

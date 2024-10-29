@@ -10,3 +10,7 @@
 @if (isGameStarted()) {
     <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
 }
+
+@if (isGameInAdventurePhase()) {
+    <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+}

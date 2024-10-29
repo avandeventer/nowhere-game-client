@@ -1,0 +1,21 @@
+@for (location of locations; track location.locationId) {
+    {{location.locationName}}
+}
+
+@if(activePlayerSession.story.storyId != "") {
+    <br>
+    You travel to the {{activePlayerSession.story.location.locationName}}
+    <br>
+    {{activePlayerSession.story.prompt}}<br>
+    {{activePlayerSession.story.options[0].optionText}}
+    <br>
+    {{activePlayerSession.story.options[1].optionText}}
+}
+
+@for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
+    <div>{{outcome}}</div><br>
+}
+
+@if (activePlayerSession.outcomeDisplay.length > 0) {
+    <div>Push Continue on Your Device</div>
+}

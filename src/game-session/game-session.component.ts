@@ -42,7 +42,4 @@ export class GameSessionComponent {
       });
   }
 
-  getPlayers(gameCode: string) {
-    console.log('Your game code! ' + gameCode);
-  }
 }

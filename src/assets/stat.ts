@@ -1,0 +1,8 @@
+export enum Stat {
+    STRENGTH = "STRENGTH",
+    DEXTERITY = "DEXTERITY",
+    CHARISMA = "CHARISMA",
+    INTELLECT = "INTELLECT",
+    WEALTH = "WEALTH",
+    MAGIC = "MAGIC"
+  }  
