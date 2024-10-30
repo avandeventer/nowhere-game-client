@@ -16,7 +16,9 @@
     {{activePlayerSession.story.options[1].optionText}}
 }
 
-@if (activePlayerSession.outcomeDisplay !== null) {
+@if (activePlayerSession.outcomeDisplay !== null
+    && activePlayerSession.outcomeDisplay.length > 0
+) {
     @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
         <div>{{outcome}}</div><br>
     }
