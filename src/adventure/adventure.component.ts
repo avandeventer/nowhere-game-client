@@ -23,6 +23,7 @@ export class AdventureComponent implements OnInit {
     locations: Location[] = [];
     players: Player[] = [];
     currentPlayerIndex: number = 0;
+    playerName: String = "";
     playerTurnAuthorId: String = "";
     roundNumber: number = 0;
 
@@ -32,7 +33,6 @@ export class AdventureComponent implements OnInit {
       console.log("Adventure Loaded!" + this.activePlayerSession);
       this.getLocations(this.gameCode);
       this.getPlayers();
-      this.setNextPlayerTurn();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -52,19 +52,21 @@ export class AdventureComponent implements OnInit {
         .get<Location[]>('https://nowhere-556057816518.us-east5.run.app/location', { params })
           .subscribe({
             next: (response) => {
-              console.log('Stories retrieved!', response);
               this.locations = response;
               console.log('Locations', this.locations);
             },
             error: (error) => {
-              console.error('Error creating game', error);
+              console.error('Error getting locations', error);
             },
           });
       }
 
       setNextPlayerTurn() {
-        if(this.currentPlayerIndex >= this.players.length) {
+        console.log("Set next player's turn");
+        console.log("Player turn, round number", this.currentPlayerIndex, this.roundNumber);
+        if(this.currentPlayerIndex <= this.players.length) {
           this.playerTurnAuthorId = this.players[this.currentPlayerIndex].authorId;
+          this.playerName = this.players[this.currentPlayerIndex].userName;
           this.currentPlayerIndex++;
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false);
         } else {
@@ -84,15 +86,16 @@ export class AdventureComponent implements OnInit {
         console.log(params);
     
         this.http
-        .get<Player[]>(environment.production + HttpConstants.PLAYER_PATH, { params })
+        .get<Player[]>(environment.nowhereBackendUrl + HttpConstants.PLAYER_PATH, { params })
           .subscribe({
             next: (response) => {
               console.log('Players retrieved!', response);
               this.players = response;
+              this.setNextPlayerTurn();
               console.log('Players:', this.players);
             },
             error: (error) => {
-              console.error('Error creating game', error);
+              console.error('Error getting players', error);
             },
           });
       }
@@ -133,5 +136,14 @@ export class AdventureComponent implements OnInit {
     const diceRoll: number = Math.floor((Math.random() * 10) + 1);
     const playerTotal = diceRoll + playerStat;
     return playerTotal >= dcToBeat;
+  }
+
+  playerObject(): String {    
+    if(this.players === null) {
+      return "Player turns have not yet started";
+    } 
+    console.log("Player set: ", this.currentPlayerIndex);
+    console.log("Your player", this.players[this.currentPlayerIndex]);
+    return this.players[this.currentPlayerIndex].userName + " is seeking boons for the harvest. Check your hand portal to get started.";
   }
 }

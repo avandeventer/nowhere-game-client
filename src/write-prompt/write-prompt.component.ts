@@ -16,7 +16,7 @@ export class WritePromptComponent implements OnInit {
   private timerSubscription: Subscription = new Subscription;
   countDownTime: Observable<number> = new Observable;
   currentCountdown: number = 0;
-  timerStartValue: number = 90;
+  timerStartValue: number = 10;
 
   startTimer() {
     if (this.timerSubscription) {
@@ -30,7 +30,9 @@ export class WritePromptComponent implements OnInit {
 
     this.timerSubscription = this.countDownTime.subscribe(time => {
       this.currentCountdown = time;
-      if(this.currentCountdown == 0) {
+      if(this.currentCountdown === 0 
+        && (this.gameState === GameState.WRITE_PROMPTS 
+        || this.gameState === GameState.WRITE_OPTIONS)) {
         this.setToNextGamePhase();
         this.resetTimer();
       }
@@ -50,22 +52,23 @@ export class WritePromptComponent implements OnInit {
 
   setToNextGamePhase() {
 
-    let nextGamePhase: GameState = GameState.INIT;
+      let nextGamePhase: GameState = GameState.INIT;
 
-    switch(this.gameState) { 
-      case GameState.WRITE_PROMPTS: { 
-         nextGamePhase = GameState.WRITE_OPTIONS;
-         break; 
-      } 
-      case GameState.WRITE_OPTIONS: { 
-         nextGamePhase = GameState.ROUND1;
-         break; 
-      } 
-      default: { 
-         nextGamePhase = GameState.INIT
-         break; 
-      } 
-   } 
+      switch(this.gameState) { 
+        case GameState.WRITE_PROMPTS: { 
+          nextGamePhase = GameState.WRITE_OPTIONS;
+          break; 
+        } 
+        case GameState.WRITE_OPTIONS: { 
+          nextGamePhase = GameState.ROUND1;
+          break; 
+        } 
+        default: { 
+          break; 
+        } 
+    }
+
+    this.gameState = nextGamePhase;
 
     const requestBody = {
       gameCode: this.gameCode,
@@ -78,7 +81,7 @@ export class WritePromptComponent implements OnInit {
       .put('https://nowhere-556057816518.us-east5.run.app/game', requestBody)
       .subscribe({
         next: (response) => {
-          console.log('Time to write options!', response);
+          console.log('Next game phase triggered', nextGamePhase);
         },
         error: (error) => {
           console.error('Error started game', error);

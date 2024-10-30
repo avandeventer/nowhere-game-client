@@ -28,6 +28,7 @@ export class GameStateManagerComponent implements OnInit {
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
       
       console.log('New gameState:', this.gameState);
+      console.log('New Active Player Session', this.activePlayerSession);
     });
   }
 
@@ -56,7 +57,7 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameStarted() {
-    return this.gameState !== GameState.INIT && this.gameState !== GameState.START;
+    return this.gameState === GameState.WRITE_PROMPTS || this.gameState === GameState.WRITE_OPTIONS;
   }
 
   isGameInAdventurePhase() {

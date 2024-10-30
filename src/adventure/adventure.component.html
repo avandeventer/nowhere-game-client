@@ -1,8 +1,12 @@
 @for (location of locations; track location.locationId) {
-    {{location.locationName}}
+    <div>{{location.locationName}}</div>
 }
 
-@if(activePlayerSession.story.storyId != "") {
+@if (players.length > 0) {
+    <div>{{playerName}} is seeking boons for the harvest. Choose a location on your phone.</div>
+}
+
+@if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {
     <br>
     You travel to the {{activePlayerSession.story.location.locationName}}
     <br>
@@ -12,10 +16,10 @@
     {{activePlayerSession.story.options[1].optionText}}
 }
 
-@for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
-    <div>{{outcome}}</div><br>
-}
+@if (activePlayerSession.outcomeDisplay !== null) {
+    @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
+        <div>{{outcome}}</div><br>
+    }
 
-@if (activePlayerSession.outcomeDisplay.length > 0) {
     <div>Push Continue on Your Device</div>
 }

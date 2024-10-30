@@ -1,15 +1,15 @@
 export class Player {
-  name: string;
+  userName: String;
   strength: number;
   intellect: number;
   charisma: number;
   dexterity: number;
   wealth: number;
   magic: number;
-  authorId: string;
+  authorId: String;
 
   constructor() {
-    this.name = '';
+    this.userName = '';
     this.strength = 0;
     this.intellect = 0;
     this.charisma = 0;
