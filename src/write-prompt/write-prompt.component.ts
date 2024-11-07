@@ -32,7 +32,9 @@ export class WritePromptComponent implements OnInit {
       this.currentCountdown = time;
       if(this.currentCountdown === 0 
         && (this.gameState === GameState.WRITE_PROMPTS 
-        || this.gameState === GameState.WRITE_OPTIONS)) {
+        || this.gameState === GameState.WRITE_OPTIONS
+        || this.gameState === GameState.WRITE_PROMPTS_AGAIN
+        || this.gameState === GameState.WRITE_OPTIONS_AGAIN)) {
         this.setToNextGamePhase();
         this.resetTimer();
       }
@@ -51,7 +53,6 @@ export class WritePromptComponent implements OnInit {
   }
 
   setToNextGamePhase() {
-
       let nextGamePhase: GameState = GameState.INIT;
 
       switch(this.gameState) { 
@@ -62,7 +63,15 @@ export class WritePromptComponent implements OnInit {
         case GameState.WRITE_OPTIONS: { 
           nextGamePhase = GameState.ROUND1;
           break; 
-        } 
+        }
+        case GameState.WRITE_PROMPTS_AGAIN: {
+          nextGamePhase = GameState.WRITE_OPTIONS_AGAIN;
+          break;
+        }
+        case GameState.WRITE_OPTIONS_AGAIN: {
+          nextGamePhase = GameState.ROUND2;
+          break;
+        }
         default: { 
           break; 
         } 
@@ -87,8 +96,6 @@ export class WritePromptComponent implements OnInit {
           console.error('Error started game', error);
         },
       });
-    
-    
   }
   
 }

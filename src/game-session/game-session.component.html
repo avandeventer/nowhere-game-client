@@ -1,9 +1,13 @@
 <h2>Welcome to Nowhere!</h2>
+<h3>Erysus has been expecting you</h3>
 
 @if(!gameSessionCreated) {
-    <button (click)="createGame()">Create Game</button>
-    <p>Your game code should not be set yet {{gameCode}}</p>
+    <input type="text" id="rejoin" [formControl]="rejoinCode" placeholder="Rejoin Existing Game" />
+    <button (click)="initializeGame()">Create Game</button> <br>
+    <p>Type a code in the above box to rejoin an existing game. Leave it blank to start a new one.</p>
 } @else {
+    <div>The season of harvest has arrived and we all must spend the coming weeks preparing for the ritual to our patron God of Harvest, Erysus. 
+        At the end of the season, if we have not yet gained enough Favor with our patron, the least liked among us must be burned upon the fire for a bountiful harvest.</div>
     <div>Join game on your device with this code: {{gameCode}}</div>
     <game-state-manager [gameCode]="gameCode"></game-state-manager>
 }

@@ -64,16 +64,22 @@ export class AdventureComponent implements OnInit {
       setNextPlayerTurn() {
         console.log("Set next player's turn");
         console.log("Player turn, round number", this.currentPlayerIndex, this.roundNumber);
-        if(this.currentPlayerIndex <= this.players.length) {
+        if(this.currentPlayerIndex < this.players.length) {
           this.playerTurnAuthorId = this.players[this.currentPlayerIndex].authorId;
           this.playerName = this.players[this.currentPlayerIndex].userName;
           this.currentPlayerIndex++;
+          console.log("Player turn index, round number, author id", 
+            this.currentPlayerIndex, 
+            this.roundNumber, 
+            this.playerTurnAuthorId);
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false);
         } else {
           if(this.roundNumber <= 2) {
             this.roundNumber++;
             this.currentPlayerIndex = 0;
             this.setNextPlayerTurn();
+          } else {
+            this.setToNextGamePhase();
           }
         }
       }
@@ -145,5 +151,43 @@ export class AdventureComponent implements OnInit {
     console.log("Player set: ", this.currentPlayerIndex);
     console.log("Your player", this.players[this.currentPlayerIndex]);
     return this.players[this.currentPlayerIndex].userName + " is seeking boons for the harvest. Check your hand portal to get started.";
+  }
+
+  setToNextGamePhase() {
+    let nextGamePhase: GameState = GameState.INIT;
+
+    switch(this.gameState) { 
+      case GameState.ROUND1: { 
+        nextGamePhase = GameState.START_PHASE2;
+        break; 
+      } 
+      case GameState.ROUND2: { 
+        nextGamePhase = GameState.WRITE_ENDINGS;
+        break; 
+      }
+      default: { 
+        break; 
+      } 
+    }
+
+    this.gameState = nextGamePhase;
+
+    const requestBody = {
+      gameCode: this.gameCode,
+      gameState: nextGamePhase,
+    };
+
+    console.log(requestBody);
+
+    this.http
+      .put('https://nowhere-556057816518.us-east5.run.app/game', requestBody)
+      .subscribe({
+        next: (response) => {
+          console.log('Next game phase triggered', nextGamePhase);
+        },
+        error: (error) => {
+          console.error('Error started game', error);
+        },
+      });
   }
 }

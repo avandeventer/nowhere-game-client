@@ -57,10 +57,13 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameStarted() {
-    return this.gameState === GameState.WRITE_PROMPTS || this.gameState === GameState.WRITE_OPTIONS;
+    return this.gameState === GameState.WRITE_PROMPTS 
+    || this.gameState === GameState.WRITE_OPTIONS 
+    || this.gameState === GameState.WRITE_PROMPTS_AGAIN 
+    || this.gameState === GameState.WRITE_OPTIONS_AGAIN;
   }
 
   isGameInAdventurePhase() {
-    return this.gameState === GameState.ROUND1;
+    return this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2;
   }
 }
