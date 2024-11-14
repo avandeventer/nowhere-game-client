@@ -35,8 +35,9 @@ export class WritePromptComponent implements OnInit {
         || this.gameState === GameState.WRITE_OPTIONS
         || this.gameState === GameState.WRITE_PROMPTS_AGAIN
         || this.gameState === GameState.WRITE_OPTIONS_AGAIN)) {
-        this.setToNextGamePhase();
-        this.resetTimer();
+        // Add this back when timers matter again
+        // this.setToNextGamePhase();
+        // this.resetTimer();
       }
     });
   }
