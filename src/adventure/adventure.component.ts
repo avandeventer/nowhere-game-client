@@ -26,6 +26,7 @@ export class AdventureComponent implements OnInit {
     playerName: String = "";
     playerTurnAuthorId: String = "";
     roundNumber: number = 0;
+    settingNextPlayerTurn: boolean = false;
 
     constructor(private http:HttpClient) {}
 
@@ -37,7 +38,10 @@ export class AdventureComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['activePlayerSession'] && changes['activePlayerSession'].currentValue?.setNextPlayerTurn) {
-        this.setNextPlayerTurn();
+        if(!this.settingNextPlayerTurn) {
+          this.settingNextPlayerTurn = true;
+          this.setNextPlayerTurn();
+        }
       }
     }
 
@@ -73,6 +77,7 @@ export class AdventureComponent implements OnInit {
             this.roundNumber, 
             this.playerTurnAuthorId);
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false);
+          this.settingNextPlayerTurn = false;
         } else {
           if(this.roundNumber <= 2) {
             this.roundNumber++;
@@ -80,6 +85,7 @@ export class AdventureComponent implements OnInit {
             this.setNextPlayerTurn();
           } else {
             this.setToNextGamePhase();
+            this.roundNumber = 0;
           }
         }
       }
@@ -154,7 +160,7 @@ export class AdventureComponent implements OnInit {
   }
 
   setToNextGamePhase() {
-    let nextGamePhase: GameState = GameState.INIT;
+    let nextGamePhase: GameState = this.gameState;
 
     switch(this.gameState) { 
       case GameState.ROUND1: { 
