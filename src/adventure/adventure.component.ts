@@ -84,7 +84,7 @@ export class AdventureComponent implements OnInit {
             this.currentPlayerIndex = 0;
             this.setNextPlayerTurn();
           } else {
-            this.setToNextGamePhase();
+            // this.setToNextGamePhase();
             this.roundNumber = 0;
           }
         }
