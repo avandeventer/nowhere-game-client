@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { GameService } from '../services/game-session.service';
 import { HttpClient } from '@angular/common/http';
 import { GameState } from 'src/assets/game-state';
 import { WritePromptComponent } from 'src/write-prompt/write-prompt.component';
 import { AdventureComponent } from 'src/adventure/adventure.component';
 import { ActivePlayerSession } from 'src/assets/active-player-session';
+import { ActiveGameStateSession } from 'src/assets/active-game-state-session';
+import { environment } from 'src/environments/environments';
+import { HttpConstants } from 'src/assets/http-constants';
 
 @Component({
   selector: 'game-state-manager',
@@ -16,6 +19,8 @@ export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
   gameState: GameState = GameState.INIT;
   activePlayerSession: ActivePlayerSession = new ActivePlayerSession();
+  activeGameStateSession: ActiveGameStateSession = new ActiveGameStateSession();
+  isSettingNextGameState: boolean = false;
 
   constructor(
     private gameService: GameService,
@@ -26,28 +31,42 @@ export class GameStateManagerComponent implements OnInit {
     this.gameService.listenForGameStateChanges(this.gameCode).subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
-      
+      // this.activeGameStateSession = newState.activeGameStateSession as unknown as ActiveGameStateSession;
+
+      const rawIsPlayerDone = newState.activeGameStateSession.isPlayerDone;
+      this.activeGameStateSession = new ActiveGameStateSession();
+      this.activeGameStateSession.isPlayerDone = new Map(Object.entries(rawIsPlayerDone));
+  
       console.log('New gameState:', this.gameState);
       console.log('New Active Player Session', this.activePlayerSession);
+      console.log('New Active Game State Session', this.activeGameStateSession);
+
+      this.checkForNextGameState(this.activeGameStateSession);
     });
   }
 
-  startGame() {
-    const requestBody = {
-      gameCode: this.gameCode,
-      gameState: GameState.START,
-    };
-
-    console.log(requestBody);
-
+  checkForNextGameState(activeGameStateSession: ActiveGameStateSession) {
+    if (!this.isSettingNextGameState) {
+      const allPlayersDone = Array.from(this.activeGameStateSession.isPlayerDone.values()).every(value => value);
+      console.log('NgOnChanges', allPlayersDone, this.isSettingNextGameState);
+  
+      if (allPlayersDone) {
+        this.isSettingNextGameState = true;
+        this.setToNextGameState();
+      }
+    }
+  }
+  
+  setToNextGameState() {
     this.http
-      .put('https://nowhere-556057816518.us-east5.run.app/game', requestBody)
+      .put(environment.nowhereBackendUrl + HttpConstants.NEXT_GAME_SESSION_PATH + '?gameCode=' + this.gameCode, {})
       .subscribe({
         next: (response) => {
-          console.log('Game started!', response);
+          this.isSettingNextGameState = false;
+          console.log('Game phase updated', response);
         },
         error: (error) => {
-          console.error('Error started game', error);
+          console.error('Error updating game phase', error);
         },
       });
   }

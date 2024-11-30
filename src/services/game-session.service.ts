@@ -7,13 +7,14 @@ import { map } from 'rxjs/operators';
 export class GameService {
   constructor(private firestore: Firestore) {}
 
-  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; activePlayerSession: any | null }> {
+  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; activePlayerSession: any | null; activeGameStateSession: any | null }> {
     const gameDocRef = doc(this.firestore, `gameSessions/${gameCode}`);
   
     return docData(gameDocRef).pipe(
       map((data: any) => ({
         gameState: data?.gameState ?? null,
-        activePlayerSession: data?.activePlayerSession ?? null
+        activePlayerSession: data?.activePlayerSession ?? null,
+        activeGameStateSession: data?.activeGameStateSession ?? null
       }))
     );
   }
