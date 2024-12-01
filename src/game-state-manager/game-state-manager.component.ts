@@ -45,11 +45,11 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   checkForNextGameState(activeGameStateSession: ActiveGameStateSession) {
-    if (!this.isSettingNextGameState) {
+    if (!this.isSettingNextGameState && activeGameStateSession.isPlayerDone.size !== 0) {
       const allPlayersDone = Array.from(activeGameStateSession.isPlayerDone.values()).every(value => value);
-      console.log('NgOnChanges', allPlayersDone, this.isSettingNextGameState);
   
       if (allPlayersDone) {
+        console.log('All players are done', activeGameStateSession);
         this.isSettingNextGameState = true;
         this.setToNextGameState();
       }
