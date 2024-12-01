@@ -31,7 +31,6 @@ export class GameStateManagerComponent implements OnInit {
     this.gameService.listenForGameStateChanges(this.gameCode).subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
-      // this.activeGameStateSession = newState.activeGameStateSession as unknown as ActiveGameStateSession;
 
       const rawIsPlayerDone = newState.activeGameStateSession.isPlayerDone;
       this.activeGameStateSession = new ActiveGameStateSession();
@@ -47,7 +46,7 @@ export class GameStateManagerComponent implements OnInit {
 
   checkForNextGameState(activeGameStateSession: ActiveGameStateSession) {
     if (!this.isSettingNextGameState) {
-      const allPlayersDone = Array.from(this.activeGameStateSession.isPlayerDone.values()).every(value => value);
+      const allPlayersDone = Array.from(activeGameStateSession.isPlayerDone.values()).every(value => value);
       console.log('NgOnChanges', allPlayersDone, this.isSettingNextGameState);
   
       if (allPlayersDone) {
