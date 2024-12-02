@@ -1,14 +1,10 @@
-@for (location of locations; track location.locationId) {
-    <div>{{location.locationName}}</div>
-}
-
 @if (players.length > 0) {
-    <div>{{playerName}} is seeking boons for the harvest. Choose a location on your phone.</div>
+    <div>{{playerName}} is seeking boons for the harvest. Choose what you'll do from your phone.</div>
 }
 
 @if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {
     <br>
-    You travel to the {{activePlayerSession.story.location.locationName}}
+    You travel to the {{activePlayerSession.story.location.label}}
     <br>
     {{activePlayerSession.story.prompt}}<br>
     {{activePlayerSession.story.options[0].optionText}}
