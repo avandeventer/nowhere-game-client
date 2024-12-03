@@ -8,6 +8,7 @@ import { ActivePlayerSession } from 'src/assets/active-player-session';
 import { ActiveGameStateSession } from 'src/assets/active-game-state-session';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'game-state-manager',
@@ -28,7 +29,7 @@ export class GameStateManagerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.gameService.listenForGameStateChanges(this.gameCode).subscribe((newState) => {
+    this.gameService.listenForGameStateChanges(this.gameCode).pipe(debounceTime(300)).subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
 
