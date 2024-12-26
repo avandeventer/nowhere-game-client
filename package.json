@@ -19,8 +19,8 @@
     "@angular/material": "^18.2.13",
     "@angular/platform-browser": "^18.2.13",
     "@angular/router": "^18.2.13",
-    "firebase": "^9.23.0",
-    "rxfire": "^6.0.3",
+    "firebase": "^11.1.0",
+    "rxfire": "^6.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.0"
