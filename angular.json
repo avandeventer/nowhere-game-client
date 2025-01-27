@@ -53,7 +53,7 @@
                 "input": "src/public"
               }
             ],
-            "styles": ["src/styles.css"],
+            "styles": ["src/styles.scss", "src/nowhere-theme.scss"],
             "scripts": []
           },
           "configurations": {

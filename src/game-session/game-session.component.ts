@@ -6,13 +6,17 @@ import { GameStateManagerComponent } from 'src/game-state-manager/game-state-man
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { LocationComponent } from 'src/location/location.component';
 
 @Component({
   selector: 'game-session',
   styles: `.btn { padding: 5px; }`,
   templateUrl: './game-session.component.html',
   standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule]
+  imports: [GameStateManagerComponent, LocationComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule]
 })
 export class GameSessionComponent {
 
