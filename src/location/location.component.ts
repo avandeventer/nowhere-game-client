@@ -7,6 +7,8 @@ import { Story } from "src/assets/story";
 import { Location } from "src/assets/location";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
+import { environment } from "src/environments/environments";
+import { HttpConstants } from "src/assets/http-constants";
 
 
 @Component({
@@ -66,7 +68,7 @@ export class LocationComponent implements OnInit {
         gameCode: gameCode,
       };
   
-      this.http.get<Location[]>('https://nowhere-556057816518.us-east5.run.app/location', { params }).subscribe({
+      this.http.get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH, { params }).subscribe({
         next: (response) => {
           this.locations = response;
   
@@ -98,8 +100,8 @@ export class LocationComponent implements OnInit {
       const angle = (2 * Math.PI / totalButtons) * locationId; // Evenly spaced angle
     
       // Calculate positions relative to the center
-      const x = Math.cos(angle) * radius + (mapCenter - buttonWidth); // Adjust for button width
-      const y = Math.sin(angle) * radius + (mapCenter - buttonHeight); // Adjust for button height
+      const x = Math.cos(angle) * radius + (mapCenter - buttonWidth / 2); // Adjust for button width
+      const y = Math.sin(angle) * radius + (mapCenter - buttonHeight / 2); // Adjust for button height
     
       console.log("Button position (id, x, y):", locationId, x, y);
       console.log("Radius in button function", radius);
