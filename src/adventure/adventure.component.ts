@@ -53,7 +53,7 @@ export class AdventureComponent implements OnInit {
         console.log(params);
     
         this.http
-        .get<Location[]>('https://nowhere-556057816518.us-east5.run.app/location', { params })
+        .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH, { params })
           .subscribe({
             next: (response) => {
               this.locations = response;
@@ -186,7 +186,7 @@ export class AdventureComponent implements OnInit {
     console.log(requestBody);
 
     this.http
-      .put('https://nowhere-556057816518.us-east5.run.app/game', requestBody)
+      .put(environment.nowhereBackendUrl + HttpConstants.GAME_SESSION_PATH, requestBody)
       .subscribe({
         next: (response) => {
           console.log('Next game phase triggered', nextGamePhase);

@@ -3,6 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { GameState } from 'src/assets/game-state';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subscription, map, takeWhile, timer } from 'rxjs';
+import { environment } from 'src/environments/environments';
+import { HttpConstants } from 'src/assets/http-constants';
 
 @Component({
   selector: 'write-prompt',
@@ -88,7 +90,7 @@ export class WritePromptComponent implements OnInit {
     console.log(requestBody);
 
     this.http
-      .put('https://nowhere-556057816518.us-east5.run.app/game', requestBody)
+      .put(environment.nowhereBackendUrl + HttpConstants.GAME_SESSION_PATH, requestBody)
       .subscribe({
         next: (response) => {
           console.log('Next game phase triggered', nextGamePhase);
