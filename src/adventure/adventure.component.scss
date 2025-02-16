@@ -1,6 +1,3 @@
-@use '@angular/material' as mat;
-@import "../nowhere-theme.scss";
-  
 .command-feed {
     background: var(--md-sys-color-primary-container);  // Adjust this based on your theme
     color: var(--md-sys-color-on-primary-container);   // Text color from theme
