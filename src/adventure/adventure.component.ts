@@ -5,15 +5,16 @@ import { GameState } from "src/assets/game-state";
 import { Player } from "src/assets/player";
 import { Location } from "src/assets/location";
 import { Story } from 'src/assets/story';
-import { Option } from 'src/assets/option';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
     selector: 'adventure',
     templateUrl: './adventure.component.html',
     standalone: true,
-    imports: []
+    imports: [MatCardModule],
+    styleUrl: './adventure.component.scss'
 })
 export class AdventureComponent implements OnInit {
     @Input() gameState: GameState = GameState.ROUND1;
@@ -76,7 +77,7 @@ export class AdventureComponent implements OnInit {
             this.currentPlayerIndex, 
             this.roundNumber, 
             this.playerTurnAuthorId);
-          this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false);
+          this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
           this.settingNextPlayerTurn = false;
         } else {
           if(this.roundNumber <= 2) {
@@ -84,7 +85,6 @@ export class AdventureComponent implements OnInit {
             this.currentPlayerIndex = 0;
             this.setNextPlayerTurn();
           } else {
-            // this.setToNextGamePhase();
             this.roundNumber = 0;
           }
         }
@@ -118,7 +118,9 @@ export class AdventureComponent implements OnInit {
     selectedOptionId: String,
     outcomeDisplay: String[],
     playerStoryId: String,
-    setNextPlayerTurn: boolean
+    setNextPlayerTurn: boolean,
+    selectedLocationOptionId: String,
+    locationOutcomeDisplay: String[]
   ) {
     console.log("Your player session", this.activePlayerSession);
     const newActivePlayerSession: ActivePlayerSession = new ActivePlayerSession();
@@ -128,6 +130,8 @@ export class AdventureComponent implements OnInit {
     newActivePlayerSession.outcomeDisplay = outcomeDisplay;
     newActivePlayerSession.playerChoiceOptionId = selectedOptionId;
     newActivePlayerSession.setNextPlayerTurn = setNextPlayerTurn;
+    newActivePlayerSession.selectedLocationOptionId = selectedLocationOptionId;
+    newActivePlayerSession.locationOutcomeDisplay = locationOutcomeDisplay;
     console.log("New player session", newActivePlayerSession);
 
     this.activePlayerSession.playerId = playerStoryId;
@@ -157,43 +161,5 @@ export class AdventureComponent implements OnInit {
     console.log("Player set: ", this.currentPlayerIndex);
     console.log("Your player", this.players[this.currentPlayerIndex]);
     return this.players[this.currentPlayerIndex].userName + " is seeking boons for the harvest. Check your hand portal to get started.";
-  }
-
-  setToNextGamePhase() {
-    let nextGamePhase: GameState = this.gameState;
-
-    switch(this.gameState) { 
-      case GameState.ROUND1: { 
-        nextGamePhase = GameState.START_PHASE2;
-        break; 
-      } 
-      case GameState.ROUND2: { 
-        nextGamePhase = GameState.WRITE_ENDINGS;
-        break; 
-      }
-      default: { 
-        break; 
-      } 
-    }
-
-    this.gameState = nextGamePhase;
-
-    const requestBody = {
-      gameCode: this.gameCode,
-      gameState: nextGamePhase,
-    };
-
-    console.log(requestBody);
-
-    this.http
-      .put(environment.nowhereBackendUrl + HttpConstants.GAME_SESSION_PATH, requestBody)
-      .subscribe({
-        next: (response) => {
-          console.log('Next game phase triggered', nextGamePhase);
-        },
-        error: (error) => {
-          console.error('Error started game', error);
-        },
-      });
   }
 }
