@@ -1,6 +1,6 @@
 .command-feed {
-    background: var(--md-sys-color-primary-container);  // Adjust this based on your theme
-    color: var(--md-sys-color-on-primary-container);   // Text color from theme
+    background: var(--mat-optgroup-label-text-color);  // Adjust this based on your theme
+    color: var(--mat-option-selected-state-layer-color);  // Text color from theme
     font-family: "Courier New", monospace;
     padding: 10px;
     max-height: 250px;
