@@ -83,6 +83,6 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInAdventurePhase() {
-    return this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2;
+    return this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2 || this.gameState === GameState.RITUAL;
   }
 }

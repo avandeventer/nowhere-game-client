@@ -24,6 +24,10 @@
             }
         }
 
+        @if(activePlayerSession.ritualStory !== null && activePlayerSession.ritualStory.ritualOptions.length != 0) {
+            <div class="fade-in">{{activePlayerSession.ritualStory.ritualOptions[0].attemptText}}</div>
+        }
+
         @if (activePlayerSession.outcomeDisplay !== null && activePlayerSession.outcomeDisplay.length > 0) {
             @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
                 <div class="fade-in">{{ outcome }}</div>
