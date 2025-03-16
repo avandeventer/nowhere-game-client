@@ -9,12 +9,14 @@ import { ActiveGameStateSession } from 'src/assets/active-game-state-session';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 import { debounceTime } from 'rxjs';
+import { LocationComponent } from 'src/location/location.component';
 
 @Component({
   selector: 'game-state-manager',
   templateUrl: './game-state-manager.component.html',
+  styleUrl: './game-state-manager.style.scss',
   standalone: true,
-  imports: [WritePromptComponent, AdventureComponent]
+  imports: [WritePromptComponent, AdventureComponent, LocationComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -75,7 +77,7 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.INIT;
   }
 
-  isGameStarted() {
+  isGameInWritingPhase() {
     return this.gameState === GameState.WRITE_PROMPTS 
     || this.gameState === GameState.WRITE_OPTIONS 
     || this.gameState === GameState.WRITE_PROMPTS_AGAIN 
@@ -83,6 +85,11 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInAdventurePhase() {
-    return this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2 || this.gameState === GameState.RITUAL;
+    return this.gameState === GameState.ROUND1
+      || this.gameState === GameState.ROUND2;
+  }
+
+  isGameInRitualPhase() {
+    return this.gameState === GameState.RITUAL;
   }
 }
