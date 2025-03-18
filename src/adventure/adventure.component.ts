@@ -80,7 +80,7 @@ export class AdventureComponent implements OnInit {
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
           this.settingNextPlayerTurn = false;
         } else {
-          if(this.roundNumber <= 2) {
+          if(this.roundNumber <= 3) {
             this.roundNumber++;
             this.currentPlayerIndex = 0;
             this.setNextPlayerTurn();

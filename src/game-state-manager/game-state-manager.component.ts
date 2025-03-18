@@ -23,6 +23,7 @@ export class GameStateManagerComponent implements OnInit {
   gameState: GameState = GameState.INIT;
   activePlayerSession: ActivePlayerSession = new ActivePlayerSession();
   activeGameStateSession: ActiveGameStateSession = new ActiveGameStateSession();
+  didWeSucceed: boolean = false;
   isSettingNextGameState: boolean = false;
 
   constructor(
@@ -38,10 +39,12 @@ export class GameStateManagerComponent implements OnInit {
       const rawIsPlayerDone = newState.activeGameStateSession.isPlayerDone;
       this.activeGameStateSession = new ActiveGameStateSession();
       this.activeGameStateSession.isPlayerDone = new Map(Object.entries(rawIsPlayerDone));
+      this.didWeSucceed = newState.didWeSucceed;
   
       console.log('New gameState:', this.gameState);
       console.log('New Active Player Session', this.activePlayerSession);
       console.log('New Active Game State Session', this.activeGameStateSession);
+      console.log('Did we succeed?', this.didWeSucceed)
 
       this.checkForNextGameState(this.activeGameStateSession);
     });
@@ -84,6 +87,10 @@ export class GameStateManagerComponent implements OnInit {
     || this.gameState === GameState.WRITE_OPTIONS_AGAIN;
   }
 
+  isGameInWriteEndingsPhase() {
+    return this.gameState === GameState.WRITE_ENDINGS;
+  }
+
   isGameInAdventurePhase() {
     return this.gameState === GameState.ROUND1
       || this.gameState === GameState.ROUND2;
@@ -91,5 +98,9 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInRitualPhase() {
     return this.gameState === GameState.RITUAL;
+  }
+
+  isGameInEndingPhase() {
+    return this.gameState === GameState.ENDING;
   }
 }
