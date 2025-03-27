@@ -8,6 +8,9 @@
 
 @if (isGameInWritingPhase()) {
     <location></location><br>
+    @if (isGameInSecondPhase()) {
+        <div>The season progresses. Some of have us focused on our commitment to Erysus and some of us, in our arrogance, have chosen frivolity. Now is the time to prepare for the harvest ritual. Hone your skills and impress Erysus lest you invoke her ire.</div>
+    }
     <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
 }
 

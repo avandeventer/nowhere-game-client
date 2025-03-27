@@ -87,6 +87,10 @@ export class GameStateManagerComponent implements OnInit {
     || this.gameState === GameState.WRITE_OPTIONS_AGAIN;
   }
 
+  isGameInSecondPhase() {
+    return this.gameState === GameState.WRITE_PROMPTS_AGAIN;
+  }
+
   isGameInWriteEndingsPhase() {
     return this.gameState === GameState.WRITE_ENDINGS;
   }
