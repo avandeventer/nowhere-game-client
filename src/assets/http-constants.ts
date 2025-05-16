@@ -9,4 +9,5 @@ export abstract class HttpConstants {
     static readonly PLAYER_AUTHORID_PATH: string = "/player/authorId";
     static readonly ACTIVE_GAME_STATE_SESSION_PATH: string = "/activeGameStateSession";
     static readonly LOCATION_PATH: string = "/location";
+    static readonly USER_PROFILE: string = "/user-profile";
 }

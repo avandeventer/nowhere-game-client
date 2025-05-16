@@ -1,7 +1,31 @@
-<h2>Welcome to Nowhere!</h2>
-<h3>Erysus has been expecting you</h3>
-
 @if(!gameSessionCreated) {
+
+    <mat-accordion>
+        @for (entry of adventureMapsList; track entry.key) {
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    {{ entry.map.adventureMap.name }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <!-- Nested saveGames -->
+                <mat-nav-list>
+                    @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
+                      <mat-list-item
+                        [id]="'save-game-' + saveEntry.saveGame.id"
+                        [class]="{ 'selected': saveEntry.saveGame.id === saveGameId }"
+                        (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id)"
+                        style="cursor: pointer;"
+                      >
+                        <span>Save ID: {{ saveEntry.saveGame.id }}</span>
+                      </mat-list-item>
+                    }
+                </mat-nav-list>
+            </mat-expansion-panel>
+        }
+    </mat-accordion><br>
+    
     <form class="join-game">
         <mat-form-field class="full-width">
             <mat-label>Rejoin Existing Game</mat-label>

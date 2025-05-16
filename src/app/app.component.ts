@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { GameSessionComponent } from '../game-session/game-session.component';
+import { LoginComponent } from 'src/login/login.component';
 
 @Component({
   selector: 'app-root',
-  template: `<game-session></game-session>`,
+  template: `<login></login>`,
   standalone: true,
-  imports: [GameSessionComponent],
+  imports: [LoginComponent],
 })
 export class AppComponent {}

@@ -11,10 +11,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),     
+    provideHttpClient(),
+    provideAnimations(),
     provideFirebaseApp(() => {
       console.log('Initializing Firebase:', environment.firebaseConfig);
       return initializeApp(environment.firebaseConfig);

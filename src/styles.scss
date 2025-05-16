@@ -31,3 +31,8 @@ mat-form-field input {
 mat-flat-button button {
   float: right;
 }
+
+.selected {
+  background-color: var(--mat-option-selected-state-layer-color);
+  border-left: 4px solid #1976d2;
+}
