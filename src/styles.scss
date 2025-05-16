@@ -34,5 +34,5 @@ mat-flat-button button {
 
 .selected {
   background-color: var(--mat-option-selected-state-layer-color);
-  border-left: 4px solid #1976d2;
+  border-left: 4px solid var(--mat-option-selected-state-layer-color);
 }
