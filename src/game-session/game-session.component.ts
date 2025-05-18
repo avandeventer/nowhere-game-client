@@ -5,23 +5,24 @@ import { GameState } from 'src/assets/game-state';
 import { GameStateManagerComponent } from 'src/game-state-manager/game-state-manager.component';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Form, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { UserProfile } from 'src/assets/user-profile';
 import { ProfileAdventureMap } from 'src/assets/profile-adventure-map';
-import {CdkAccordionModule} from '@angular/cdk/accordion';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { SaveGame } from 'src/assets/save-game';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatListModule} from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'game-session',
   styles: `.btn { padding: 5px; }`,
   templateUrl: './game-session.component.html',
   standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule]
+  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
@@ -31,6 +32,9 @@ export class GameSessionComponent {
   rejoinCode = new FormControl('');
   adventureId: string = "";
   saveGameId: string = "";
+  activatedSaveGameId: string = 'none';
+  saveGameName: FormControl = new FormControl();
+  selectedSaveGameName: string = '';
 
   constructor(private http: HttpClient) {
     console.log('GameSessionComponent initialized');
@@ -44,6 +48,7 @@ export class GameSessionComponent {
       if (saveGames.length > 0) {
         this.adventureId = firstMapEntry.map.adventureMap.adventureId;
         this.saveGameId = saveGames[0].saveGame.id;
+        this.selectedSaveGameName = saveGames[0].saveGame.name;
       }
     }
   }
@@ -62,22 +67,25 @@ export class GameSessionComponent {
 
   getSaveGamesList(map: ProfileAdventureMap): { key: string, saveGame: SaveGame }[] {
     const list = Object.entries(map.saveGames).map(([key, saveGame]) => ({ key, saveGame }));
-    console.log("Your save games:");
-    console.log(list);
     return list;
   }
 
+  onFormSubmit(event: Event) {
+    event.preventDefault();
+  }  
 
-selectSaveGame(adventureId: string, saveGameId: string) {
-  this.adventureId = adventureId;
-  this.saveGameId = saveGameId;
+  selectSaveGame(adventureId: string, saveGameId: string, selectedSaveGameName: string) {
+    this.adventureId = adventureId;
+    this.saveGameId = saveGameId;
+    this.selectedSaveGameName = selectedSaveGameName;
+    this.activatedSaveGameId = 'none';
 
-  // Optional: Scroll to the selected item
-  setTimeout(() => {
-    const el = document.getElementById(`save-game-${saveGameId}`);
-    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 0);
-}
+    // Optional: Scroll to the selected item
+    setTimeout(() => {
+      const el = document.getElementById(`save-game-${saveGameId}`);
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 0);
+  }
     
   createGame() {
     const createGameParameters = "?userProfileId=" + this.userProfile.id + "&adventureId=" + this.adventureId + "&saveGameId=" + this.saveGameId;
@@ -90,6 +98,41 @@ selectSaveGame(adventureId: string, saveGameId: string) {
           
           this.gameCode = response.gameCode;
           this.gameSessionCreated = true;
+        },
+        error: (error) => {
+          console.error('Error creating game', error);
+        },
+      });
+  }
+
+  activateEditNameBox(activatedSaveGameId: string) {
+    this.activatedSaveGameId = activatedSaveGameId;
+  }
+
+  deactivateEditNameBox() {
+    this.activatedSaveGameId = 'none';
+  }
+
+  upsertSaveGame(saveGameId: string) {
+    console.log("Upsert Save Game: " + saveGameId);
+    console.log("Save Game Name: " + this.saveGameName.value);
+    const createGameParameters = "?userProfileId=" + this.userProfile.id + "&adventureId=" + this.adventureId;
+
+    const saveGame: SaveGame = {
+      name: this.saveGameName?.value ?? '',
+      id: saveGameId
+    }
+
+    this.http
+      .post<SaveGame>(environment.nowhereBackendUrl + HttpConstants.SAVE_GAME_PATH + createGameParameters, saveGame)
+      .subscribe({
+        next: (response) => {
+          console.log('Save Game created!', response);
+          this.saveGameId = response.id;
+          this.userProfile.maps[this.adventureId].saveGames[response.id] = response;
+          this.activatedSaveGameId = 'none';
+          this.selectedSaveGameName = response.name;
+          this.saveGameName.reset();
         },
         error: (error) => {
           console.error('Error creating game', error);

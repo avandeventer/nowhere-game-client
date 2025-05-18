@@ -1,31 +1,77 @@
 @if(!gameSessionCreated) {
-
     <mat-accordion>
         @for (entry of adventureMapsList; track entry.key) {
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                    {{ entry.map.adventureMap.name }}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <!-- Nested saveGames -->
-                <mat-nav-list>
-                    @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
-                      <mat-list-item
-                        [id]="'save-game-' + saveEntry.saveGame.id"
-                        [class]="{ 'selected': saveEntry.saveGame.id === saveGameId }"
-                        (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id)"
-                        style="cursor: pointer;"
-                      >
-                        <span>Save ID: {{ saveEntry.saveGame.id }}</span>
-                      </mat-list-item>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ entry.map.adventureMap.name }} - {{ selectedSaveGameName }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+      
+            <mat-nav-list>
+              @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
+                <mat-list-item [class.selected]="saveEntry.saveGame.id === saveGameId" style="align-items: flex-start;">
+                  <div class="list-content" style="width: 100%;">
+                    @if (activatedSaveGameId === saveEntry.saveGame.id) {
+                        <div style="display: flex; align-items: center; width: 100%;">
+                            <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                <mat-label>Rename Save Game</mat-label>
+                                <input matInput [formControl]="saveGameName" placeholder="{{saveEntry.saveGame.name}}">
+                                <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
+                                    <mat-icon>close</mat-icon>
+                                </button>                                
+                                <button mat-icon-button matSuffix (click)="upsertSaveGame(saveEntry.saveGame.id)">
+                                    <mat-icon>check</mat-icon>
+                                </button>
+                                </mat-form-field>
+                            </form>
+                        </div>
+                    } @else {
+                      <div style="display: flex; justify-content: space-between; align-items: center;" (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id, saveEntry.saveGame.name)">
+                        <span>Save Game: {{ saveEntry.saveGame.name }}</span>
+                        <button mat-icon-button (click)="activateEditNameBox(saveEntry.saveGame.id); $event.stopPropagation()">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                      </div>
                     }
-                </mat-nav-list>
-            </mat-expansion-panel>
+                  </div>
+                </mat-list-item>
+              }
+      
+              <!-- Create new save game -->
+              <mat-list-item>
+                <div class="list-content" style="width: 100%;">
+                  @if (activatedSaveGameId === '') {
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
+                            <mat-form-field appearance="outline" style="width: 100%;">
+                                <mat-label>Create New Save Game</mat-label>
+                                <input matInput [formControl]="saveGameName" placeholder="New Save Game">
+                                <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <button mat-icon-button matSuffix (click)="upsertSaveGame('')">
+                                    <mat-icon>check</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                  } @else {
+                    <div style="display: flex; justify-content: space-between; align-items: center;" (click)="activateEditNameBox('')">
+                      <span>Create New Save Game</span>
+                      <button mat-icon-button>
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
         }
     </mat-accordion><br>
-    
+
     <form class="join-game">
         <mat-form-field class="full-width">
             <mat-label>Rejoin Existing Game</mat-label>
