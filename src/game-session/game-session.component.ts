@@ -5,7 +5,7 @@ import { GameState } from 'src/assets/game-state';
 import { GameStateManagerComponent } from 'src/game-state-manager/game-state-manager.component';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
-import { Form, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,13 +16,14 @@ import { SaveGame } from 'src/assets/save-game';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'game-session',
   styles: `.btn { padding: 5px; }`,
   templateUrl: './game-session.component.html',
   standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule]
+  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
@@ -35,6 +36,8 @@ export class GameSessionComponent {
   activatedSaveGameId: string = 'none';
   saveGameName: FormControl = new FormControl();
   selectedSaveGameName: string = '';
+  storiesToWritePerRound: number = 1;
+  storiesToPlayPerRound: number = 1;
 
   constructor(private http: HttpClient) {
     console.log('GameSessionComponent initialized');
@@ -70,6 +73,19 @@ export class GameSessionComponent {
     return list;
   }
 
+  setStoriesToPlay(checked: boolean) {
+    if (checked) {
+      this.storiesToPlayPerRound = this.storiesToWritePerRound + 1;
+    } else {
+      this.storiesToPlayPerRound = this.storiesToWritePerRound;
+    }
+  }
+
+  eligibleForPreviousStories(saveGame: SaveGame) {
+    const numberOfGlobalStories: number = saveGame.globalStories?.length ?? 0;
+    return numberOfGlobalStories > 0;
+  }
+
   onFormSubmit(event: Event) {
     event.preventDefault();
   }  
@@ -88,7 +104,11 @@ export class GameSessionComponent {
   }
     
   createGame() {
-    const createGameParameters = "?userProfileId=" + this.userProfile.id + "&adventureId=" + this.adventureId + "&saveGameId=" + this.saveGameId;
+    const createGameParameters = "?userProfileId=" + this.userProfile.id 
+    + "&adventureId=" + this.adventureId 
+    + "&saveGameId=" + this.saveGameId
+    + "&storiesToWritePerRound=" + this.storiesToWritePerRound
+    + "&storiesToPlayPerRound=" + this.storiesToPlayPerRound;
 
     this.http
       .post<GameSession>(environment.nowhereBackendUrl + HttpConstants.GAME_SESSION_PATH + createGameParameters, {})

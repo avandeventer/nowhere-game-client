@@ -30,6 +30,12 @@
                     } @else {
                       <div style="display: flex; justify-content: space-between; align-items: center;" (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id, saveEntry.saveGame.name)">
                         <span>Save Game: {{ saveEntry.saveGame.name }}</span>
+                        @if (eligibleForPreviousStories(saveEntry.saveGame)) {
+                          <mat-checkbox
+                            [checked]="true"
+                            (change)="setStoriesToPlay($event.checked)"
+                          >Use previous stories?</mat-checkbox>
+                        }
                         <button mat-icon-button (click)="activateEditNameBox(saveEntry.saveGame.id); $event.stopPropagation()">
                           <mat-icon>edit</mat-icon>
                         </button>
@@ -39,13 +45,12 @@
                 </mat-list-item>
               }
       
-              <!-- Create new save game -->
               <mat-list-item>
                 <div class="list-content" style="width: 100%;">
                   @if (activatedSaveGameId === '') {
                     <div style="display: flex; align-items: center; width: 100%;">
                         <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
-                            <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-form-field appearance="outline" style="width: 100%; font-weight: 400">
                                 <mat-label>Create New Save Game</mat-label>
                                 <input matInput [formControl]="saveGameName" placeholder="New Save Game">
                                 <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
