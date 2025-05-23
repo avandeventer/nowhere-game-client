@@ -32,5 +32,5 @@
 @else {
     <mat-chip-set><mat-chip>Profile: {{userProfile.email}}</mat-chip></mat-chip-set>
     <button (click)="changeProfile()">Switch Profile</button><br><br>
-    <game-session [userProfile]="userProfile"></game-session>
+    <game-session [userProfile]="userProfile" (refreshLogin)="refreshLogin($event)"></game-session>
 }

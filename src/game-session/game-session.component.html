@@ -87,5 +87,5 @@
     <p>Type a code in the above box to rejoin an existing game. Leave it blank to start a new one.</p>
 } @else {
     <div>Join game on your device with this code: {{gameCode}}</div>
-    <game-state-manager [gameCode]="gameCode"></game-state-manager>
+    <game-state-manager [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></game-state-manager>
 }

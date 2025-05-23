@@ -48,3 +48,7 @@
     <div>The season of harvest is over and another season begins. Each of us has a legacy we must live up to.</div>
     <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
 }
+
+@if (isGameInFinalePhase()){
+    <finale [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></finale>
+}

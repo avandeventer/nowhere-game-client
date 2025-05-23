@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { GameService } from '../services/game-session.service';
 import { HttpClient } from '@angular/common/http';
 import { GameState } from 'src/assets/game-state';
@@ -10,13 +10,14 @@ import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 import { debounceTime } from 'rxjs';
 import { LocationComponent } from 'src/location/location.component';
+import { FinaleComponent } from 'src/finale/finale.component';
 
 @Component({
   selector: 'game-state-manager',
   templateUrl: './game-state-manager.component.html',
   styleUrl: './game-state-manager.style.scss',
   standalone: true,
-  imports: [WritePromptComponent, AdventureComponent, LocationComponent]
+  imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -25,6 +26,16 @@ export class GameStateManagerComponent implements OnInit {
   activeGameStateSession: ActiveGameStateSession = new ActiveGameStateSession();
   didWeSucceed: boolean = false;
   isSettingNextGameState: boolean = false;
+  @Output() gameSessionCreated = new EventEmitter<boolean>();
+
+  setNewGame(gameSessionCreated: boolean) {
+    this.gameSessionCreated.emit(gameSessionCreated);
+    this.gameState = GameState.INIT;
+    this.activePlayerSession = new ActivePlayerSession();
+    this.activeGameStateSession = new ActiveGameStateSession();
+    this.didWeSucceed = false;
+    this.isSettingNextGameState = false;  
+  }
 
   constructor(
     private gameService: GameService,
@@ -106,5 +117,9 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInEndingPhase() {
     return this.gameState === GameState.ENDING;
+  }
+
+  isGameInFinalePhase() {
+    return this.gameState === GameState.FINALE;
   }
 }

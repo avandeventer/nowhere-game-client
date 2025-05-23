@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GameSession } from 'src/assets/game-session';
 import { GameState } from 'src/assets/game-state';
@@ -29,6 +29,7 @@ export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
   gameCode: string = '';
   gameSessionCreated: boolean = false;
+  @Output() refreshLogin = new EventEmitter<string>();
   gameState: GameState = GameState.INIT;
   rejoinCode = new FormControl('');
   adventureId: string = "";
@@ -38,6 +39,11 @@ export class GameSessionComponent {
   selectedSaveGameName: string = '';
   storiesToWritePerRound: number = 1;
   storiesToPlayPerRound: number = 1;
+
+  setNewGame(gameSessionCreated: boolean) {
+    this.gameSessionCreated = gameSessionCreated;
+    this.refreshLogin.emit(this.userProfile.id);
+  }
 
   constructor(private http: HttpClient) {
     console.log('GameSessionComponent initialized');

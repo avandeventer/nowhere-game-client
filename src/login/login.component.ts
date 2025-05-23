@@ -131,6 +131,10 @@ export class LoginComponent {
         });
     }
 
+    refreshLogin(userProfileId: string) {
+        this.login();
+    }
+
     getNewProfileForm() {
         this.createNewProfile = true;
         this.loginForm.get('confirmPassword')?.setValidators([Validators.required]);

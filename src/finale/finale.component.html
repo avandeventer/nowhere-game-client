@@ -1,0 +1,26 @@
+
+@if (!storiesSaved) {
+    <div>Would you like to save these stories for later?</div><br>
+    @if (isLoadingSelection) {
+        <div class="loading-overlay">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+    }
+
+    <button 
+        mat-flat-button 
+        (click)="!isLoadingSelection && saveStories()"
+        [class.disabled]="isLoadingSelection"
+    >
+        Store Stories
+    </button> <br>
+}
+
+@else {
+    <button 
+        mat-flat-button 
+        (click)="newGame()"
+    >
+        Start a New Game?
+    </button> <br>
+}
