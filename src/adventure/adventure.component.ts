@@ -47,14 +47,10 @@ export class AdventureComponent implements OnInit {
     }
 
     getLocations(gameCode: string) {
-        const params = {
-          gameCode: this.gameCode
-        };
-    
-        console.log(params);
-    
-        this.http
-        .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH, { params })
+      const parameter = "?gameCode=" + gameCode;
+
+      this.http
+      .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH + parameter)
           .subscribe({
             next: (response) => {
               this.locations = response;

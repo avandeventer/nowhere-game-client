@@ -4,48 +4,47 @@
 
 @if (isGameInitialized()) {
     <p>Once all players have joined, click the Start Game button on your phone to begin!</p>
+    {{gameSessionDisplay.mapDescription}}<br>
+    {{gameSessionDisplay.goalDescription}}
 }
 
 @if (isGameInWritingPhase()) {
-    <location></location><br>
-    @if (isGameInSecondPhase()) {
-        <div>The season progresses. Some of have us focused on our commitment to Erysus and some of us, in our arrogance, have chosen frivolity. Now is the time to prepare for the harvest ritual. Hone your skills and impress Erysus lest you invoke her ire.</div>
-    }
+    {{gameSessionDisplay.mapDescription}}<br><br>
+    <location [gameCode]="gameCode"></location><br>
     <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
 }
 
 @if (isGameInAdventurePhase()) {
-    <location></location><br>
-    <div>The season of harvest has arrived and we all must spend the coming weeks preparing for the ritual to our patron God of Harvest, Erysus. 
-        At the end of the season, if we have not yet gained enough Favor with our patron, the least liked among us must be burned upon the fire for a bountiful harvest.</div>
+    {{gameSessionDisplay.goalDescription}}<br><br>
+    <location [gameCode]="gameCode"></location><br>
     <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
 }
 
 @if (isGameInRitualPhase()) {
+    {{gameSessionDisplay.endingDescription}}<br><br>
     <div class="map">
         <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
     </div><br>
-    <div>Behold! The harvest ritual arrives! Have you prepared appropriately? Choose how you believe you can best impress Erysus.</div>
     <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
 }
 
 @if (isGameInWriteEndingsPhase()) {
+    @if (didWeSucceed) {
+        {{gameSessionDisplay.successText}}<br><br>
+    } @else {
+        {{gameSessionDisplay.failureText}}<br><br>
+    }
+
     <div class="map">
         <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
     </div><br>
-    <div>And so the ritual lasted long into the night just as it always does. All of the citizens of our little hamlet in the middle of Nowhere did their best to impress Erysus lest she deliver a season where they could provide for their families.</div><br>
     
-    @if (didWeSucceed) {
-        <div>After a night of colors and feasting and prayer, we awaken to fields abundant with new sprouts. The winter has ended and Erysus has looked kindly upon us. We hug and we cry and we begin to work again once more in the fields and those among us who believe set upon their task of preparing to pray again next year before the god who sees our faith and shows us mercy. The almighty Erysus!</div><br>
-    } @else {
-        <div>However. The night is filled with folly and, despite the best efforts of the faithful, Erysus seems to have abandoned us come morning. The fields do not sprout, the air remains cold, and children go hungry. The season of winter has ended, but we do not see any change. Those who are faithful begin their task of convincing the community that our ritual next year should be grander, but many in the community lose faith altogether. It will be a year of despair.</div><br>
-    }
     <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
 }
 
 @if (isGameInEndingPhase()) {
-    <location></location><br>
-    <div>The season of harvest is over and another season begins. Each of us has a legacy we must live up to.</div>
+    <location [gameCode]="gameCode"></location><br>
+    <div>The die has been cast. Now is the time to decide each other's legacies. Look to your phone to choose what story or ending represents the legacy of another player. Then write their legacy.</div>
     <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
 }
 

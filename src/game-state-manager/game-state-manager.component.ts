@@ -11,6 +11,7 @@ import { HttpConstants } from 'src/assets/http-constants';
 import { debounceTime } from 'rxjs';
 import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
+import { GameSessionDisplay } from 'src/assets/game-session-display';
 
 @Component({
   selector: 'game-state-manager',
@@ -26,6 +27,7 @@ export class GameStateManagerComponent implements OnInit {
   activeGameStateSession: ActiveGameStateSession = new ActiveGameStateSession();
   didWeSucceed: boolean = false;
   isSettingNextGameState: boolean = false;
+  gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
   @Output() gameSessionCreated = new EventEmitter<boolean>();
 
   setNewGame(gameSessionCreated: boolean) {
@@ -43,6 +45,7 @@ export class GameStateManagerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.populateGameSessionDisplay(this.gameCode);
     this.gameService.listenForGameStateChanges(this.gameCode).pipe(debounceTime(300)).subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
@@ -59,6 +62,23 @@ export class GameStateManagerComponent implements OnInit {
 
       this.checkForNextGameState(this.activeGameStateSession);
     });
+  }
+
+  populateGameSessionDisplay(gameCode: string) {
+    const parameter = "?gameCode=" + gameCode;
+
+    this.http
+      .get<GameSessionDisplay>(environment.nowhereBackendUrl + HttpConstants.DISPLAY_PATH + parameter)
+      .subscribe({
+        next: (response) => {
+          console.log('Game session display retrieved from map!', response);
+          
+          this.gameSessionDisplay = response;
+        },
+        error: (error) => {
+          console.error('Error creating game', error);
+        },
+      });
   }
 
   checkForNextGameState(activeGameStateSession: ActiveGameStateSession) {

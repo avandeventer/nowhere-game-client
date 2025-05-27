@@ -64,12 +64,10 @@ export class LocationComponent implements OnInit {
     }
     
     getLocations(gameCode: string) {
-      const params = {
-        gameCode: gameCode,
-      };
-  
+      const parameter = "?gameCode=" + gameCode;
+
       this.http
-      .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH, { params })
+      .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH + parameter)
       .subscribe({
         next: (response) => {
           this.locations = response;
