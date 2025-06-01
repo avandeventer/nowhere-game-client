@@ -8,7 +8,7 @@ import { ActivePlayerSession } from 'src/assets/active-player-session';
 import { ActiveGameStateSession } from 'src/assets/active-game-state-session';
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
-import { debounceTime } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
@@ -46,7 +46,9 @@ export class GameStateManagerComponent implements OnInit {
 
   ngOnInit() {
     this.populateGameSessionDisplay(this.gameCode);
-    this.gameService.listenForGameStateChanges(this.gameCode).pipe(debounceTime(300)).subscribe((newState) => {
+    this.gameService.listenForGameStateChanges(this.gameCode)
+      .pipe(debounceTime(300), distinctUntilChanged((a, b) => a.activeGameStateSession === b.activeGameStateSession))
+      .subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
 

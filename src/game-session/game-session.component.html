@@ -32,7 +32,7 @@
                         <span>Save Game: {{ saveEntry.saveGame.name }}</span>
                         @if (eligibleForPreviousStories(saveEntry.saveGame)) {
                           <mat-checkbox
-                            [checked]="true"
+                            [checked]="false"
                             (change)="setStoriesToPlay($event.checked)"
                           >Use previous stories?</mat-checkbox>
                         }
