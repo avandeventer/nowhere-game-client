@@ -1,13 +1,29 @@
 @if(!gameSessionCreated) {
     <mat-accordion>
-        @for (entry of adventureMapsList; track entry.key) {
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                {{ entry.map.adventureMap.name }} - {{ selectedSaveGameName }}
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-      
+      @for (entry of adventureMapsList; track entry.key) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ entry.map.adventureMap.name }} - {{ selectedSaveGameName }}
+            </mat-panel-title>
+            <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matSuffix (click)="deactivateEditMapForm()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-expansion-panel-header>
+    
+          @if (activatedEditMapFormAdventureId === entry.map.adventureMap.adventureId) {
+            <adventure-map-form 
+              class="adventure-form-wrapper"
+              (adventureMapOutput)="addAdventureMap($event)"
+              [userProfileId]="userProfile.id"
+              [adventureMap]="entry.map.adventureMap"
+            ></adventure-map-form>  
+          }
+
+          @else {
             <mat-nav-list>
               @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
                 <mat-list-item [class.selected]="saveEntry.saveGame.id === saveGameId" style="align-items: flex-start;">
@@ -48,7 +64,7 @@
               <mat-list-item>
                 <div class="list-content" style="width: 100%;">
                   @if (activatedSaveGameId === '') {
-                    <div style="display: flex; align-items: center; width: 100%;">
+                    <div class="adventure-map-wrapper">
                         <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
                             <mat-form-field appearance="outline" style="width: 100%; font-weight: 400">
                                 <mat-label>Create New Save Game</mat-label>
@@ -63,7 +79,7 @@
                         </form>
                     </div>
                   } @else {
-                    <div style="display: flex; justify-content: space-between; align-items: center;" (click)="activateEditNameBox('')">
+                    <div class="adventure-map-wrapper" (click)="activateEditNameBox('')">
                       <span>Create New Save Game</span>
                       <button mat-icon-button>
                         <mat-icon>edit</mat-icon>
@@ -73,10 +89,24 @@
                 </div>
               </mat-list-item>
             </mat-nav-list>
-          </mat-expansion-panel>
-        }
+          }
+        </mat-expansion-panel>
+      }
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title (click)="toggleNewAdventureMapForm()">
+            <div>Create New Setting</div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <adventure-map-form 
+          class="adventure-form-wrapper"
+          [userProfileId]="userProfile.id"
+          (adventureMapOutput)="addAdventureMap($event)"
+        >
+        </adventure-map-form>
+      </mat-expansion-panel>
     </mat-accordion><br>
-
+  @if (!newSettingFormActivated) {
     <form class="join-game">
         <mat-form-field class="full-width">
             <mat-label>Rejoin Existing Game</mat-label>
@@ -85,6 +115,7 @@
     </form>
     <button mat-flat-button (click)="initializeGame()">Create Game</button> <br>
     <p>Type a code in the above box to rejoin an existing game. Leave it blank to start a new one.</p>
+  }
 } @else {
     <div>Join game on your device with this code: {{gameCode}}</div>
     <game-state-manager [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></game-state-manager>

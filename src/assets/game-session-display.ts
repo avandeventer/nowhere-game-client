@@ -1,6 +1,8 @@
 export class GameSessionDisplay {
     mapDescription: string;
     goalDescription: string;
+    playerTitle: string;
+    playerDescription: string;
     endingDescription: string;
     successText: string;
     neutralText: string;
@@ -9,6 +11,8 @@ export class GameSessionDisplay {
     constructor() {
         this.mapDescription = "";
         this.goalDescription = "";
+        this.playerTitle = "";
+        this.playerDescription = "";
         this.endingDescription = "";
         this.successText = "";
         this.neutralText = "";

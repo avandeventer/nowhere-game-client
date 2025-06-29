@@ -2,16 +2,21 @@ import { Option } from './option';
 
 export class Location {
     locationId: number;
-    locationName: String;
-    options: Option[];
+    description: string;
+    locationIndex: number;
+
+    id: string;
     label: String;
+    options: Option[];
     iconDirectory: String;
 
     constructor () {
         this.locationId = 0;
-        this.locationName = "";
-        this.options = []
+        this.description = "";
+        this.locationIndex = 0;
+        this.id = "";
         this.label = "";
+        this.options = [];
         this.iconDirectory = "";
     }
 }

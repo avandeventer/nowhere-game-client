@@ -1,13 +1,12 @@
 import { OutcomeStat } from "./outcome-stat";
-import { Stat } from "./stat";
+import { PlayerStat } from "./player-stat";
 
 export class Option {
     optionId: string;
     optionText: string;
     attemptText: string;
-    statRequirement: Stat;
-    statDC: number;
     successText: string;
+    playerStatDCs: PlayerStat[]
     successResults: OutcomeStat[];
     failureResults: OutcomeStat[];
 
@@ -15,9 +14,8 @@ export class Option {
         this.optionId = "";
         this.optionText = "";
         this.attemptText = "";
-        this.statRequirement = Stat.CHARISMA;
-        this.statDC = 0;
         this.successText = "";
+        this.playerStatDCs = [];
         this.successResults = [];
         this.failureResults = [];
     }

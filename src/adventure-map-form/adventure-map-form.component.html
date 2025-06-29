@@ -1,0 +1,110 @@
+<form [formGroup]="adventureMapForm" (ngSubmit)="submit()">
+    <mat-form-field class="game-session-display" appearance="fill">
+      <mat-label>What do we call this place?</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field><br>
+    <fieldset formGroupName="gameSessionDisplay">
+      <legend>Game Session Display</legend>
+      <h3>The Map</h3>
+      <mat-form-field class="game-session-display" appearance="fill">
+        <mat-label>What is it like here?</mat-label>
+        <textarea matInput formControlName="mapDescription"></textarea>
+      </mat-form-field><br>
+      <h3>The Players</h3>
+      <mat-form-field class="game-session-display" appearance="fill">
+        <mat-label>What are we called?</mat-label>
+        <input matInput formControlName="playerTitle">
+      </mat-form-field><br>
+      <mat-form-field  class="game-session-display" appearance="fill">
+        <mat-label>What are we like?</mat-label>
+        <textarea matInput formControlName="playerDescription"></textarea>
+      </mat-form-field><br>
+      <h3>The Ending</h3>
+      <mat-form-field class="game-session-display" appearance="fill">
+        <mat-label>Something is coming. What will happen when it gets here?</mat-label>
+        <textarea matInput formControlName="endingDescription"></textarea>
+      </mat-form-field><br>
+      <mat-form-field  class="game-session-display" appearance="fill">
+        <mat-label>What is our goal when it gets here?</mat-label>
+        <textarea matInput formControlName="goalDescription"></textarea>
+      </mat-form-field><br>
+    </fieldset>
+  
+    <div formArrayName="statTypes">
+      <h3>Stat Types</h3>
+      <div *ngFor="let stat of statTypes.controls; index as i" [formGroupName]="i">
+        <mat-form-field appearance="fill">
+          <mat-label>Stat Name</mat-label>
+          <input matInput formControlName="label">
+        </mat-form-field><br>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description">
+        </mat-form-field>
+        <button mat-icon-button color="warn" type="button" (click)="removeStatType(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-flat-button color="primary" type="button" (click)="addStatType()">Add Stat</button><br>
+    </div>
+
+    <button mat-flat-button type="button" (click)="submit()">Next</button> <br> <br>
+  
+    @if (locationsFormActivated) {
+      <div formArrayName="locations">
+        <h3>Locations</h3>
+      
+        @for (location of locations.controls; track location; let i = $index) {
+          <div [formGroupName]="i">
+            <h4>Location {{i + 1}}</h4>
+            <mat-form-field appearance="fill">
+              <mat-label>Label</mat-label>
+              <input matInput formControlName="label" />
+            </mat-form-field><br>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+      
+            <div formArrayName="options">
+              @for (option of getOptions(location).controls; track option; let j = $index) {                
+                <div [formGroupName]="j">
+                  <h4>Option {{ j + 1 }}</h4>
+            
+                  <mat-form-field appearance="fill">
+                    <mat-label>Occupation Name</mat-label>
+                    <input matInput formControlName="optionText" />
+                  </mat-form-field>
+            
+                  <mat-form-field appearance="fill">
+                    <mat-label>Occupation Description</mat-label>
+                    <input matInput formControlName="attemptText" />
+                  </mat-form-field>
+            
+                  <mat-form-field appearance="fill">
+                    <mat-label>Result Stats</mat-label>
+                    <mat-select formControlName="successResults" multiple>
+                      @for (stat of statTypes.controls; track stat; let i = $index) {
+                        <mat-option [value]="stat.get('id')?.value">
+                          {{ stat.get('label')?.value }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              }
+            </div>
+
+            <button mat-icon-button color="warn" type="button" (click)="removeLocation(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+        <button mat-flat-button color="primary" type="button" (click)="addLocation()">Add Location</button><br>
+      </div>
+    }
+  
+    <button mat-flat-button type="button" color="primary" (click)="update()">Submit</button>
+  </form>
+  

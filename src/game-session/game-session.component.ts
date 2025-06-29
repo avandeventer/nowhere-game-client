@@ -17,13 +17,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-form.component';
+import { AdventureMap } from 'src/assets/adventure-map';
 
 @Component({
   selector: 'game-session',
-  styles: `.btn { padding: 5px; }`,
+  styleUrl: './game-session.component.scss',
   templateUrl: './game-session.component.html',
   standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule]
+  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
@@ -39,6 +41,8 @@ export class GameSessionComponent {
   selectedSaveGameName: string = '';
   storiesToWritePerRound: number = 1;
   storiesToPlayPerRound: number = 1;
+  newSettingFormActivated: boolean = false;
+  activatedEditMapFormAdventureId: string = "";
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated = gameSessionCreated;
@@ -95,6 +99,14 @@ export class GameSessionComponent {
   onFormSubmit(event: Event) {
     event.preventDefault();
   }  
+
+  activateEditMapForm(activatedEditMapFormAdventureId: string) {
+    this.activatedEditMapFormAdventureId = activatedEditMapFormAdventureId;
+  }
+
+  deactivateEditMapForm() {
+    this.activatedEditMapFormAdventureId = "";
+  }
 
   selectSaveGame(adventureId: string, saveGameId: string, selectedSaveGameName: string) {
     this.adventureId = adventureId;
@@ -183,6 +195,19 @@ export class GameSessionComponent {
           console.error('Error creating game', error);
         },
       });
+  }
+
+  toggleNewAdventureMapForm() {
+    if (this.newSettingFormActivated === true) {
+      this.newSettingFormActivated = false;
+    } else {
+      this.newSettingFormActivated = true;
+    }
+  }
+
+  addAdventureMap(adventureMap: AdventureMap) {
+    this.userProfile.upsertProfileAdventureMap(new ProfileAdventureMap(adventureMap));
+    this.newSettingFormActivated = false;
   }
 
 }
