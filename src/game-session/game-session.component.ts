@@ -114,7 +114,7 @@ export class GameSessionComponent {
     this.selectedSaveGameName = selectedSaveGameName;
     this.activatedSaveGameId = 'none';
 
-    // Optional: Scroll to the selected item
+    // Scroll to the selected item
     setTimeout(() => {
       const el = document.getElementById(`save-game-${saveGameId}`);
       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -206,8 +206,10 @@ export class GameSessionComponent {
   }
 
   addAdventureMap(adventureMap: AdventureMap) {
+    this.userProfile = Object.assign(new UserProfile(), this.userProfile);
     this.userProfile.upsertProfileAdventureMap(new ProfileAdventureMap(adventureMap));
     this.newSettingFormActivated = false;
+    this.deactivateEditMapForm();
   }
 
 }

@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { OutcomeStat } from 'src/assets/outcome-stat';
 import { PlayerStat } from 'src/assets/player-stat';
+import { StatType } from 'src/assets/stat-type';
 import { AdventureMapService } from 'src/services/adventure-map.service';
 
 @Component({
@@ -23,7 +25,8 @@ import { AdventureMapService } from 'src/services/adventure-map.service';
     MatButtonModule,
     MatIconModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDividerModule
   ],
   styleUrl: './adventure-map-form.component.scss',
   templateUrl: './adventure-map-form.component.html',
@@ -62,6 +65,30 @@ export class AdventureMapFormComponent implements OnInit {
       this.patchFormWithAdventureMap(this.adventureMap);
       this.locationsFormActivated = true;
     }
+
+    if(this.adventureMap.statTypes === null 
+      || this.adventureMap.statTypes.length === 0
+      || !this.adventureMap.statTypes.some(s => s.favorType)) {
+        this.addFavorStat();
+    } else if (this.adventureMap.statTypes.some(s => s.favorType)) {
+      const favorIndex = this.adventureMap.statTypes.findIndex(s => s.favorType);
+      const [favorStat] = this.adventureMap.statTypes.splice(favorIndex, 1);
+
+      this.adventureMap.statTypes.unshift(favorStat);
+      this.patchFormWithAdventureMap(this.adventureMap);
+      console.log("shifted statTypes " + this.adventureMap.statTypes);
+    }
+  }
+
+  private addFavorStat(): void {
+    const favorStatGroup = this.fb.group({
+      label: ['Favor'],
+      description: [''],
+      favorType: [true],
+      favorEntity: ['', Validators.required]
+    });
+  
+    this.statTypes.insert(0, favorStatGroup);
   }
 
   get statTypes(): FormArray {
@@ -201,7 +228,9 @@ export class AdventureMapFormComponent implements OnInit {
       this.fb.group({
         id: [stat.id],
         label: [stat.label],
-        description: [stat.description]
+        description: [stat.description],
+        favorEntity: [stat.favorEntity],
+        favorType: [stat.favorType]
       })
     );
     this.adventureMapForm.setControl('statTypes', this.fb.array(statTypeFGs));
