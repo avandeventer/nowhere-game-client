@@ -55,11 +55,15 @@ export class LocationComponent implements OnInit {
     }
     
     private updateButtonTransforms() {
+      let locationIndex = 0;
+
       this.locations.forEach((location) => {
-        this.buttonTransforms[location.locationId] = this.generateTransformBasedOnId(
-          location.locationId,
+        this.buttonTransforms[locationIndex] = this.generateTransformBasedOnId(
+          locationIndex,
           this.locations.length
         );
+        location.locationIndex = locationIndex;
+        locationIndex += 1;
       });
     }
     
@@ -72,12 +76,14 @@ export class LocationComponent implements OnInit {
         next: (response) => {
           this.locations = response;
   
-          // Calculate transform values for each location
+          let locationIndex = 0;
           this.locations.forEach((location) => {
-            this.buttonTransforms[location.locationId] =  this.generateTransformBasedOnId(
-              location.locationId,
+            this.buttonTransforms[locationIndex] =  this.generateTransformBasedOnId(
+              locationIndex,
               this.locations.length // Total number of locations
             );
+            location.locationIndex = locationIndex;
+            locationIndex += 1;
           });
         },
         error: (error) => {

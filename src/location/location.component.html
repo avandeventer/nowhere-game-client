@@ -5,7 +5,7 @@
         <div
           class="location-button"
           [style.position]="'absolute'"
-          [style.transform]="buttonTransforms[location.locationId]"
+          [style.transform]="buttonTransforms[location.locationIndex]"
         >
           <img src="{{location.iconDirectory}}" alt="{{ location.label }}" class="location-icon" />
           <span class="location-label">{{ location.label }}</span>
