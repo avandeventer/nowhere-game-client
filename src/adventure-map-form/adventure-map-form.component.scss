@@ -13,3 +13,17 @@ textarea {
 h3 {
     color: var(--mat-full-pseudo-checkbox-selected-icon-color);
 }
+
+mat-form-field {
+    width: 100%;
+  }
+
+input, textarea {
+    width: 100%; // optional, but doesn’t hurt
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}

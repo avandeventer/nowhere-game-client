@@ -126,6 +126,42 @@
         }
         <button mat-flat-button color="primary" type="button" (click)="addLocation()">Add Location</button><br><br>
       </div>
+      <div formGroupName="ritual">
+        <h3>Ending Options</h3>
+        <div formArrayName="options">
+          @for (opt of ritualOptions.controls; track opt; let i = $index) {
+            <div [formGroupName]="i">
+              <h4>Ending {{ i + 1 }}</h4>
+              <mat-form-field appearance="fill">
+                <mat-label>Option</mat-label>
+                <input matInput formControlName="optionText" placeholder="Option Text" />
+              </mat-form-field><br>
+              <mat-form-field appearance="fill">
+                <mat-label>Select Required Stats</mat-label>
+                <mat-select multiple>
+                  @for (stat of statTypes.controls; track stat) {
+                    <mat-option
+                      [value]="stat.get('id')?.value"
+                      (onSelectionChange)="toggleStat(i, stat.value)">
+                      {{ stat.get('label')?.value }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field><br>
+              <mat-form-field appearance="fill">
+                <mat-label>Success Text</mat-label>
+                <textarea matInput formControlName="successText" placeholder="Success Text" ></textarea>
+              </mat-form-field><br>
+              <mat-form-field appearance="fill">
+                <mat-label>Failure Text</mat-label>
+                <textarea matInput formControlName="failureText" placeholder="Failure Text" ></textarea>
+              </mat-form-field>
+            </div>
+          }
+          <mat-divider></mat-divider><br>
+          <button mat-flat-button color="primary" type="button" (click)="addRitualOption()">Add Option</button><br><br>
+        </div>
+      </div>
     }
   
     <button mat-flat-button type="button" (click)="update()">Submit</button>

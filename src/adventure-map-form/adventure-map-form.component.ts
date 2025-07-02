@@ -55,7 +55,10 @@ export class AdventureMapFormComponent implements OnInit {
         failureText: [''],
       }),
       statTypes: this.fb.array([]),
-      locations: this.fb.array([])
+      locations: this.fb.array([]),
+      ritual: this.fb.group({
+        options: this.fb.array([])
+      })    
     });
 
     if (
@@ -97,6 +100,24 @@ export class AdventureMapFormComponent implements OnInit {
 
   get locations(): FormArray {
     return this.adventureMapForm.get('locations') as FormArray;
+  }
+
+  get ritualOptions(): FormArray {
+    return this.adventureMapForm.get('ritual.options') as FormArray;
+  }
+  
+  createOption(): FormGroup {
+    return this.fb.group({
+      optionText: [''],
+      successText: [''],
+      failureText: [''],
+      playerStatDCs: this.fb.array([])
+    });
+  }
+
+  addRitualOption() {
+    this.ritualOptions.push(this.createOption());
+    console.log("Your ritual options: " + this.ritualOptions);
   }
 
   addStatType(): void {
@@ -173,6 +194,15 @@ export class AdventureMapFormComponent implements OnInit {
         opt.successResults = this.toOutcomeStats(opt.successResults);
       });
     });
+
+    if (formValue.ritual?.options) {
+      formValue.ritual.options.forEach((opt: any) => {
+        opt.playerStatDCs = opt.playerStatDCs.map((ps: any) => ({
+          statType: ps.statType,
+          value: ps.value
+        }));
+      });
+    }    
     
     formValue.adventureId = this.adventureMap.adventureId;
     console.log('Submitting AdventureMap:', formValue);    
@@ -251,5 +281,62 @@ export class AdventureMapFormComponent implements OnInit {
       })
     );
     this.adventureMapForm.setControl('locations', this.fb.array(locationFGs));
+
+    if (map.ritual?.options) {
+      const ritualOptionFGs = map.ritual.options.map(opt =>
+        this.fb.group({
+          optionText: [opt.optionText],
+          successText: [opt.successText],
+          failureText: [opt.failureText],
+          playerStatDCs: this.fb.array(
+            opt.playerStatDCs?.map(stat => this.fb.group({
+              id: [stat.statType.id],
+              label: [stat.statType.label],
+              description: [stat.statType.description],
+              favorEntity: [stat.statType.favorEntity],
+              favorType: [stat.statType.favorType]
+            })) || []
+          )
+        })
+      );
+      (this.adventureMapForm.get('ritual') as FormGroup).setControl('options', this.fb.array(ritualOptionFGs));
+    }    
+  }
+
+  toggleStat(optionIndex: number, stat: StatType) {
+    const playerStatArray = this.ritualOptions.at(optionIndex).get('playerStatDCs') as FormArray;
+  
+    const exists = playerStatArray.controls.some(ctrl =>
+      ctrl.get('statType.id')?.value === stat.id
+    );
+  
+    if (exists) {
+      for (let i = playerStatArray.length - 1; i >= 0; i--) {
+        const ctrl = playerStatArray.at(i);
+        if (ctrl.get('statType.id')?.value === stat.id) {
+          playerStatArray.removeAt(i);
+        }
+      }
+    } else {
+      [6, 9].forEach(value => {
+        playerStatArray.push(this.fb.group({
+          statType: this.fb.group({
+            id: [stat.id],
+            label: [stat.label],
+            description: [stat.description],
+            favorEntity: [stat.favorEntity],
+            favorType: [stat.favorType]
+          }),
+          value: [value]
+        }));
+      });
+    }
+  }
+    
+  hasStat(optionIndex: number, stat: StatType): boolean {
+    const playerStatArray = this.ritualOptions.at(optionIndex).get('playerStatDCs') as FormArray;
+    return playerStatArray.controls.some(ctrl =>
+      ctrl.get('statType.id')?.value === stat.id
+    );
   }
 }

@@ -1,5 +1,5 @@
 @if (players.length > 0) {
-    <div>{{playerName}} is seeking boons for the harvest. Choose what you'll do from your phone.</div><br>
+    <div>{{playerName}} is seeking adventure. Choose what you'll do from your phone.</div><br>
 }
 
 <mat-card class="command-feed">
@@ -23,8 +23,8 @@
             }
         }
 
-        @if(activePlayerSession.ritualStory !== null && activePlayerSession.ritualStory.ritualOptions.length != 0) {
-            <div class="fade-in">{{activePlayerSession.ritualStory.ritualOptions[0].attemptText}}</div>
+        @if(activePlayerSession.ritualStory !== null && activePlayerSession.ritualStory.options.length != 0) {
+            <div class="fade-in">{{activePlayerSession.ritualStory.options[0].attemptText}}</div>
         }
 
         @if (activePlayerSession.outcomeDisplay !== null && activePlayerSession.outcomeDisplay.length > 0) {
