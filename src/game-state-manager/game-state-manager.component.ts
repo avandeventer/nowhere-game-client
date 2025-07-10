@@ -12,13 +12,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'game-state-manager',
   templateUrl: './game-state-manager.component.html',
   styleUrl: './game-state-manager.style.scss',
   standalone: true,
-  imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent]
+  imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -111,6 +112,11 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInitialized() {
     return this.gameState === GameState.INIT;
+  }
+
+  isGameInLocationSelectPhase() {
+    return this.gameState === GameState.LOCATION_SELECT
+    || this.gameState === GameState.LOCATION_SELECT_AGAIN
   }
 
   isGameInWritingPhase() {

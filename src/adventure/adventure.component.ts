@@ -28,6 +28,7 @@ export class AdventureComponent implements OnInit {
     playerTurnAuthorId: String = "";
     roundNumber: number = 0;
     settingNextPlayerTurn: boolean = false;
+    currentLocation: Location = new Location();
 
     constructor(private http:HttpClient) {}
 
@@ -55,6 +56,7 @@ export class AdventureComponent implements OnInit {
             next: (response) => {
               this.locations = response;
               console.log('Locations', this.locations);
+              this.setCurrentLocation();
             },
             error: (error) => {
               console.error('Error getting locations', error);
@@ -74,6 +76,7 @@ export class AdventureComponent implements OnInit {
             this.roundNumber, 
             this.playerTurnAuthorId);
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
+          this.setCurrentLocation();
           this.settingNextPlayerTurn = false;
         } else {
           if(this.roundNumber <= 3) {
@@ -108,6 +111,11 @@ export class AdventureComponent implements OnInit {
           });
       }
       
+  setCurrentLocation() {
+    this.currentLocation = this.locations.find(
+      location => location.id === this.activePlayerSession?.story?.location?.id
+    ) ?? new Location();
+  }
 
   private updateActivePlayerSession(
     playerStory: Story,

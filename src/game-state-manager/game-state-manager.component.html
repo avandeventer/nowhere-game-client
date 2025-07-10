@@ -3,9 +3,30 @@
 }
 
 @if (isGameInitialized()) {
-    <p>Once all players have joined, click the Start Game button on your phone to begin!</p>
-    {{gameSessionDisplay.mapDescription}}<br>
-    {{gameSessionDisplay.goalDescription}}
+    <mat-card class="instructions" appearance="outlined">
+        Once all players have joined, click the Start Game button on your phone to begin!
+    </mat-card>
+    <mat-card class="game-session-display">
+        {{gameSessionDisplay.mapDescription}}
+    </mat-card>
+}
+
+@if (isGameInLocationSelectPhase()) {
+    <div class="location-layout">
+        <div class="location-panel">
+          <location [gameCode]="gameCode"></location>
+        </div>
+      
+        <div class="card-column">
+          <mat-card class="instructions" appearance="outlined">
+            Choose how you will spend your time from your phone. Once you select where you will go someone else will determine what happens to you there.
+          </mat-card>
+      
+          <mat-card class="game-session-display">
+            {{ gameSessionDisplay.goalDescription }}
+          </mat-card>
+        </div>
+    </div>
 }
 
 @if (isGameInWritingPhase()) {
@@ -16,7 +37,8 @@
 
 @if (isGameInAdventurePhase()) {
     {{gameSessionDisplay.goalDescription}}<br><br>
-    <location [gameCode]="gameCode"></location><br>
+    <!-- <location [gameCode]="gameCode"></location><br> -->
+
     <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
 }
 

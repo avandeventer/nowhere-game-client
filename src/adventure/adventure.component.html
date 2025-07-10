@@ -2,6 +2,11 @@
     <div>{{playerName}} is seeking adventure. Choose what you'll do from your phone.</div><br>
 }
 
+@if (currentLocation.id !== "") {
+    <mat-card>
+        <img src="{{currentLocation.iconDirectory}}" alt="{{ currentLocation.label }}" class="location-icon" />
+    </mat-card>
+}
 <mat-card class="command-feed">
     <div #scrollContainer class="feed">
         @if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {

@@ -2,29 +2,15 @@
     position: relative;
     width: 80vw; /* Make the width 80% of the viewport width */
     height: 80vw; /* Keep the height equal to the width for a perfect circle */
-    max-width: 500px; /* Set a maximum width to prevent it from becoming too large */
-    max-height: 500px; /* Set a corresponding maximum height */
+    max-width: 600px; /* Set a maximum width to prevent it from becoming too large */
+    max-height: 600px; /* Set a corresponding maximum height */
     margin: 0 auto; /* Center the map horizontally */
     border: 1px dashed #ccc;
     border-radius: 50%; /* Ensure the element remains circular */
-    background-color: #76a37e;
-    animation: glow 2s infinite;
-    box-shadow: 0 0 300px rgba(0, 0, 0) inset;
+    background-color: var(--mdc-filled-text-field-container-color);
     overflow: hidden;
   }
-  
-  @keyframes glow {
-    0% {
-      box-shadow: 0 0 298px rgba(33, 43, 33) inset;
-    }
-    50% {
-      box-shadow: 0 0 300px rgba(0, 0, 0) inset;
-    }
-    100% {
-      box-shadow: 0 0 298px rgba(33, 43, 33) inset;
-    }
-  }
-  
+    
   .location-button {
     position: absolute;
     display: flex;
@@ -79,7 +65,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10%; /* Scale the pyre relative to the map */
-    max-width: 50px; /* Set a maximum size for larger screens */
+    width: 20%; /* Scale the pyre relative to the map */
+    max-width: 80px; /* Set a maximum size for larger screens */
     height: auto; /* Maintain aspect ratio */
   }

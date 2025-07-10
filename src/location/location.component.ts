@@ -99,9 +99,10 @@ export class LocationComponent implements OnInit {
       const buttonWidth = exampleButton ? exampleButton.offsetWidth : 40;
       const buttonHeight = exampleButton ? exampleButton.offsetHeight : 50;
 
-      const mapCenter = mapSize / 2; // Center of the map
-      const radius = mapCenter - (totalButtons * 10); // Adjust radius dynamically
-
+      const mapCenter = mapSize / 2 - 20; // Center of the map
+      const maxAllowedRadius = 180; // <-- tweak this to keep buttons inside your visual circle
+      const dynamicRadius = mapCenter - (totalButtons * 10);
+      const radius = Math.min(dynamicRadius, maxAllowedRadius);
     
       const angle = (2 * Math.PI / totalButtons) * locationId; // Evenly spaced angle
     
