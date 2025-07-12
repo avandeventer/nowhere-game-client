@@ -1,17 +1,17 @@
 .map {
-    position: relative;
-    width: 80vw; /* Make the width 80% of the viewport width */
-    height: 80vw; /* Keep the height equal to the width for a perfect circle */
-    max-width: 600px; /* Set a maximum width to prevent it from becoming too large */
-    max-height: 600px; /* Set a corresponding maximum height */
-    margin: 0 auto; /* Center the map horizontally */
-    border: 1px dashed #ccc;
-    border-radius: 50%; /* Ensure the element remains circular */
-    background-color: var(--mdc-filled-text-field-container-color);
-    overflow: hidden;
-  }
+  position: relative;
+  width: 40vw; /* Make the width 80% of the viewport width */
+  height: 40vw; /* Keep the height equal to the width for a perfect circle */
+  max-width: 500px; /* Set a maximum width to prevent it from becoming too large */
+  max-height: 500px; /* Set a corresponding maximum height */
+  margin: 0 auto; /* Center the map horizontally */
+  border: 1px dashed #ccc;
+  border-radius: 50%; /* Ensure the element remains circular */
+  background-color: var(--mdc-filled-text-field-container-color);
+  overflow: hidden;
+}
     
-  .location-button {
+.location-button {
     position: absolute;
     display: flex;
     flex-direction: column; /* Stack image and text */

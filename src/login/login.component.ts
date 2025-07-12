@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -22,6 +22,7 @@ export class LoginComponent {
     createNewProfile: boolean = false;
     loginSuccessful: boolean = false;
     userProfile: UserProfile = new UserProfile();
+    gameSessionCreated: boolean = false;
 
     constructor(private http: HttpClient, private fb: FormBuilder) {
         console.log('Login initialized');
@@ -133,6 +134,10 @@ export class LoginComponent {
 
     refreshLogin(userProfileId: string) {
         this.login();
+    }
+
+    startGame(gameSessionCreated: boolean) {
+        this.gameSessionCreated = gameSessionCreated;
     }
 
     getNewProfileForm() {

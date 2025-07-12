@@ -1,5 +1,5 @@
-<h2>Welcome to Nowhere!</h2>
 @if(!loginSuccessful) {
+  <h2>Welcome to Nowhere!</h2>
     <form class="join-game" [formGroup]="loginForm">
       <mat-form-field class="full-width">
           <mat-label>Email Address</mat-label>
@@ -30,7 +30,9 @@
     </form>
 }
 @else {
+  @if (!gameSessionCreated) {
     <mat-chip-set><mat-chip>Profile: {{userProfile.email}}</mat-chip></mat-chip-set>
     <button (click)="changeProfile()">Switch Profile</button><br><br>
-    <game-session [userProfile]="userProfile" (refreshLogin)="refreshLogin($event)"></game-session>
+  }
+  <game-session [userProfile]="userProfile" (refreshLogin)="refreshLogin($event)" (startGame)="startGame($event)"></game-session>
 }

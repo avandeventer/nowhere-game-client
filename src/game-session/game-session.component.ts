@@ -16,21 +16,23 @@ import { SaveGame } from 'src/assets/save-game';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-form.component';
 import { AdventureMap } from 'src/assets/adventure-map';
+import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'game-session',
   styleUrl: './game-session.component.scss',
   templateUrl: './game-session.component.html',
   standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent]
+  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChipSet, MatChip]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
   gameCode: string = '';
   gameSessionCreated: boolean = false;
+  @Output() startGame = new EventEmitter<boolean>();
   @Output() refreshLogin = new EventEmitter<string>();
   gameState: GameState = GameState.INIT;
   rejoinCode = new FormControl('');
@@ -47,6 +49,7 @@ export class GameSessionComponent {
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated = gameSessionCreated;
     this.refreshLogin.emit(this.userProfile.id);
+    this.startGame.emit(gameSessionCreated);
   }
 
   constructor(private http: HttpClient) {
@@ -136,6 +139,7 @@ export class GameSessionComponent {
           
           this.gameCode = response.gameCode;
           this.gameSessionCreated = true;
+          this.startGame.emit(true);
         },
         error: (error) => {
           console.error('Error creating game', error);
@@ -190,6 +194,7 @@ export class GameSessionComponent {
           console.log('Game rejoined!', response);
           this.gameCode = response.gameCode;
           this.gameSessionCreated = true;
+          this.startGame.emit(true);
         },
         error: (error) => {
           console.error('Error creating game', error);

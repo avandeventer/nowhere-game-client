@@ -1,5 +1,5 @@
 @if (gameState) {
-    <p>Game state has changed: {{ gameState }}</p>
+    <p class="game-code">Game state: {{ gameState }}</p>
 }
 
 @if (isGameInitialized()) {
@@ -30,9 +30,20 @@
 }
 
 @if (isGameInWritingPhase()) {
-    {{gameSessionDisplay.mapDescription}}<br><br>
-    <location [gameCode]="gameCode"></location><br>
-    <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
+    <div class="location-layout">
+        <div class="location-panel">
+          <location [gameCode]="gameCode"></location>
+        </div>
+      
+        <div class="card-column">
+            <mat-card class="instructions" appearance="outlined">
+                <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
+            </mat-card>
+            <mat-card class="game-session-display">
+                {{gameSessionDisplay.mapDescription}}
+            </mat-card>
+        </div>
+    </div>
 }
 
 @if (isGameInAdventurePhase()) {

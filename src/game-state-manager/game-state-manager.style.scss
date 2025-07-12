@@ -7,7 +7,7 @@
 .game-session-display {
   padding: 16px;
   font-family: "Courier New", monospace;
-  font-size: clamp(1.2rem, 2.5vw, 2rem); // Responsive font size
+  font-size: clamp(0.9rem, 1.5vw, 1.5rem); // allow it to shrink
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   line-height: 1.6;
@@ -20,6 +20,8 @@
   justify-content: space-between;
   gap: 20px;
   width: 100%;
+  height: 100vh; // <-- Cap height to viewport
+  overflow: hidden; // Prevent global overflow
 }
 
 .location-panel {
@@ -32,22 +34,10 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: 300px;
+  overflow-y: auto; // Allow scrolling inside this column if needed
+  max-height: 100vh;
+  padding: 8px;
 }
-
-.map {
-    position: relative;
-    width: 80vw; /* Make the width 80% of the viewport width */
-    height: 80vw; /* Keep the height equal to the width for a perfect circle */
-    max-width: 500px; /* Set a maximum width to prevent it from becoming too large */
-    max-height: 500px; /* Set a corresponding maximum height */
-    margin: 0 auto; /* Center the map horizontally */
-    border: 1px dashed #ccc;
-    border-radius: 50%; /* Ensure the element remains circular */
-    background-color: rgb(221, 194, 39);
-    box-shadow: 0 0 300px rgba(0, 0, 0) inset;
-    overflow: hidden;
-  }
     
 .pyre {
   position: absolute;
@@ -57,4 +47,8 @@
   width: 100%; /* Scale the pyre relative to the map */
   max-width: 200px; /* Set a maximum size for larger screens */
   height: auto; /* Maintain aspect ratio */
+}
+
+.game-code {
+  text-align: right;
 }
