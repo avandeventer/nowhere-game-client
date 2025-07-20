@@ -1,13 +1,8 @@
 @if (players.length > 0) {
-    <div>{{playerName}} is seeking adventure. Choose what you'll do from your phone.</div><br>
+    <mat-card class="instructions">{{playerName}} is seeking adventure. Choose what you'll do from your phone.</mat-card>
 }
 
-@if (currentLocation.id !== "") {
-    <mat-card>
-        <img src="{{currentLocation.iconDirectory}}" alt="{{ currentLocation.label }}" class="location-icon" />
-    </mat-card>
-}
-<mat-card class="command-feed">
+<mat-card class="game-session-display">
     <div #scrollContainer class="feed">
         @if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {
             <div class="fade-in">You travel to the {{ activePlayerSession.story.location.label }}</div>

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { ActivePlayerSession } from "src/assets/active-player-session";
 import { GameState } from "src/assets/game-state";
 import { Player } from "src/assets/player";
@@ -17,6 +17,7 @@ import {MatCardModule} from '@angular/material/card';
     styleUrl: './adventure.component.scss'
 })
 export class AdventureComponent implements OnInit {
+    @ViewChild('scrollContainer') private scrollContainer!: ElementRef<HTMLDivElement>;
     @Input() gameState: GameState = GameState.ROUND1;
     @Input() gameCode: string = "";
     @Input() activePlayerSession: ActivePlayerSession = new ActivePlayerSession();
@@ -28,42 +29,52 @@ export class AdventureComponent implements OnInit {
     playerTurnAuthorId: String = "";
     roundNumber: number = 0;
     settingNextPlayerTurn: boolean = false;
-    currentLocation: Location = new Location();
+    // @Output() currentLocation = new EventEmitter<Location>();
 
     constructor(private http:HttpClient) {}
 
     ngOnInit(): void {
       console.log("Adventure Loaded!" + this.activePlayerSession);
-      this.getLocations(this.gameCode);
+      // this.getLocations(this.gameCode);
       this.getPlayers();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-      if (changes['activePlayerSession'] && changes['activePlayerSession'].currentValue?.setNextPlayerTurn) {
-        if(!this.settingNextPlayerTurn) {
+      if (changes['activePlayerSession']) {
+        setTimeout(() => this.scrollToBottom(), 0);
+    
+        if (changes['activePlayerSession'].currentValue?.setNextPlayerTurn && !this.settingNextPlayerTurn) {
           this.settingNextPlayerTurn = true;
           this.setNextPlayerTurn();
         }
       }
-    }
+    }    
 
-    getLocations(gameCode: string) {
-      const parameter = "?gameCode=" + gameCode;
+    // getLocations(gameCode: string) {
+    //   const parameter = "?gameCode=" + gameCode;
 
-      this.http
-      .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH + parameter)
-          .subscribe({
-            next: (response) => {
-              this.locations = response;
-              console.log('Locations', this.locations);
-              this.setCurrentLocation();
-            },
-            error: (error) => {
-              console.error('Error getting locations', error);
-            },
-          });
+    //   this.http
+    //   .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH + parameter)
+    //       .subscribe({
+    //         next: (response) => {
+    //           this.locations = response;
+    //           console.log('Locations', this.locations);
+    //           this.setCurrentLocation();
+    //         },
+    //         error: (error) => {
+    //           console.error('Error getting locations', error);
+    //         },
+    //       });
+    //   }
+
+      private scrollToBottom(): void {
+        try {
+          this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+        } catch (err) {
+          console.error("Failed to scroll", err);
+        }
       }
-
+    
       setNextPlayerTurn() {
         console.log("Set next player's turn");
         console.log("Player turn, round number", this.currentPlayerIndex, this.roundNumber);
@@ -76,7 +87,7 @@ export class AdventureComponent implements OnInit {
             this.roundNumber, 
             this.playerTurnAuthorId);
           this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
-          this.setCurrentLocation();
+          // this.setCurrentLocation();
           this.settingNextPlayerTurn = false;
         } else {
           if(this.roundNumber <= 3) {
@@ -102,7 +113,11 @@ export class AdventureComponent implements OnInit {
             next: (response) => {
               console.log('Players retrieved!', response);
               this.players = response;
-              this.setNextPlayerTurn();
+              if (this.activePlayerSession.playerId === "") {
+                this.setNextPlayerTurn();
+              } else {
+                this.setExistingPlayerTurn(this.activePlayerSession.playerId);
+              }
               console.log('Players:', this.players);
             },
             error: (error) => {
@@ -110,11 +125,19 @@ export class AdventureComponent implements OnInit {
             },
           });
       }
+
+  setExistingPlayerTurn(playerId: String) {
+    this.currentPlayerIndex = this.players.findIndex((player) => player.authorId === playerId);
+    this.playerName = this.players[this.currentPlayerIndex].userName;
+  }
       
-  setCurrentLocation() {
-    this.currentLocation = this.locations.find(
-      location => location.id === this.activePlayerSession?.story?.location?.id
-    ) ?? new Location();
+  setCurrentLocation(location: Location) {
+    // let foundLocation = this.locations.find(
+    //   location => location.id === this.activePlayerSession?.story?.location?.id
+    // ) ?? new Location();
+
+    // this.currentLocation.emit(foundLocation);
+    console.log("turned this function off");
   }
 
   private updateActivePlayerSession(
@@ -150,12 +173,6 @@ export class AdventureComponent implements OnInit {
           console.error('Error updating session', error);
         },
       });
-  }
-
-  rollForSuccess(playerStat: number, dcToBeat: number): boolean {
-    const diceRoll: number = Math.floor((Math.random() * 10) + 1);
-    const playerTotal = diceRoll + playerStat;
-    return playerTotal >= dcToBeat;
   }
 
   playerObject(): String {    

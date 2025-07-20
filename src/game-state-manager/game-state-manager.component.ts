@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { GameService } from '../services/game-session.service';
 import { HttpClient } from '@angular/common/http';
 import { GameState } from 'src/assets/game-state';
+import { Location } from 'src/assets/location';
 import { WritePromptComponent } from 'src/write-prompt/write-prompt.component';
 import { AdventureComponent } from 'src/adventure/adventure.component';
 import { ActivePlayerSession } from 'src/assets/active-player-session';
@@ -13,6 +14,7 @@ import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { MatCardModule } from '@angular/material/card';
+import { AdventureMap } from 'src/assets/adventure-map';
 
 @Component({
   selector: 'game-state-manager',
@@ -29,6 +31,8 @@ export class GameStateManagerComponent implements OnInit {
   didWeSucceed: boolean = false;
   isSettingNextGameState: boolean = false;
   gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
+  adventureMap: AdventureMap = new AdventureMap();
+  currentLocation: Location = new Location();
   @Output() gameSessionCreated = new EventEmitter<boolean>();
 
   setNewGame(gameSessionCreated: boolean) {
@@ -58,13 +62,19 @@ export class GameStateManagerComponent implements OnInit {
       this.activeGameStateSession.isPlayerDone = new Map(Object.entries(rawIsPlayerDone));
       this.didWeSucceed = newState.didWeSucceed;
   
-      console.log('New gameState:', this.gameState);
-      console.log('New Active Player Session', this.activePlayerSession);
-      console.log('New Active Game State Session', this.activeGameStateSession);
-      console.log('Did we succeed?', this.didWeSucceed)
+      console.log('New adventureMap:', this.adventureMap.locations);
 
       this.checkForNextGameState(this.activeGameStateSession);
     });
+  }
+
+  setCurrentLocation() {
+    let foundLocation = this.adventureMap.locations.find(
+      location => location.id === this.activePlayerSession?.story?.location?.id
+    ) ?? new Location();
+
+    this.currentLocation = foundLocation;
+    console.log('Current location updated: ', this.currentLocation);
   }
 
   populateGameSessionDisplay(gameCode: string) {

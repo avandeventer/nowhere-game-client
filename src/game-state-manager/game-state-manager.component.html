@@ -47,18 +47,36 @@
 }
 
 @if (isGameInAdventurePhase()) {
-    {{gameSessionDisplay.goalDescription}}<br><br>
-    <!-- <location [gameCode]="gameCode"></location><br> -->
+    <div class="location-layout">
+        <div class="location-panel">
+            @if (activePlayerSession.story.location.iconDirectory) {
+                <div class="map">
+                  <img [src]="activePlayerSession.story.location.iconDirectory" alt="{{ currentLocation.label }}" class="pyre" />
+                </div>
+            }        
+        </div>
 
-    <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+        <div class="card-column">
+            <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+        </div>
+    </div>
 }
 
 @if (isGameInRitualPhase()) {
-    {{gameSessionDisplay.endingDescription}}<br><br>
-    <div class="map">
-        <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
-    </div><br>
-    <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+    <div class="location-layout">
+        <div class="location-panel">
+            <div class="map">
+                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+            </div>
+        </div>
+
+        <div class="card-column">
+            <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+            <mat-card class="game-session-display">
+                {{gameSessionDisplay.endingDescription}}
+            </mat-card>
+        </div>
+    </div>
 }
 
 @if (isGameInWriteEndingsPhase()) {

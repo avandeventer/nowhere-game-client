@@ -99,7 +99,7 @@ export class LocationComponent implements OnInit {
       const buttonWidth = exampleButton ? exampleButton.offsetWidth : 40;
       const buttonHeight = exampleButton ? exampleButton.offsetHeight : 50;
 
-      const mapCenter = mapSize / 2 - 20; // Center of the map
+      const mapCenter = mapSize / 2 - 10; // Center of the map
       const maxAllowedRadius = 180; // <-- tweak this to keep buttons inside your visual circle
       const maxRadiusByHeight = window.innerHeight / 2; // Example threshold
       const maxRadiusByWidth = window.innerWidth / 2;
