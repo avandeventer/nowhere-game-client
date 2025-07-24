@@ -72,9 +72,11 @@
 
         <div class="card-column">
             <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
-            <mat-card class="game-session-display">
-                {{gameSessionDisplay.endingDescription}}
-            </mat-card>
+            @if(activePlayerSession.outcomeDisplay.length === 0) {
+                <mat-card class="game-session-display">
+                    {{gameSessionDisplay.endingDescription}}
+                </mat-card>
+            }
         </div>
     </div>
 }

@@ -29,13 +29,11 @@ export class AdventureComponent implements OnInit {
     playerTurnAuthorId: String = "";
     roundNumber: number = 0;
     settingNextPlayerTurn: boolean = false;
-    // @Output() currentLocation = new EventEmitter<Location>();
 
     constructor(private http:HttpClient) {}
 
     ngOnInit(): void {
       console.log("Adventure Loaded!" + this.activePlayerSession);
-      // this.getLocations(this.gameCode);
       this.getPlayers();
     }
 
@@ -50,96 +48,69 @@ export class AdventureComponent implements OnInit {
       }
     }    
 
-    // getLocations(gameCode: string) {
-    //   const parameter = "?gameCode=" + gameCode;
-
-    //   this.http
-    //   .get<Location[]>(environment.nowhereBackendUrl + HttpConstants.LOCATION_PATH + parameter)
-    //       .subscribe({
-    //         next: (response) => {
-    //           this.locations = response;
-    //           console.log('Locations', this.locations);
-    //           this.setCurrentLocation();
-    //         },
-    //         error: (error) => {
-    //           console.error('Error getting locations', error);
-    //         },
-    //       });
-    //   }
-
-      private scrollToBottom(): void {
-        try {
-          this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
-        } catch (err) {
-          console.error("Failed to scroll", err);
-        }
+    private scrollToBottom(): void {
+      try {
+        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+      } catch (err) {
+        console.error("Failed to scroll", err);
       }
-    
-      setNextPlayerTurn() {
-        console.log("Set next player's turn");
-        console.log("Player turn, round number", this.currentPlayerIndex, this.roundNumber);
-        if(this.currentPlayerIndex < this.players.length) {
-          this.playerTurnAuthorId = this.players[this.currentPlayerIndex].authorId;
-          this.playerName = this.players[this.currentPlayerIndex].userName;
-          this.currentPlayerIndex++;
-          console.log("Player turn index, round number, author id", 
-            this.currentPlayerIndex, 
-            this.roundNumber, 
-            this.playerTurnAuthorId);
-          this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
-          // this.setCurrentLocation();
-          this.settingNextPlayerTurn = false;
+    }
+  
+    setNextPlayerTurn() {
+      console.log("Set next player's turn");
+      console.log("Player turn, round number", this.currentPlayerIndex, this.roundNumber);
+      if(this.currentPlayerIndex < this.players.length) {
+        this.playerTurnAuthorId = this.players[this.currentPlayerIndex].authorId;
+        this.playerName = this.players[this.currentPlayerIndex].userName;
+        this.currentPlayerIndex++;
+        console.log("Player turn index, round number, author id", 
+          this.currentPlayerIndex, 
+          this.roundNumber, 
+          this.playerTurnAuthorId);
+        this.updateActivePlayerSession(new Story(), "", [], this.playerTurnAuthorId, false, "", []);
+        this.settingNextPlayerTurn = false;
+      } else {
+        if(this.roundNumber <= 3) {
+          this.roundNumber++;
+          this.currentPlayerIndex = 0;
+          this.setNextPlayerTurn();
         } else {
-          if(this.roundNumber <= 3) {
-            this.roundNumber++;
-            this.currentPlayerIndex = 0;
-            this.setNextPlayerTurn();
-          } else {
-            this.roundNumber = 0;
-          }
+          this.roundNumber = 0;
         }
       }
+    }
 
-      getPlayers() {
-        const params = {
-          gameCode: this.gameCode
-        };
-    
-        console.log(params);
-    
-        this.http
-        .get<Player[]>(environment.nowhereBackendUrl + HttpConstants.PLAYER_PATH, { params })
-          .subscribe({
-            next: (response) => {
-              console.log('Players retrieved!', response);
-              this.players = response;
-              if (this.activePlayerSession.playerId === "") {
-                this.setNextPlayerTurn();
-              } else {
-                this.setExistingPlayerTurn(this.activePlayerSession.playerId);
-              }
-              console.log('Players:', this.players);
-            },
-            error: (error) => {
-              console.error('Error getting players', error);
-            },
-          });
-      }
+    getPlayers() {
+      const params = {
+        gameCode: this.gameCode
+      };
+  
+      console.log(params);
+  
+      this.http
+      .get<Player[]>(environment.nowhereBackendUrl + HttpConstants.PLAYER_PATH, { params })
+        .subscribe({
+          next: (response) => {
+            console.log('Players retrieved!', response);
+            this.players = response;
+            if (this.activePlayerSession.playerId === "") {
+              this.setNextPlayerTurn();
+            } else {
+              this.setExistingPlayerTurn(this.activePlayerSession.playerId);
+            }
+            console.log('Players:', this.players);
+          },
+          error: (error) => {
+            console.error('Error getting players', error);
+          },
+        });
+    }
 
   setExistingPlayerTurn(playerId: String) {
     this.currentPlayerIndex = this.players.findIndex((player) => player.authorId === playerId);
     this.playerName = this.players[this.currentPlayerIndex].userName;
   }
       
-  setCurrentLocation(location: Location) {
-    // let foundLocation = this.locations.find(
-    //   location => location.id === this.activePlayerSession?.story?.location?.id
-    // ) ?? new Location();
-
-    // this.currentLocation.emit(foundLocation);
-    console.log("turned this function off");
-  }
-
   private updateActivePlayerSession(
     playerStory: Story,
     selectedOptionId: String,
@@ -175,12 +146,11 @@ export class AdventureComponent implements OnInit {
       });
   }
 
-  playerObject(): String {    
-    if(this.players === null) {
-      return "Player turns have not yet started";
-    } 
-    console.log("Player set: ", this.currentPlayerIndex);
-    console.log("Your player", this.players[this.currentPlayerIndex]);
-    return this.players[this.currentPlayerIndex].userName + " is seeking boons for the harvest. Check your hand portal to get started.";
+  playerTurnMessage(): String {
+    if (this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2) {
+      return `${this.playerName} is seeking adventure. Choose what you'll do from your phone.`;
+    } else {
+      return `${this.playerName} is making their final choice. Choose what you'll do from your phone.`
+    }
   }
 }
