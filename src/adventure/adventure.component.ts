@@ -153,4 +153,8 @@ export class AdventureComponent implements OnInit {
       return `${this.playerName} is making their final choice. Choose what you'll do from your phone.`
     }
   }
+
+  isRitualPhase() {
+    return this.gameState === GameState.RITUAL;
+  }
 }
