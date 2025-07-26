@@ -49,7 +49,9 @@
 @if (isGameInAdventurePhase()) {
     <div class="location-layout">
         <div class="location-panel">
-            @if (activePlayerSession.story.location.iconDirectory) {
+            @if (activePlayerSession.story !== null 
+                && activePlayerSession.story.location !== null 
+                && activePlayerSession.story.location.iconDirectory) {
                 <div class="map">
                   <img [src]="activePlayerSession.story.location.iconDirectory" alt="{{ currentLocation.label }}" class="pyre" />
                 </div>
@@ -82,23 +84,38 @@
 }
 
 @if (isGameInWriteEndingsPhase()) {
-    @if (didWeSucceed) {
-        {{gameSessionDisplay.successText}}<br><br>
-    } @else {
-        {{gameSessionDisplay.failureText}}<br><br>
-    }
+    <div class="location-layout">
+        <div class="location-panel">
+            <div class="map">
+                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+            </div>
+        </div>
+        <div class="card-column">
+            <mat-card class="game-session-display">
+                @if (didWeSucceed) {
+                    {{gameSessionDisplay.successText}}<br><br>
+                } @else {
+                    {{gameSessionDisplay.failureText}}<br><br>
+                }
+            </mat-card>
+            <mat-card class="instructions" appearance="outlined">
+                <div>The die has been cast. Now is the time to decide each other's legacies. Look to your phone to choose what story or ending represents the legacy of another player. Then write their legacy.</div>
+                <!-- <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt> -->
+            </mat-card>
 
-    <div class="map">
-        <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
-    </div><br>
-    
-    <write-prompt [gameCode]="gameCode" [gameState]="gameState"></write-prompt>
+        </div>
+    </div>
 }
 
 @if (isGameInEndingPhase()) {
-    <location [gameCode]="gameCode"></location><br>
-    <div>The die has been cast. Now is the time to decide each other's legacies. Look to your phone to choose what story or ending represents the legacy of another player. Then write their legacy.</div>
-    <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+    <div class="location-layout">
+        <div class="location-panel">
+          <location [gameCode]="gameCode"></location>
+        </div>
+        <div class="card-column">
+            <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+        </div>
+    </div>
 }
 
 @if (isGameInFinalePhase()){

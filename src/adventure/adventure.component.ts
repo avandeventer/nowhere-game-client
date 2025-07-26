@@ -147,11 +147,18 @@ export class AdventureComponent implements OnInit {
   }
 
   playerTurnMessage(): String {
-    if (this.gameState === GameState.ROUND1 || this.gameState === GameState.ROUND2) {
-      return `${this.playerName} is seeking adventure. Choose what you'll do from your phone.`;
-    } else {
-      return `${this.playerName} is making their final choice. Choose what you'll do from your phone.`
-    }
+    switch(this.gameState) {
+      case GameState.ROUND1:
+      case GameState.ROUND2:
+        return `${this.playerName} is seeking adventure. Choose what you'll do from your phone.`;
+      case GameState.RITUAL:
+        return `${this.playerName} is making their final choice. Choose what you'll do from your phone.`;
+      case GameState.ENDING:
+        return `${this.playerName}'s fate is sealed`
+      default:
+        return "Look to your phone for answers!"
+
+    } 
   }
 
   isRitualPhase() {

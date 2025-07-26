@@ -41,8 +41,8 @@ mat-flat-button button {
   position: relative;
   width: 40vw; /* Make the width 40% of the viewport width */
   height: 40vw; /* Keep the height equal to the width for a perfect circle */
-  max-width: 500px; /* Set a maximum width to prevent it from becoming too large */
-  max-height: 500px; /* Set a corresponding maximum height */
+  max-width: 450px; /* Set a maximum width to prevent it from becoming too large */
+  max-height: 450px; /* Set a corresponding maximum height */
   margin: 0 auto; /* Center the map horizontally */
   border: 1px dashed #ccc;
   border-radius: 50%; /* Ensure the element remains circular */
@@ -64,14 +64,21 @@ mat-flat-button button {
   background: var(--mat-optgroup-label-text-color) !important;  // Adjust this based on your theme
   color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
   max-height: 60vh;
+  overflow: auto;
+  transition: font-size 0.3s ease;
+  font-size: clamp(1rem, 1.1vw, 2rem) !important;
+}
+
+.instructions {
+  font-size: clamp(0.9rem, 2.0vw, 2.0rem) !important;
 }
 
 .instructions,
 .game-session-display {
   padding: 16px !important;
   font-family: "Courier New", monospace !important;
-  font-size: clamp(0.9rem, 2.0vw, 2.0rem) !important; // allow it to shrink
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   line-height: 1.6;
 }
+
