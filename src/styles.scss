@@ -63,8 +63,8 @@ mat-flat-button button {
 .game-session-display {
   background: var(--mat-optgroup-label-text-color) !important;  // Adjust this based on your theme
   color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
-  max-height: 60vh;
-  overflow: auto;
+  max-height: 50vh;
+  overflow: hidden;
   transition: font-size 0.3s ease;
   font-size: clamp(1rem, 1.1vw, 2rem) !important;
 }
