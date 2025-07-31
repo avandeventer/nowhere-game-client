@@ -1,4 +1,4 @@
-@if (players.length > 0) {
+@if (players.length > 0 && currentTurnPlayer !== undefined && currentTurnPlayer.userName !== "") {
     <mat-card class="instructions">{{playerTurnMessage()}}</mat-card><br>
 }
 
