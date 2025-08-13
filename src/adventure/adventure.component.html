@@ -5,35 +5,45 @@
 @if (!(isRitualPhase() && activePlayerSession.outcomeDisplay.length === 0)) {
     <mat-card class="game-session-display">
         <div #scrollContainer class="feed">
-            @if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {
-                <div class="fade-in">You travel to the {{ activePlayerSession.story.location.label }}</div>
+            @if (!activePlayerSession.repercussions?.ending) {
+                @if(activePlayerSession.story !== null && activePlayerSession.story.storyId != "") {
+                    <div class="fade-in">You travel to the {{ activePlayerSession.story.location.label }}</div>
 
-                <div class="fade-in">{{ activePlayerSession.story.location.options[0].optionText }}</div>
-                <div class="fade-in">{{ activePlayerSession.story.location.options[1].optionText }}</div>
+                    <div class="fade-in">{{ activePlayerSession.story.location.options[0].optionText }}</div>
+                    <div class="fade-in">{{ activePlayerSession.story.location.options[1].optionText }}</div>
 
-                @if(activePlayerSession.selectedLocationOptionId !== "") {
-                    <div class="fade-in">{{ activePlayerSession.story.location.options[+activePlayerSession.selectedLocationOptionId].optionText }}</div>
+                    @if(activePlayerSession.selectedLocationOptionId !== "") {
+                        <div class="fade-in">{{ activePlayerSession.story.location.options[+activePlayerSession.selectedLocationOptionId].optionText }}</div>
 
-                    @for (outcome of activePlayerSession.locationOutcomeDisplay; track outcome) {
+                        @for (outcome of activePlayerSession.locationOutcomeDisplay; track outcome) {
+                            <div class="fade-in">{{ outcome }}</div>
+                        }
+
+                        <div class="fade-in">{{ activePlayerSession.story.prompt }}</div>
+                        <div class="fade-in">{{ activePlayerSession.story.options[0].optionText }}</div>
+                        <div class="fade-in">{{ activePlayerSession.story.options[1].optionText }}</div>
+                    }
+                }
+
+                @if (activePlayerSession.outcomeDisplay !== null && activePlayerSession.outcomeDisplay.length > 0) {
+                    @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
                         <div class="fade-in">{{ outcome }}</div>
                     }
-
-                    <div class="fade-in">{{ activePlayerSession.story.prompt }}</div>
-                    <div class="fade-in">{{ activePlayerSession.story.options[0].optionText }}</div>
-                    <div class="fade-in">{{ activePlayerSession.story.options[1].optionText }}</div>
+                    <div class="fade-in highlight">Push Continue on Your Device</div>
                 }
-            }
-
-            @if(activePlayerSession.ritualStory !== null && activePlayerSession.ritualStory.options.length != 0) {
-                <div class="fade-in">{{activePlayerSession.ritualStory.options[0].attemptText}}</div>
-            }
-
-            @if (activePlayerSession.outcomeDisplay !== null && activePlayerSession.outcomeDisplay.length > 0) {
-                @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
-                    <div class="fade-in">{{ outcome }}</div>
+            } @else {
+                <div class="fade-in">You envision the final encounter...</div>
+                <div class="fade-in">
+                    {{gameSessionDisplay.endingDescription}}
+                </div>
+                @for (option of activePlayerSession.repercussions?.ending?.options; track option) {
+                    @if (option.optionText != "") {
+                        <div class="fade-in">************</div>
+                        <div class="fade-in">{{option.optionText}} discovered!</div>
+                    }
                 }
-                <div class="fade-in highlight">Push Continue on Your Device</div>
-            }
+
+            }            
             <div class="fade-in"> ... </div>
         </div>
     </mat-card>

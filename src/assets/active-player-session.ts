@@ -1,3 +1,4 @@
+import { RepercussionOutput } from "./repercussion-output";
 import { Story } from "./story";
 
 export class ActivePlayerSession {
@@ -9,7 +10,7 @@ export class ActivePlayerSession {
     setNextPlayerTurn: boolean;
     gameCode: String;
     outcomeDisplay: String[];
-    ritualStory: Story;
+    repercussions: RepercussionOutput;
 
     constructor() {
             this.playerId = "";
@@ -20,6 +21,6 @@ export class ActivePlayerSession {
             this.gameCode = "";
             this.outcomeDisplay = [];
             this.locationOutcomeDisplay = [];
-            this.ritualStory = new Story();
+            this.repercussions = new RepercussionOutput();
     }
 }

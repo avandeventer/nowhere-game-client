@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { ActivePlayerSession } from "src/assets/active-player-session";
 import { GameState } from "src/assets/game-state";
 import { Player } from "src/assets/player";
@@ -7,6 +7,7 @@ import { Location } from "src/assets/location";
 import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 import {MatCardModule} from '@angular/material/card';
+import { GameSessionDisplay } from 'src/assets/game-session-display';
 
 @Component({
     selector: 'adventure',
@@ -20,6 +21,7 @@ export class AdventureComponent implements OnInit {
     @Input() gameState: GameState = GameState.ROUND1;
     @Input() gameCode: string = "";
     @Input() activePlayerSession: ActivePlayerSession = new ActivePlayerSession();
+    @Input() gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
 
     locations: Location[] = [];
     players: Player[] = [];
@@ -95,14 +97,17 @@ export class AdventureComponent implements OnInit {
     switch(this.gameState) {
       case GameState.ROUND1:
       case GameState.ROUND2:
-        return `${this.currentTurnPlayer?.userName} is seeking adventure. Choose what you'll do from your phone.`;
+        if (!this.activePlayerSession.repercussions?.ending) {
+          return `${this.currentTurnPlayer?.userName} is seeking adventure. Choose what you'll do from your phone.`;
+        }
+
+        return `${this.currentTurnPlayer?.userName} has made a discovery! Add new artifacts from your phone!`;
       case GameState.RITUAL:
         return `${this.currentTurnPlayer?.userName} is making their final choice. Choose what you'll do from your phone.`;
       case GameState.ENDING:
         return `${this.currentTurnPlayer?.userName}'s fate is sealed`
       default:
         return "Look to your phone for answers!"
-
     } 
   }
 

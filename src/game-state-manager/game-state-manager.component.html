@@ -49,17 +49,17 @@
 @if (isGameInAdventurePhase()) {
     <div class="location-layout">
         <div class="location-panel">
+            <div class="map">
             @if (activePlayerSession.story !== null 
                 && activePlayerSession.story.location !== null 
                 && activePlayerSession.story.location.iconDirectory) {
-                <div class="map">
                   <img [src]="activePlayerSession.story.location.iconDirectory" alt="{{ currentLocation.label }}" class="pyre" />
-                </div>
-            }        
+            }
+            </div>
         </div>
 
         <div class="card-column">
-            <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>
+            <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession" [gameSessionDisplay]="gameSessionDisplay"></adventure>
         </div>
     </div>
 }
