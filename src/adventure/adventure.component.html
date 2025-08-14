@@ -36,7 +36,7 @@
                 <div class="fade-in">
                     {{gameSessionDisplay.endingDescription}}
                 </div>
-                @for (option of activePlayerSession.repercussions?.ending?.options; track option) {
+                @for (option of activePlayerSession.repercussions.ending?.options; track option) {
                     @if (option.optionText != "") {
                         <div class="fade-in">************</div>
                         <div class="fade-in">{{option.optionText}} discovered!</div>
