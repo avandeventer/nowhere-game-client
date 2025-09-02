@@ -32,6 +32,9 @@
             } 
             
             @if (activePlayerSession.outcomeDisplay.length > 0) {
+                @if (isRitualPhase()) {
+                    <div class="fade-in">{{ gameSessionDisplay.endingDescription }}</div><br>
+                }
                 @for (outcome of activePlayerSession.outcomeDisplay; track outcome) {
                     <div class="fade-in">{{ outcome }}</div>
                 }
