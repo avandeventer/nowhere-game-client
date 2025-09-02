@@ -10,17 +10,17 @@
 }
 
 .location-panel {
-  flex: 1;
+  width: 30vw;
   min-width: 400px;
 }
 
 .card-column {
-  flex: 1;
+  width: 70vw;
   display: flex;
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
-  max-height: 100vh;
+  max-height: 90vh;
   padding: 8px;
 }
     

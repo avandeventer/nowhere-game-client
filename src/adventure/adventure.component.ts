@@ -29,6 +29,7 @@ export class AdventureComponent implements OnInit {
     currentTurnPlayer: Player | undefined = new Player();
     roundNumber: number = 0;
     settingNextPlayerTurn: boolean = false;
+    favorEntity: string = "";
 
     constructor(private http:HttpClient) {}
 
@@ -63,6 +64,7 @@ export class AdventureComponent implements OnInit {
   
     setCurrentPlayer() {
       this.currentTurnPlayer = this.players.find(player => player.authorId === this.activePlayerSession.playerId);
+      this.favorEntity = this.currentTurnPlayer?.playerStats.find(stat => stat.statType.favorType)?.statType.favorEntity ?? "";
     }
 
     getPlayers() {

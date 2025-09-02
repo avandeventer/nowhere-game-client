@@ -3,12 +3,22 @@
 }
 
 @if (isGameInitialized()) {
-    <mat-card class="instructions" appearance="outlined">
-        Once all players have joined, click the Start Game button on your phone to begin!
-    </mat-card>
-    <mat-card class="game-session-display">
-        {{gameSessionDisplay.mapDescription}}
-    </mat-card>
+    <div class="location-layout">
+        <div class="location-panel">
+            <div class="map">
+                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+            </div>
+        </div>
+
+        <div class="card-column">
+            <mat-card class="instructions" appearance="outlined">
+                Once all players have joined, click the Start Game button on your phone to begin!
+            </mat-card>
+            <mat-card class="game-session-display">
+                {{gameSessionDisplay.mapDescription}}
+            </mat-card>
+        </div>
+    </div>
 }
 
 @if (isGameInLocationSelectPhase()) {
