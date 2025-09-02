@@ -61,9 +61,9 @@
         <div class="location-panel">
             <div class="map">
             @if (activePlayerSession.story !== null 
-                && activePlayerSession.story.location !== null 
-                && activePlayerSession.story.location.iconDirectory) {
-                  <img [src]="activePlayerSession.story.location.iconDirectory" alt="{{ currentLocation.label }}" class="pyre" />
+                && activePlayerSession.location !== null 
+                && activePlayerSession.location.iconDirectory) {
+                  <img [src]="activePlayerSession.location.iconDirectory" alt="{{ currentLocation.label }}" class="pyre" />
             }
             </div>
         </div>
@@ -102,9 +102,15 @@
         </div>
         <div class="card-column">
             <mat-card class="game-session-display">
-                @if (didWeSucceed) {
+                @if (totalPointsTowardsVictory > 8) {
                     {{gameSessionDisplay.successText}}<br><br>
-                } @else {
+                } 
+
+                @if (totalPointsTowardsVictory >= -8 && totalPointsTowardsVictory <= 8) {
+                    {{gameSessionDisplay.neutralText}}<br><br>
+                }
+
+                @if (totalPointsTowardsVictory < -8) {
                     {{gameSessionDisplay.failureText}}<br><br>
                 }
             </mat-card>

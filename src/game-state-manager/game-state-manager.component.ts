@@ -28,6 +28,7 @@ export class GameStateManagerComponent implements OnInit {
   gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
   adventureMap: AdventureMap = new AdventureMap();
   currentLocation: Location = new Location();
+  totalPointsTowardsVictory: number = 0;
   @Output() gameSessionCreated = new EventEmitter<boolean>();
 
   setNewGame(gameSessionCreated: boolean) {
@@ -53,6 +54,7 @@ export class GameStateManagerComponent implements OnInit {
       this.activeGameStateSession = new ActiveGameStateSession();
       this.activeGameStateSession.isPlayerDone = new Map(Object.entries(rawIsPlayerDone));
       this.didWeSucceed = newState.didWeSucceed;
+      this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap.locations);

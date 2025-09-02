@@ -13,7 +13,7 @@ export class GameService {
     private http: HttpClient
   ) {}
 
-  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; didWeSucceed: boolean; activePlayerSession: any | null; activeGameStateSession: any | null }> {
+  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; didWeSucceed: boolean; activePlayerSession: any | null; activeGameStateSession: any | null; totalPointsTowardsVictory: number | null }> {
     const gameDocRef: DocumentReference = doc(this.firestore, `gameSessions/${gameCode}`) as DocumentReference;
 
     return docData(gameDocRef).pipe(
@@ -21,7 +21,8 @@ export class GameService {
         gameState: data?.gameState ?? null,
         didWeSucceed: data?.didWeSucceed ?? false,
         activePlayerSession: data?.activePlayerSession ?? null,
-        activeGameStateSession: data?.activeGameStateSession ?? null
+        activeGameStateSession: data?.activeGameStateSession ?? null,
+        totalPointsTowardsVictory: data?.totalPointsTowardsVictory ?? 0
       }))
     );
   }
