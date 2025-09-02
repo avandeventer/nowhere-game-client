@@ -30,6 +30,9 @@ export class GameStateManagerComponent implements OnInit {
   currentLocation: Location = new Location();
   totalPointsTowardsVictory: number = 0;
   @Output() gameSessionCreated = new EventEmitter<boolean>();
+  
+  private backgroundMusic: HTMLAudioElement = new Audio();
+  private currentMusicTrack: string = '';
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated.emit(gameSessionCreated);
@@ -45,6 +48,7 @@ export class GameStateManagerComponent implements OnInit {
 
   ngOnInit() {
     this.populateGameSessionDisplay(this.gameCode);
+    this.setupBackgroundMusic();
     this.gameService.listenForGameStateChanges(this.gameCode)
       .subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
@@ -58,6 +62,7 @@ export class GameStateManagerComponent implements OnInit {
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap.locations);
+      this.updateBackgroundMusic();
     });
   }
 
@@ -123,5 +128,41 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInFinalePhase() {
     return this.gameState === GameState.FINALE;
+  }
+
+  private setupBackgroundMusic() {
+    this.backgroundMusic.loop = true;
+    this.backgroundMusic.volume = 0.3;
+    this.updateBackgroundMusic();
+  }
+
+  private updateBackgroundMusic() {
+    const track = this.getMusicTrackForGameState();
+    if (track && track !== this.currentMusicTrack) {
+      this.playMusicTrack(track);
+    }
+  }
+
+  private getMusicTrackForGameState(): string {
+    if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
+      return 'JustTryYourBest_NoTension.wav';
+    }
+    if (this.isGameInWritingPhase() || this.isGameInWriteEndingsPhase()) {
+      return 'FolkSoundscape_1.wav';
+    }
+    if (this.gameState === GameState.ROUND2 || this.isGameInRitualPhase() || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {
+      return 'JustTryYourBest_TensionTail_BanjoTag.wav';
+    }
+    return '';
+  }
+
+  private playMusicTrack(trackName: string) {
+    this.backgroundMusic.pause();
+    this.backgroundMusic.src = `assets/music/${trackName}`;
+    this.backgroundMusic.load();
+    this.backgroundMusic.play().catch(error => {
+      console.log('Autoplay prevented:', error);
+    });
+    this.currentMusicTrack = trackName;
   }
 }
