@@ -5,7 +5,7 @@
 @if (!(isRitualPhase() && activePlayerSession.outcomeDisplay.length === 0)) {
     <mat-card class="game-session-display">
         <div #scrollContainer class="feed">
-            @if(activePlayerSession.location != null) {
+            @if(activePlayerSession.location !== null && activePlayerSession.location.id !== "") {
                 <div class="fade-in">You travel to the {{ activePlayerSession.location.label }}</div>
 
                 @if(activePlayerSession.selectedLocationOptionId === "") {
