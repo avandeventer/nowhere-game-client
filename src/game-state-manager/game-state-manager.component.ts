@@ -59,9 +59,10 @@ export class GameStateManagerComponent implements OnInit {
       this.activeGameStateSession.isPlayerDone = new Map(Object.entries(rawIsPlayerDone));
       this.didWeSucceed = newState.didWeSucceed;
       this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
+      this.adventureMap = newState.adventureMap as unknown as AdventureMap;
   
       console.log('New game state received:', this.gameState);
-      console.log('New adventureMap:', this.adventureMap.locations);
+      console.log('New adventureMap:', this.adventureMap);
       this.updateBackgroundMusic();
     });
   }
@@ -73,6 +74,19 @@ export class GameStateManagerComponent implements OnInit {
 
     this.currentLocation = foundLocation;
     console.log('Current location updated: ', this.currentLocation);
+  }
+
+  getGameSessionDisplay() {
+    switch (this.gameState) {
+      case GameState.PREAMBLE:
+        return this.gameSessionDisplay.mapDescription;
+      case GameState.PREAMBLE_AGAIN:
+        return this.gameSessionDisplay.goalDescription;
+      case GameState.ENDING_PREAMBLE:
+        return this.gameSessionDisplay.endingDescription;
+      default:
+        return this.gameSessionDisplay.mapDescription;
+    }
   }
 
   populateGameSessionDisplay(gameCode: string) {
@@ -103,6 +117,10 @@ export class GameStateManagerComponent implements OnInit {
     || this.gameState === GameState.WRITE_OPTIONS 
     || this.gameState === GameState.WRITE_PROMPTS_AGAIN 
     || this.gameState === GameState.WRITE_OPTIONS_AGAIN;
+  }
+
+  isGameInPreamblePhase() {
+    return this.gameState === GameState.PREAMBLE || this.gameState === GameState.PREAMBLE_AGAIN || this.gameState === GameState.ENDING_PREAMBLE;
   }
 
   isGameInSecondPhase() {
