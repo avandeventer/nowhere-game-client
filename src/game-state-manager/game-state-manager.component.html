@@ -25,7 +25,14 @@
             </div>
         </div>
     </div>
-    <div class="card-column">{{getGameSessionDisplay()}}</div>
+    <div class="card-column">
+        <!-- <mat-card class="instructions{" appearance="outlined">
+            {{getInstructionDisplay()}}
+        </mat-card> -->
+        <mat-card class="game-session-display">
+            {{getGameSessionDisplay()}}
+        </mat-card>
+    </div>
 }
 
 @if (isGameInLocationSelectPhase()) {

@@ -76,6 +76,20 @@ export class GameStateManagerComponent implements OnInit {
     console.log('Current location updated: ', this.currentLocation);
   }
 
+  // getInstructionDisplay() {
+  //   switch (this.gameState) {
+  //     case GameState.PREAMBLE:
+  //       return `You are about to embark on a journey into the unknown. You'll each choose where you'll spend your time and then your friends will determine what happens to you there. 
+  //       Be wary that some of you will encounter the entity with the most power in this world ${favorStat.favorEntity} which also means that the rest of you will need to describe how to impress or weaken them.`;
+  //     case GameState.PREAMBLE_AGAIN:
+  //       return this.gameSessionDisplay.goalDescription;
+  //     case GameState.ENDING_PREAMBLE:
+  //       return this.gameSessionDisplay.endingDescription;
+  //     default:
+  //       return this.gameSessionDisplay.mapDescription;
+  //   }
+  // }
+
   getGameSessionDisplay() {
     switch (this.gameState) {
       case GameState.PREAMBLE:
