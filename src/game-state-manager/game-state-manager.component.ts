@@ -11,6 +11,7 @@ import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { MatCardModule } from '@angular/material/card';
 import { AdventureMap } from 'src/assets/adventure-map';
+import { StatType } from 'src/assets/stat-type';
 
 @Component({
   selector: 'game-state-manager',
@@ -29,6 +30,7 @@ export class GameStateManagerComponent implements OnInit {
   adventureMap: AdventureMap = new AdventureMap();
   currentLocation: Location = new Location();
   totalPointsTowardsVictory: number = 0;
+  favorStat: StatType = new StatType();
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
   private backgroundMusic: HTMLAudioElement = new Audio();
@@ -60,6 +62,7 @@ export class GameStateManagerComponent implements OnInit {
       this.didWeSucceed = newState.didWeSucceed;
       this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
       this.adventureMap = newState.adventureMap as unknown as AdventureMap;
+      this.favorStat = this.adventureMap.statTypes.find(stat => stat.favorType) ?? new StatType();
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
@@ -76,19 +79,20 @@ export class GameStateManagerComponent implements OnInit {
     console.log('Current location updated: ', this.currentLocation);
   }
 
-  // getInstructionDisplay() {
-  //   switch (this.gameState) {
-  //     case GameState.PREAMBLE:
-  //       return `You are about to embark on a journey into the unknown. You'll each choose where you'll spend your time and then your friends will determine what happens to you there. 
-  //       Be wary that some of you will encounter the entity with the most power in this world ${favorStat.favorEntity} which also means that the rest of you will need to describe how to impress or weaken them.`;
-  //     case GameState.PREAMBLE_AGAIN:
-  //       return this.gameSessionDisplay.goalDescription;
-  //     case GameState.ENDING_PREAMBLE:
-  //       return this.gameSessionDisplay.endingDescription;
-  //     default:
-  //       return this.gameSessionDisplay.mapDescription;
-  //   }
-  // }
+  getInstructionDisplay() {
+    switch (this.gameState) {
+      case GameState.PREAMBLE:
+        return `You are about to embark on a journey into the unknown. You'll each choose where you'll spend your time and then your friends will determine what happens to you there. 
+        Be wary that some of you will encounter the entity who holds the most power in this world, ${this.favorStat.favorEntity}, which means that the rest of you will need to describe what makes them who they are.`;
+      case GameState.PREAMBLE_AGAIN:
+        return `The final challenge draws closer. The world is stranger because of the choices you've made so far and some of the things you see this round will build on what you saw in the last round. Be prepared to write
+        sequel encounters that connected to a specific players or to specific locations!`;
+      case GameState.ENDING_PREAMBLE:
+        return `The final challenge begins. You will each encounter ${this.favorStat.favorEntity} and your choices will determine the fate of everyone in ${this.adventureMap.name}. Luckily, we have learned a lot about ${this.favorStat.favorEntity} by now! All that's left is to decide whether you want to impress them or defy them.`;
+      default:
+        return this.gameSessionDisplay.mapDescription;
+    }
+  }
 
   getGameSessionDisplay() {
     switch (this.gameState) {
