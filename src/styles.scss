@@ -46,7 +46,7 @@ mat-flat-button button {
   margin: 0 auto; /* Center the map horizontally */
   border: 1px dashed #ccc;
   border-radius: 50%; /* Ensure the element remains circular */
-  background-color: var(--mdc-filled-text-field-container-color);
+  background-color: var(--mat-form-field-filled-container-color);
   overflow: hidden;
 }
 

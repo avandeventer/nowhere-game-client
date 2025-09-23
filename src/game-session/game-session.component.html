@@ -120,5 +120,11 @@
     <div class="game-code">Join game on your device with this code: 
       <mat-chip>{{gameCode}}</mat-chip>
     </div>
+    
+    <div class="qr-code-section">
+      <h3>Or scan this QR code:</h3>
+      <qr-code [value]="qrCodeUrl" [size]="200" errorCorrectionLevel="M"></qr-code>
+    </div>
+    
     <game-state-manager [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></game-state-manager>
 }

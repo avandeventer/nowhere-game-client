@@ -20,16 +20,18 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-form.component';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { MatChip } from '@angular/material/chips';
+import { QrCodeModule } from 'ng-qrcode';
 
 @Component({
     selector: 'game-session',
     styleUrl: './game-session.component.scss',
     templateUrl: './game-session.component.html',
-    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip]
+    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, QrCodeModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
   gameCode: string = '';
+  qrCodeUrl: string = '';
   gameSessionCreated: boolean = false;
   @Output() startGame = new EventEmitter<boolean>();
   @Output() refreshLogin = new EventEmitter<string>();
@@ -137,6 +139,7 @@ export class GameSessionComponent {
           console.log('Game created!', response);
           
           this.gameCode = response.gameCode;
+          this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${response.gameCode}`;
           this.gameSessionCreated = true;
           this.startGame.emit(true);
         },
@@ -192,6 +195,7 @@ export class GameSessionComponent {
         next: (response) => {
           console.log('Game rejoined!', response);
           this.gameCode = response.gameCode;
+          this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${response.gameCode}`;
           this.gameSessionCreated = true;
           this.startGame.emit(true);
         },
