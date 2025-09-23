@@ -11,7 +11,12 @@
                 Once all players have joined, click the Start Game button on your phone to begin!
             </mat-card>
             <mat-card class="game-session-display">
-                Welcome to {{adventureMap.name}}
+                <div class="qr-code-section">
+                    <h3>Welcome to {{adventureMap.name}}!</h3>
+                    <h3>Scan to Join:</h3>
+                    <qr-code [value]="qrCodeUrl" size="200" colorLight=var(--mat-option-selected-state-layer-color)
+                    colorDark=var(--mat-sys-on-surface) errorCorrectionLevel="M"></qr-code>
+                </div>
             </mat-card>
         </div>
     </div>

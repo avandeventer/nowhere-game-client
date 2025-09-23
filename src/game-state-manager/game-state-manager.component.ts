@@ -12,12 +12,13 @@ import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { MatCardModule } from '@angular/material/card';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { StatType } from 'src/assets/stat-type';
+import { QrCodeComponent } from 'ng-qrcode';
 
 @Component({
     selector: 'game-state-manager',
     templateUrl: './game-state-manager.component.html',
     styleUrl: './game-state-manager.style.scss',
-    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule]
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, QrCodeComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -30,6 +31,7 @@ export class GameStateManagerComponent implements OnInit {
   currentLocation: Location = new Location();
   totalPointsTowardsVictory: number = 0;
   favorStat: StatType = new StatType();
+  qrCodeUrl: string = '';
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
   private backgroundMusic: HTMLAudioElement = new Audio();
@@ -50,6 +52,7 @@ export class GameStateManagerComponent implements OnInit {
   ngOnInit() {
     this.populateGameSessionDisplay(this.gameCode);
     this.setupBackgroundMusic();
+    this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${this.gameCode}`;
     this.gameService.listenForGameStateChanges(this.gameCode)
       .subscribe((newState) => {
       this.gameState = newState.gameState as unknown as GameState;
