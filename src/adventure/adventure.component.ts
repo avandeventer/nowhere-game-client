@@ -12,7 +12,6 @@ import { GameSessionDisplay } from 'src/assets/game-session-display';
 @Component({
     selector: 'adventure',
     templateUrl: './adventure.component.html',
-    standalone: true,
     imports: [MatCardModule],
     styleUrl: './adventure.component.scss'
 })

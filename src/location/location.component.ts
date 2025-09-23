@@ -15,7 +15,6 @@ import { HttpConstants } from "src/assets/http-constants";
     selector: 'location',
     templateUrl: './location.component.html',
     imports: [MatButtonModule, MatIconModule],
-    standalone: true,
     styleUrl: './location.style.scss'
 })
 export class LocationComponent implements OnInit {

@@ -14,11 +14,10 @@ import { AdventureMap } from 'src/assets/adventure-map';
 import { StatType } from 'src/assets/stat-type';
 
 @Component({
-  selector: 'game-state-manager',
-  templateUrl: './game-state-manager.component.html',
-  styleUrl: './game-state-manager.style.scss',
-  standalone: true,
-  imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule]
+    selector: 'game-state-manager',
+    templateUrl: './game-state-manager.component.html',
+    styleUrl: './game-state-manager.style.scss',
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";

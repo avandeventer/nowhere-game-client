@@ -10,7 +10,6 @@ import { environment } from "src/environments/environments";
     selector: 'finale',
     styles: `.btn { padding: 5px; }`,
     templateUrl: './finale.component.html',
-    standalone: true,
     imports: [MatButtonModule, MatProgressSpinner]
 })
 export class FinaleComponent {

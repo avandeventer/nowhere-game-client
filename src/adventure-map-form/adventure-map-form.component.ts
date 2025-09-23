@@ -15,21 +15,20 @@ import { StatType } from 'src/assets/stat-type';
 import { AdventureMapService } from 'src/services/adventure-map.service';
 
 @Component({
-  selector: 'adventure-map-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatDividerModule
-  ],
-  styleUrl: './adventure-map-form.component.scss',
-  templateUrl: './adventure-map-form.component.html',
+    selector: 'adventure-map-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatDividerModule
+    ],
+    styleUrl: './adventure-map-form.component.scss',
+    templateUrl: './adventure-map-form.component.html'
 })
 export class AdventureMapFormComponent implements OnInit {
   @Input() userProfileId: string = "";

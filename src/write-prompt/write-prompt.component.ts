@@ -7,10 +7,9 @@ import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 
 @Component({
-  selector: 'write-prompt',
-  templateUrl: './write-prompt.component.html',
-  standalone: true,
-  imports: [ReactiveFormsModule]
+    selector: 'write-prompt',
+    templateUrl: './write-prompt.component.html',
+    imports: [ReactiveFormsModule]
 })
 export class WritePromptComponent implements OnInit {
   @Input() gameState: GameState = GameState.WRITE_PROMPTS;

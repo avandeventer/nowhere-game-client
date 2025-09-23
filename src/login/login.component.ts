@@ -13,8 +13,7 @@ import { MatChipSet, MatChip } from '@angular/material/chips'
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
-    standalone: true,
-    imports: [GameSessionComponent,  ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatChipSet, MatChip]
+    imports: [GameSessionComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatChipSet, MatChip]
 })
 export class LoginComponent {
 

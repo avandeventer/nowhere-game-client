@@ -19,14 +19,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-form.component';
 import { AdventureMap } from 'src/assets/adventure-map';
-import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
+import { MatChip } from '@angular/material/chips';
 
 @Component({
-  selector: 'game-session',
-  styleUrl: './game-session.component.scss',
-  templateUrl: './game-session.component.html',
-  standalone: true,
-  imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChipSet, MatChip]
+    selector: 'game-session',
+    styleUrl: './game-session.component.scss',
+    templateUrl: './game-session.component.html',
+    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
