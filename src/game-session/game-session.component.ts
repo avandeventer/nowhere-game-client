@@ -20,12 +20,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-form.component';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { MatChip } from '@angular/material/chips';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @Component({
     selector: 'game-session',
     styleUrl: './game-session.component.scss',
     templateUrl: './game-session.component.html',
-    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip]
+    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, MatButtonToggleModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
@@ -45,11 +46,19 @@ export class GameSessionComponent {
   storiesToPlayPerRound: number = 1;
   newSettingFormActivated: boolean = false;
   activatedEditMapFormAdventureId: string = "";
+  selectedToggle: string = 'selectAdventure'; // 'bold' for Select Adventure, 'italic' for Create New Adventure
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated = gameSessionCreated;
     this.refreshLogin.emit(this.userProfile.id);
     this.startGame.emit(gameSessionCreated);
+  }
+
+  onToggleChange(value: string) {
+    this.selectedToggle = value;
+    if (value === 'createNewAdventure') {
+      this.adventureId = '';
+    }
   }
 
   constructor(private http: HttpClient) {

@@ -1,4 +1,10 @@
 @if(!gameSessionCreated) {
+  <mat-button-toggle-group class="adventure-game-mode-toggle" aria-label="Font Style" [value]="selectedToggle" (change)="onToggleChange($event.value)">
+    <mat-button-toggle value="selectAdventure">Select Adventure</mat-button-toggle>
+    <mat-button-toggle value="createNewAdventure">Create New Adventure</mat-button-toggle>
+  </mat-button-toggle-group><br><br>
+  
+  @if (selectedToggle === 'selectAdventure') {
     <mat-accordion>
       @for (entry of adventureMapsList; track entry.key) {
         <mat-expansion-panel>
@@ -106,6 +112,14 @@
         </adventure-map-form>
       </mat-expansion-panel>
     </mat-accordion><br>
+  } @else {
+    <div class="create-new-adventure-description">
+      <h3>Create New Adventure</h3>
+      <p>This game mode will guide you through an additional phase at the start where players will create their own setting and then play in it!</p>
+      <p>Note that this will add an additional 30-45 minutes to the game! We suggest playing at least once in an existing setting before you try this out!</p>
+    </div>
+  }
+  
   @if (!newSettingFormActivated) {
     <form class="join-game">
         <mat-form-field class="full-width">

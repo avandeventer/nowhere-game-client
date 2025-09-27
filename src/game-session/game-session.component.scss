@@ -18,3 +18,33 @@
 .game-code {
     text-align: right;
 }
+
+.adventure-game-mode-toggle {
+    margin-left: auto;
+    margin-right: 0;
+    // background-color: var(--mat-form-field-filled-container-color);
+    // background-color: var(--mat-stepper-header-done-state-icon-foreground-color);
+}
+
+.create-new-adventure-description {
+    padding: 2rem;
+    margin: 1rem 0;
+    background-color: var(--mat-form-field-filled-container-color);
+    color: var(--mat-sys-on-surface);
+    border-radius: 8px;
+    border-left: 4px solid;
+    
+    h3 {
+        margin-top: 0;
+        font-weight: 500;
+    }
+    
+    p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
