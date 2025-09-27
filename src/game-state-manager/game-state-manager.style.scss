@@ -45,3 +45,26 @@
       margin-bottom: 5px;
   }
 }
+
+.music-toggle-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.music-toggle-container button {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.music-toggle-container button:hover {
+  background-color: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.1) !important;
+}
+
+.music-toggle-container mat-icon {
+  color: #333 !important;
+}

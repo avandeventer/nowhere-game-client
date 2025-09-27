@@ -10,15 +10,18 @@ import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { StatType } from 'src/assets/stat-type';
 import { QrCodeComponent } from 'ng-qrcode';
+import { MusicService } from 'src/services/music.service';
 
 @Component({
     selector: 'game-state-manager',
     templateUrl: './game-state-manager.component.html',
     styleUrl: './game-state-manager.style.scss',
-    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, QrCodeComponent]
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -34,7 +37,8 @@ export class GameStateManagerComponent implements OnInit {
   qrCodeUrl: string = '';
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
-  private backgroundMusic: HTMLAudioElement = new Audio();
+  // Music toggle properties
+  isMusicEnabled: boolean = true;
   private currentMusicTrack: string = '';
 
   setNewGame(gameSessionCreated: boolean) {
@@ -46,7 +50,8 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   constructor(
-    private gameService: GameService
+    private gameService: GameService,
+    private musicService: MusicService
   ) {}
 
   ngOnInit() {
@@ -69,6 +74,11 @@ export class GameStateManagerComponent implements OnInit {
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
       this.updateBackgroundMusic();
+      
+      // Subscribe to music state
+      this.musicService.isMusicEnabled$.subscribe(enabled => {
+        this.isMusicEnabled = enabled;
+      });
     });
   }
 
@@ -168,16 +178,19 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.FINALE;
   }
 
+  toggleMusic(): void {
+    this.musicService.toggleMusic();
+  }
+
   private setupBackgroundMusic() {
-    this.backgroundMusic.loop = true;
-    this.backgroundMusic.volume = 0.3;
     this.updateBackgroundMusic();
   }
 
   private updateBackgroundMusic() {
     const track = this.getMusicTrackForGameState();
     if (track && track !== this.currentMusicTrack) {
-      this.playMusicTrack(track);
+      this.musicService.playMusicTrack(track);
+      this.currentMusicTrack = track;
     }
   }
 
@@ -194,13 +207,4 @@ export class GameStateManagerComponent implements OnInit {
     return '';
   }
 
-  private playMusicTrack(trackName: string) {
-    this.backgroundMusic.pause();
-    this.backgroundMusic.src = `assets/music/${trackName}`;
-    this.backgroundMusic.load();
-    this.backgroundMusic.play().catch(error => {
-      console.log('Autoplay prevented:', error);
-    });
-    this.currentMusicTrack = trackName;
-  }
 }

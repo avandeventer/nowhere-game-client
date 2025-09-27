@@ -1,3 +1,10 @@
+<!-- Music toggle button -->
+<div class="music-toggle-container">
+    <button mat-icon-button (click)="toggleMusic()" [attr.aria-label]="isMusicEnabled ? 'Mute music' : 'Unmute music'">
+        <mat-icon>{{isMusicEnabled ? 'volume_up' : 'volume_off'}}</mat-icon>
+    </button>
+</div>
+
 @if (isGameInitialized()) {
     <div class="location-layout">
         <div class="location-panel">
