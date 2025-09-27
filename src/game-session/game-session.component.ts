@@ -155,10 +155,10 @@ export class GameSessionComponent {
     this.activatedSaveGameId = 'none';
   }
 
-  upsertSaveGame(saveGameId: string) {
+  upsertSaveGame(adventureId: string, saveGameId: string) {
     console.log("Upsert Save Game: " + saveGameId);
     console.log("Save Game Name: " + this.saveGameName.value);
-    const createGameParameters = "?userProfileId=" + this.userProfile.id + "&adventureId=" + this.adventureId;
+    const createGameParameters = "?userProfileId=" + this.userProfile.id + "&adventureId=" + adventureId;
 
     const saveGame: SaveGame = {
       name: this.saveGameName?.value ?? '',
@@ -171,7 +171,7 @@ export class GameSessionComponent {
         next: (response) => {
           console.log('Save Game created!', response);
           this.saveGameId = response.id;
-          this.userProfile.maps[this.adventureId].saveGames[response.id] = response;
+          this.userProfile.maps[adventureId].saveGames[response.id] = response;
           this.activatedSaveGameId = 'none';
           this.selectedSaveGameName = response.name;
           this.saveGameName.reset();

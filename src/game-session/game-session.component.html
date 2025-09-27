@@ -37,7 +37,7 @@
                                 <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
                                     <mat-icon>close</mat-icon>
                                 </button>                                
-                                <button mat-icon-button matSuffix (click)="upsertSaveGame(saveEntry.saveGame.id)">
+                                <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id)">
                                     <mat-icon>check</mat-icon>
                                 </button>
                                 </mat-form-field>
@@ -72,7 +72,7 @@
                                 <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
                                     <mat-icon>close</mat-icon>
                                 </button>
-                                <button mat-icon-button matSuffix (click)="upsertSaveGame('')">
+                                <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, '')">
                                     <mat-icon>check</mat-icon>
                                 </button>
                             </mat-form-field>
