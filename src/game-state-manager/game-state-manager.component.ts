@@ -40,6 +40,9 @@ export class GameStateManagerComponent implements OnInit {
   // Music toggle properties
   isMusicEnabled: boolean = true;
   private currentMusicTrack: string = '';
+  
+  // Animation properties
+  showCollaborativeText: boolean = false;
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated.emit(gameSessionCreated);
@@ -60,6 +63,7 @@ export class GameStateManagerComponent implements OnInit {
     this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${this.gameCode}`;
     this.gameService.listenForGameStateChanges(this.gameCode)
       .subscribe((newState) => {
+      const previousGameState = this.gameState;
       this.gameState = newState.gameState as unknown as GameState;
       this.activePlayerSession = newState.activePlayerSession as unknown as ActivePlayerSession;
 
@@ -73,6 +77,16 @@ export class GameStateManagerComponent implements OnInit {
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
+      
+      // Trigger collaborative text animation when entering collaborative phases
+      if (this.isGameInCollaborativeTextPhase() && !this.isGameInCollaborativeTextPhaseForState(previousGameState)) {
+        this.showCollaborativeText = true;
+        // Reset animation after it completes
+        setTimeout(() => {
+          this.showCollaborativeText = false;
+        }, 2000);
+      }
+      
       this.updateBackgroundMusic();
       
       // Subscribe to music state
@@ -176,6 +190,35 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInFinalePhase() {
     return this.gameState === GameState.FINALE;
+  }
+
+  isGameInCollaborativeTextPhase() {
+    return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHO_ARE_WE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
+  }
+
+  getCollaborativeTextQuestion() {
+    switch (this.gameState) {
+      case GameState.WHERE_ARE_WE:
+        return 'Where are we?';
+      case GameState.WHO_ARE_WE:
+        return 'Who are we?';
+      case GameState.WHAT_IS_OUR_GOAL:
+        return 'What is our goal?';
+      case GameState.WHAT_ARE_WE_CAPABLE_OF:
+        return 'What are we capable of?';
+      default:
+        return 'Collaborative Writing';
+    }
+  }
+
+  private isGameInCollaborativeTextPhaseForState(gameState: GameState) {
+    return gameState === GameState.WHERE_ARE_WE || 
+           gameState === GameState.WHO_ARE_WE || 
+           gameState === GameState.WHAT_IS_OUR_GOAL || 
+           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
   }
 
   toggleMusic(): void {

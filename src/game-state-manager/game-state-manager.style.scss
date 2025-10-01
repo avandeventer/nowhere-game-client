@@ -68,3 +68,86 @@
 .music-toggle-container mat-icon {
   color: #333 !important;
 }
+
+// Collaborative Text Display
+.collaborative-text-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  
+  &.animate-in {
+    animation: fadeIn 1.5s ease-in-out;
+    
+    .collaborative-question {
+      animation: slideInUp 1s ease-out 0.5s both;
+    }
+    
+    .collaborative-instruction {
+      animation: slideInUp 1s ease-out 0.8s both;
+    }
+  }
+}
+
+.question-container {
+  text-align: center;
+  background: var(--mat-optgroup-label-text-color) !important;  // Adjust this based on your theme
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 1000px;
+  margin: 20px;
+}
+
+.collaborative-question {
+  font-size: 6.0rem;
+  font-weight: 700;
+  color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
+  margin: 0 0 20px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.collaborative-instruction {
+  font-size: 1.8rem;
+  color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
+  margin: 0;
+  font-weight: 500;
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .collaborative-question {
+    font-size: 2.5rem;
+  }
+  
+  .collaborative-instruction {
+    font-size: 1rem;
+  }
+  
+  .question-container {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+}

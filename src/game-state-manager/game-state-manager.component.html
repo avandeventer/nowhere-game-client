@@ -47,6 +47,15 @@
     </div>
 }
 
+@if (isGameInCollaborativeTextPhase()) {
+    <div class="collaborative-text-display" [class.animate-in]="showCollaborativeText">
+        <div class="question-container">
+            <h1 class="collaborative-question">{{ getCollaborativeTextQuestion() }}</h1>
+            <p class="collaborative-instruction">We will begin by describing our world. Look to your device and don't worry about thinking too hard about what you say. Your friends will help!</p>
+        </div>
+    </div>
+}
+
 @if (isGameInLocationSelectPhase()) {
     <div class="location-layout">
         <div class="location-panel">
