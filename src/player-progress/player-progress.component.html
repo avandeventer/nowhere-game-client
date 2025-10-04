@@ -1,0 +1,33 @@
+@if (isVisible) {
+  <div class="player-progress-container">
+    <!-- Progress bubbles in a straight line -->
+    <div class="bubbles-container">
+      @for (playerId of completedPlayers; track playerId; let i = $index) {
+        <div class="bubble-wrapper">
+          <div 
+            class="progress-bubble"
+            [style.background-color]="getBubbleColor(i)"
+            [attr.data-player-name]="getPlayerName(playerId)"
+          >
+          </div>
+          <div class="player-label">
+            {{ getPlayerName(playerId) }}
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Progress summary -->
+    <div class="progress-summary">
+      <span class="progress-text">
+        {{ completedPlayers.length }} of {{ players.length }} players completed
+      </span>
+      <div class="progress-bar">
+        <div 
+          class="progress-fill" 
+          [style.width.%]="getPlayerProgress()"
+        ></div>
+      </div>
+    </div>
+  </div>
+}

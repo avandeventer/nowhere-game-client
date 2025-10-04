@@ -1,0 +1,40 @@
+.timer-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.timer-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer-label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.timer-value {
+  font-weight: bold;
+  font-size: 18px;
+  font-family: 'Courier New', monospace;
+}
+
+.timer-warning {
+  color: #ff6b6b;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}

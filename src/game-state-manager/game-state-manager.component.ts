@@ -16,12 +16,15 @@ import { AdventureMap } from 'src/assets/adventure-map';
 import { StatType } from 'src/assets/stat-type';
 import { QrCodeComponent } from 'ng-qrcode';
 import { MusicService } from 'src/services/music.service';
+import { TimerService } from 'src/services/timer.service';
+import { TimerComponent } from 'src/timer/timer.component';
+import { PlayerProgressComponent } from 'src/player-progress/player-progress.component';
 
 @Component({
     selector: 'game-state-manager',
     templateUrl: './game-state-manager.component.html',
     styleUrl: './game-state-manager.style.scss',
-    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent]
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent, TimerComponent, PlayerProgressComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -54,7 +57,8 @@ export class GameStateManagerComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private musicService: MusicService
+    private musicService: MusicService,
+    private timerService: TimerService
   ) {}
 
   ngOnInit() {
@@ -196,18 +200,26 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.WHERE_ARE_WE || 
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_OUR_GOAL || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
+           this.gameState === GameState.WHERE_ARE_WE_VOTE || 
+           this.gameState === GameState.WHO_ARE_WE_VOTE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
   }
 
   getCollaborativeTextQuestion() {
     switch (this.gameState) {
       case GameState.WHERE_ARE_WE:
+      case GameState.WHERE_ARE_WE_VOTE:
         return 'Where are we?';
       case GameState.WHO_ARE_WE:
+      case GameState.WHO_ARE_WE_VOTE:
         return 'Who are we?';
       case GameState.WHAT_IS_OUR_GOAL:
+      case GameState.WHAT_IS_OUR_GOAL_VOTE:
         return 'What is our goal?';
       case GameState.WHAT_ARE_WE_CAPABLE_OF:
+      case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE:
         return 'What are we capable of?';
       default:
         return 'Collaborative Writing';
@@ -218,7 +230,46 @@ export class GameStateManagerComponent implements OnInit {
     return gameState === GameState.WHERE_ARE_WE || 
            gameState === GameState.WHO_ARE_WE || 
            gameState === GameState.WHAT_IS_OUR_GOAL || 
-           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
+           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF || 
+           gameState === GameState.WHERE_ARE_WE_VOTE || 
+           gameState === GameState.WHO_ARE_WE_VOTE || 
+           gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
+  }
+
+  getCollaborativeTextVotingInstruction() {
+    return 'The time has come to solidify our fate. Rank the descriptions on your device from best to worst.';
+  }
+
+  getCollaborativeTextInstruction() {
+    let collaborativeTextInstruction = '';
+
+    switch (this.gameState) {
+      case GameState.WHERE_ARE_WE:
+        collaborativeTextInstruction = 'We will begin by describing our world.';
+        break;
+      case GameState.WHO_ARE_WE:
+        collaborativeTextInstruction = 'Now a potentially even more crucial question. Define who we are together. What is our goal?';
+        break;
+      case GameState.WHAT_IS_OUR_GOAL:
+        collaborativeTextInstruction = 'Something is coming. What must we each do when it arrives to ensure our survival?';
+        break;
+      case GameState.WHAT_ARE_WE_CAPABLE_OF:
+        collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you thing we will need to be good at to survive. Some of you may need to answer a question of a slightly different nature.';
+        break;
+      default:
+        return 'Do your best to answer the question above!';
+    }
+
+
+    return collaborativeTextInstruction + ' Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
+  }
+
+  isGameInCollaborativeTextVotingPhase() {
+    return this.gameState === GameState.WHERE_ARE_WE_VOTE || 
+           this.gameState === GameState.WHO_ARE_WE_VOTE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
   }
 
   toggleMusic(): void {
@@ -248,6 +299,21 @@ export class GameStateManagerComponent implements OnInit {
       return 'JustTryYourBest_TensionTail_BanjoTag.wav';
     }
     return '';
+  }
+
+  /**
+   * Handles timer completion for collaborative text phases
+   */
+  onCollaborativeTextTimerComplete() {
+    console.log('Collaborative text timer completed, advancing to next game phase...');
+    this.timerService.onTimerComplete(this.gameCode).subscribe({
+      next: (response) => {
+        console.log('Game phase advanced successfully', response);
+      },
+      error: (error) => {
+        console.error('Error advancing game phase:', error);
+      }
+    });
   }
 
 }

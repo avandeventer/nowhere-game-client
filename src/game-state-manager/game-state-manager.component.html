@@ -51,9 +51,22 @@
     <div class="collaborative-text-display" [class.animate-in]="showCollaborativeText">
         <div class="question-container">
             <h1 class="collaborative-question">{{ getCollaborativeTextQuestion() }}</h1>
-            <p class="collaborative-instruction">We will begin by describing our world. Look to your device and don't worry about thinking too hard about what you say. Your friends will help!</p>
+            @if (isGameInCollaborativeTextVotingPhase()) {
+                <p class="collaborative-instruction">{{ getCollaborativeTextVotingInstruction() }}</p>
+            } @else {
+                <p class="collaborative-instruction">{{ getCollaborativeTextInstruction() }}</p>
+            }
         </div>
     </div>
+    
+    @if (!isGameInCollaborativeTextVotingPhase()) {
+        <app-timer 
+            [duration]="180" 
+            [label]="'Collaborative Writing'"
+            [autoStart]="true"
+            (timerComplete)="onCollaborativeTextTimerComplete()">
+        </app-timer>
+    }
 }
 
 @if (isGameInLocationSelectPhase()) {
@@ -171,3 +184,9 @@
 @if (isGameInFinalePhase()){
     <finale [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></finale>
 }
+
+<!-- Player Progress Component -->
+<app-player-progress 
+    [gameCode]="gameCode" 
+    [activeGameStateSession]="activeGameStateSession">
+</app-player-progress>

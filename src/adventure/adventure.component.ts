@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environments';
 import { HttpConstants } from 'src/assets/http-constants';
 import {MatCardModule} from '@angular/material/card';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
+import { GameService } from 'src/services/game-session.service';
 
 @Component({
     selector: 'adventure',
@@ -30,7 +31,7 @@ export class AdventureComponent implements OnInit {
     settingNextPlayerTurn: boolean = false;
     favorEntity: string = "";
 
-    constructor(private http:HttpClient) {}
+    constructor(private http:HttpClient, private gameService: GameService) {}
 
     ngOnInit(): void {
       console.log("Adventure Loaded!" + this.activePlayerSession);
@@ -67,26 +68,18 @@ export class AdventureComponent implements OnInit {
     }
 
     getPlayers() {
-      const params = {
-        gameCode: this.gameCode
-      };
-  
-      console.log(params);
-  
-      this.http
-      .get<Player[]>(environment.nowhereBackendUrl + HttpConstants.PLAYER_PATH, { params })
-        .subscribe({
-          next: (response) => {
-            console.log('Players retrieved!', response);
-            this.players = response;
-            this.setCurrentPlayer();
-            console.log('Players:', this.players);
-            console.log('Current Player:', this.currentTurnPlayer);
-          },
-          error: (error) => {
-            console.error('Error getting players', error);
-          },
-        });
+      this.gameService.getPlayers(this.gameCode).subscribe({
+        next: (response: Player[]) => {
+          console.log('Players retrieved!', response);
+          this.players = response;
+          this.setCurrentPlayer();
+          console.log('Players:', this.players);
+          console.log('Current Player:', this.currentTurnPlayer);
+        },
+        error: (error: any) => {
+          console.error('Error getting players', error);
+        },
+      });
     }
 
   setExistingPlayerTurn(playerId: String) {
