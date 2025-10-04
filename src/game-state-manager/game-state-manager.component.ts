@@ -19,12 +19,13 @@ import { MusicService } from 'src/services/music.service';
 import { TimerService } from 'src/services/timer.service';
 import { TimerComponent } from 'src/timer/timer.component';
 import { PlayerProgressComponent } from 'src/player-progress/player-progress.component';
+import { CollaborativeTextComponent } from 'src/collaborative-text/collaborative-text.component';
 
 @Component({
     selector: 'game-state-manager',
     templateUrl: './game-state-manager.component.html',
     styleUrl: './game-state-manager.style.scss',
-    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent, TimerComponent, PlayerProgressComponent]
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent, TimerComponent, PlayerProgressComponent, CollaborativeTextComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";
@@ -44,9 +45,6 @@ export class GameStateManagerComponent implements OnInit {
   isMusicEnabled: boolean = true;
   private currentMusicTrack: string = '';
   
-  // Animation properties
-  showCollaborativeText: boolean = false;
-
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated.emit(gameSessionCreated);
     this.gameState = GameState.INIT;
@@ -81,15 +79,6 @@ export class GameStateManagerComponent implements OnInit {
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
-      
-      // Trigger collaborative text animation when entering collaborative phases
-      if (this.isGameInCollaborativeTextPhase() && !this.isGameInCollaborativeTextPhaseForState(previousGameState)) {
-        this.showCollaborativeText = true;
-        // Reset animation after it completes
-        setTimeout(() => {
-          this.showCollaborativeText = false;
-        }, 2000);
-      }
       
       this.updateBackgroundMusic();
       
@@ -196,35 +185,20 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.FINALE;
   }
 
-  isGameInCollaborativeTextPhase() {
-    return this.gameState === GameState.WHERE_ARE_WE || 
-           this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
-           this.gameState === GameState.WHERE_ARE_WE_VOTE || 
-           this.gameState === GameState.WHO_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
-  }
-
-  getCollaborativeTextQuestion() {
-    switch (this.gameState) {
-      case GameState.WHERE_ARE_WE:
-      case GameState.WHERE_ARE_WE_VOTE:
-        return 'Where are we?';
-      case GameState.WHO_ARE_WE:
-      case GameState.WHO_ARE_WE_VOTE:
-        return 'Who are we?';
-      case GameState.WHAT_IS_OUR_GOAL:
-      case GameState.WHAT_IS_OUR_GOAL_VOTE:
-        return 'What is our goal?';
-      case GameState.WHAT_ARE_WE_CAPABLE_OF:
-      case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE:
-        return 'What are we capable of?';
-      default:
-        return 'Collaborative Writing';
+    isGameInCollaborativeTextPhase() {
+        return this.gameState === GameState.WHERE_ARE_WE || 
+               this.gameState === GameState.WHO_ARE_WE || 
+               this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
+               this.gameState === GameState.WHERE_ARE_WE_VOTE || 
+               this.gameState === GameState.WHO_ARE_WE_VOTE || 
+               this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
+               this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
+               this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
+               this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
+               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
     }
-  }
 
   private isGameInCollaborativeTextPhaseForState(gameState: GameState) {
     return gameState === GameState.WHERE_ARE_WE || 
@@ -237,39 +211,11 @@ export class GameStateManagerComponent implements OnInit {
            gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
   }
 
-  getCollaborativeTextVotingInstruction() {
-    return 'The time has come to solidify our fate. Rank the descriptions on your device from best to worst.';
-  }
-
-  getCollaborativeTextInstruction() {
-    let collaborativeTextInstruction = '';
-
-    switch (this.gameState) {
-      case GameState.WHERE_ARE_WE:
-        collaborativeTextInstruction = 'We will begin by describing our world.';
-        break;
-      case GameState.WHO_ARE_WE:
-        collaborativeTextInstruction = 'Now a potentially even more crucial question. Define who we are together. What is our goal?';
-        break;
-      case GameState.WHAT_IS_OUR_GOAL:
-        collaborativeTextInstruction = 'Something is coming. What must we each do when it arrives to ensure our survival?';
-        break;
-      case GameState.WHAT_ARE_WE_CAPABLE_OF:
-        collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you thing we will need to be good at to survive. Some of you may need to answer a question of a slightly different nature.';
-        break;
-      default:
-        return 'Do your best to answer the question above!';
-    }
-
-
-    return collaborativeTextInstruction + ' Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
-  }
-
-  isGameInCollaborativeTextVotingPhase() {
-    return this.gameState === GameState.WHERE_ARE_WE_VOTE || 
-           this.gameState === GameState.WHO_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
+  isGameInCollaborativeTextWritingPhase() {
+    return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHO_ARE_WE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
   }
 
   toggleMusic(): void {

@@ -48,20 +48,14 @@
 }
 
 @if (isGameInCollaborativeTextPhase()) {
-    <div class="collaborative-text-display" [class.animate-in]="showCollaborativeText">
-        <div class="question-container">
-            <h1 class="collaborative-question">{{ getCollaborativeTextQuestion() }}</h1>
-            @if (isGameInCollaborativeTextVotingPhase()) {
-                <p class="collaborative-instruction">{{ getCollaborativeTextVotingInstruction() }}</p>
-            } @else {
-                <p class="collaborative-instruction">{{ getCollaborativeTextInstruction() }}</p>
-            }
-        </div>
-    </div>
+    <app-collaborative-text 
+        [gameCode]="gameCode" 
+        [gameState]="gameState">
+    </app-collaborative-text>
     
-    @if (!isGameInCollaborativeTextVotingPhase()) {
+    @if (isGameInCollaborativeTextWritingPhase()) {
         <app-timer 
-            [duration]="180" 
+            [duration]="90" 
             [label]="'Collaborative Writing'"
             [autoStart]="true"
             (timerComplete)="onCollaborativeTextTimerComplete()">
