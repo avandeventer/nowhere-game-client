@@ -3,8 +3,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
+  background: var(--mat-optgroup-label-text-color) !important;  // Adjust this based on your theme
+  color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
   padding: 40px;
   border-radius: 20px;
   text-align: center;

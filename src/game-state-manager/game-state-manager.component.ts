@@ -185,27 +185,32 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.FINALE;
   }
 
-    isGameInCollaborativeTextPhase() {
-        return this.gameState === GameState.WHERE_ARE_WE || 
-               this.gameState === GameState.WHO_ARE_WE || 
-               this.gameState === GameState.WHAT_IS_OUR_GOAL || 
-               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
-               this.gameState === GameState.WHERE_ARE_WE_VOTE || 
-               this.gameState === GameState.WHO_ARE_WE_VOTE || 
-               this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
-               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
-               this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
-               this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
-               this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
-               this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
-    }
+  isGameInCollaborativeTextPhase() {
+    return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR ||
+           this.gameState === GameState.WHO_ARE_WE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
+           this.gameState === GameState.WHERE_ARE_WE_VOTE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
+           this.gameState === GameState.WHO_ARE_WE_VOTE || 
+           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
+           this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
+           this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
+  }
 
   private isGameInCollaborativeTextPhaseForState(gameState: GameState) {
     return gameState === GameState.WHERE_ARE_WE || 
+           gameState === GameState.WHAT_DO_WE_FEAR ||
            gameState === GameState.WHO_ARE_WE || 
            gameState === GameState.WHAT_IS_OUR_GOAL || 
            gameState === GameState.WHAT_ARE_WE_CAPABLE_OF || 
            gameState === GameState.WHERE_ARE_WE_VOTE || 
+           gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            gameState === GameState.WHO_ARE_WE_VOTE || 
            gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
            gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
@@ -213,9 +218,14 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInCollaborativeTextWritingPhase() {
     return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_OUR_GOAL || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
+  }
+
+  getTimerDuration(): number {
+    return (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) ? 60 : 90;
   }
 
   toggleMusic(): void {
@@ -238,7 +248,7 @@ export class GameStateManagerComponent implements OnInit {
     if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
       return 'JustTryYourBest_NoTension.wav';
     }
-    if (this.isGameInWritingPhase() || this.isGameInWriteEndingsPhase()) {
+    if (this.isGameInWritingPhase() || this.isGameInWriteEndingsPhase() || this.isGameInCollaborativeTextPhase()) {
       return 'FolkSoundscape_1.wav';
     }
     if (this.gameState === GameState.ROUND2 || this.isGameInRitualPhase() || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {

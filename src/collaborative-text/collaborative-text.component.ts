@@ -63,6 +63,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   isWinningPhase(): boolean {
     return this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
            this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
@@ -97,6 +98,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       case GameState.WHERE_ARE_WE_VOTE:
       case GameState.WHERE_ARE_WE_VOTE_WINNER:
         return 'Where are we?';
+      case GameState.WHAT_DO_WE_FEAR:
+      case GameState.WHAT_DO_WE_FEAR_VOTE:
+      case GameState.WHAT_DO_WE_FEAR_VOTE_WINNER:
+        return 'What do we fear?';
       case GameState.WHO_ARE_WE:
       case GameState.WHO_ARE_WE_VOTE:
       case GameState.WHO_ARE_WE_VOTE_WINNER:
@@ -134,6 +139,9 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       case GameState.WHERE_ARE_WE:
         collaborativeTextInstruction = 'We will begin by describing our world.';
         break;
+      case GameState.WHAT_DO_WE_FEAR:
+        collaborativeTextInstruction = 'What do we fear? What person or entity holds power in this world?';
+        break;
       case GameState.WHO_ARE_WE:
         collaborativeTextInstruction = 'Now a potentially even more crucial question. Define who we are together. What is our goal?';
         break;
@@ -151,8 +159,9 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     return collaborativeTextInstruction + ' Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
   }
 
-  private isVotingPhase(): boolean {
+  isVotingPhase(): boolean {
     return this.gameState === GameState.WHERE_ARE_WE_VOTE ||
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE ||
            this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE ||
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
@@ -160,14 +169,17 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   isCollaborativeTextPhase(): boolean {
     return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_OUR_GOAL || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE || 
            this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
            this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
@@ -175,6 +187,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   isCollaborativeTextWritingPhase(): boolean {
     return this.gameState === GameState.WHERE_ARE_WE || 
+           this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_OUR_GOAL || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;

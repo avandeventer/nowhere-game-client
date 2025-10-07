@@ -18,7 +18,11 @@
             </mat-card>
             <mat-card class="game-session-display">
                 <div class="qr-code-section">
-                    <h3>Welcome to {{adventureMap.name}}!</h3>
+                    @if(adventureMap) {
+                        <h3>Welcome to {{adventureMap.name}}!</h3>
+                    } @else {
+                        <h3>Welcome to this shapeless place</h3>
+                    }
                     <h3>Scan to Join:</h3>
                     <qr-code [value]="qrCodeUrl" size="200" colorLight=var(--mat-option-selected-state-layer-color)
                     colorDark=var(--mat-sys-on-surface) errorCorrectionLevel="M"></qr-code>
@@ -55,7 +59,7 @@
     
     @if (isGameInCollaborativeTextWritingPhase()) {
         <app-timer 
-            [duration]="90" 
+            [duration]="getTimerDuration()" 
             [label]="'Collaborative Writing'"
             [autoStart]="true"
             (timerComplete)="onCollaborativeTextTimerComplete()">
