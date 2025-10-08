@@ -75,7 +75,11 @@ export class GameStateManagerComponent implements OnInit {
       this.didWeSucceed = newState.didWeSucceed;
       this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
       this.adventureMap = newState.adventureMap as unknown as AdventureMap;
-      this.favorStat = this.adventureMap.statTypes.find(stat => stat.favorType) ?? new StatType();
+      this.favorStat = this.adventureMap !== null 
+          && this.adventureMap.statTypes !== null 
+          && this.adventureMap.statTypes.find(stat => stat.favorType) !== undefined 
+          ? this.adventureMap.statTypes.find(stat => stat.favorType) as StatType 
+          : new StatType();
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
@@ -189,17 +193,17 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.WHERE_ARE_WE || 
            this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+           this.gameState === GameState.WHAT_IS_COMING || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
            this.gameState === GameState.WHERE_ARE_WE_VOTE || 
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           this.gameState === GameState.WHAT_IS_COMING_VOTE || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
            this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_IS_OUR_GOAL_VOTE_WINNER ||
+           this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
   }
 
@@ -207,12 +211,12 @@ export class GameStateManagerComponent implements OnInit {
     return gameState === GameState.WHERE_ARE_WE || 
            gameState === GameState.WHAT_DO_WE_FEAR ||
            gameState === GameState.WHO_ARE_WE || 
-           gameState === GameState.WHAT_IS_OUR_GOAL || 
+           gameState === GameState.WHAT_IS_COMING || 
            gameState === GameState.WHAT_ARE_WE_CAPABLE_OF || 
            gameState === GameState.WHERE_ARE_WE_VOTE || 
            gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            gameState === GameState.WHO_ARE_WE_VOTE || 
-           gameState === GameState.WHAT_IS_OUR_GOAL_VOTE || 
+           gameState === GameState.WHAT_IS_COMING_VOTE || 
            gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
   }
 
@@ -220,7 +224,7 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.WHERE_ARE_WE || 
            this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_OUR_GOAL || 
+           this.gameState === GameState.WHAT_IS_COMING || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
   }
 
