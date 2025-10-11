@@ -67,6 +67,25 @@
     }
 }
 
+@if (isGameInLocationCreationPhase()) {
+    <div class="location-layout">
+        <div class="location-panel">
+            <div class="map">
+                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+            </div>
+        </div>
+
+        <div class="card-column">
+            <mat-card class="instructions" appearance="outlined">
+                Now is the time to flesh out our world. Look to your device to define an important location in our new world.
+            </mat-card>
+            <mat-card class="game-session-display">
+                {{gameSessionDisplay.mapDescription}}
+            </mat-card>
+        </div>
+    </div>
+}
+
 @if (isGameInLocationSelectPhase()) {
     <div class="location-layout">
         <div class="location-panel">

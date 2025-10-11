@@ -44,11 +44,11 @@ export class GameService {
     return this.http.get<Player[]>(environment.nowhereBackendUrl + HttpConstants.PLAYER_PATH, { params });
   }
 
-  getWinningSubmission(gameCode: string): Observable<TextSubmission> {
+  getWinningSubmission(gameCode: string): Observable<TextSubmission[]> {
     const params = {
       gameCode: gameCode
     };
 
-    return this.http.get<TextSubmission>(environment.nowhereBackendUrl + '/collaborativeText/winner', { params });
+    return this.http.get<TextSubmission[]>(environment.nowhereBackendUrl + '/collaborativeText/winner', { params });
   }
 }

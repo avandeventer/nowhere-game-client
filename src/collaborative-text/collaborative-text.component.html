@@ -3,11 +3,22 @@
     <h1 class="collaborative-question">{{ getPhaseQuestion() }}</h1>
     <p class="collaborative-instruction">{{ getPhaseInstruction() }}</p>
     
-    @if (isWinningPhase() && winningSubmission) {
+    @if (isWinningPhase() && winningSubmissions.length > 0) {
       <div class="winning-submission">
-        <div class="winning-text" [class.typing]="isAnimating">
-          {{ currentDisplayText }}<span class="cursor" [class.blinking]="isAnimating">|</span>
-        </div>
+        @if (isInNewStatTypePhase()) {
+          <div class="multiple-submissions">
+            @for (submission of winningSubmissions; track submission.submissionId) {
+              <div class="submission-item">
+                <div class="submission-text">{{ submission.currentText }}</div>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Show single submission with animation for other phases -->
+          <div class="winning-text" [class.typing]="isAnimating">
+            {{ currentDisplayText }}<span class="cursor" [class.blinking]="isAnimating">|</span>
+          </div>
+        }
       </div>
     }
   </div>

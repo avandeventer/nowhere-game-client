@@ -228,6 +228,10 @@ export class GameStateManagerComponent implements OnInit {
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
   }
 
+  isGameInLocationCreationPhase() {
+    return this.gameState === GameState.WHERE_CAN_WE_GO;
+  }
+
   getTimerDuration(): number {
     return (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) ? 60 : 90;
   }

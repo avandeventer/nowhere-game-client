@@ -16,7 +16,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Input() gameCode: string = '';
   @Input() gameState: GameState = GameState.WHERE_ARE_WE;
 
-  winningSubmission: TextSubmission | null = null;
+  winningSubmissions: TextSubmission[] = [];
   isAnimating = false;
   currentDisplayText = '';
   displayIndex = 0;
@@ -48,22 +48,26 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   private loadWinningSubmission() {
     if (this.isWinningPhase()) {
       this.gameService.getWinningSubmission(this.gameCode).subscribe({
-        next: (submission) => {
-          this.winningSubmission = submission;
-          if (this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER) {
-            this.favorEntity = this.winningSubmission?.currentText || 'the Entity';
+        next: (submissions) => {
+          this.winningSubmissions = submissions;
+          if (this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER && submissions.length > 0) {
+            this.favorEntity = submissions[0].currentText || 'the Entity';
           }
           this.startTextAnimation();
         },
         error: (error) => {
-          console.error('Error loading winning submission:', error);
+          console.error('Error loading winning submissions:', error);
         }
       });
     } else {
-      this.winningSubmission = null;
+      this.winningSubmissions = [];
       this.currentDisplayText = '';
       this.displayIndex = 0;
     }
+  }
+
+  isInNewStatTypePhase(): boolean {
+    return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
   }
 
   isWinningPhase(): boolean {
@@ -75,13 +79,23 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   private startTextAnimation() {
-    if (!this.winningSubmission) return;
+    if (this.winningSubmissions.length === 0) return;
 
     this.isAnimating = true;
     this.currentDisplayText = '';
     this.displayIndex = 0;
 
-    const textAdditions = this.winningSubmission.additions;
+    // For WHAT_ARE_WE_CAPABLE_OF, show all submissions
+    if (this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS) {
+      this.animateMultipleSubmissions();
+    } else {
+      // For other phases, show the single submission
+      this.animateSingleSubmission(this.winningSubmissions[0]);
+    }
+  }
+
+  private animateSingleSubmission(submission: TextSubmission) {
+    const textAdditions = submission.additions;
     
     const animateNextWord = () => {
       if (this.displayIndex < textAdditions.length) {
@@ -94,6 +108,26 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     };
 
     animateNextWord();
+  }
+
+  private animateMultipleSubmissions() {
+    let currentSubmissionIndex = 0;
+    
+    const animateNextSubmission = () => {
+      if (currentSubmissionIndex < this.winningSubmissions.length) {
+        const submission = this.winningSubmissions[currentSubmissionIndex];
+        this.currentDisplayText = submission.currentText;
+        currentSubmissionIndex++;
+        
+        if (currentSubmissionIndex < this.winningSubmissions.length) {
+          setTimeout(animateNextSubmission, 1000); // 1 second delay between submissions
+        } else {
+          this.isAnimating = false;
+        }
+      }
+    };
+
+    animateNextSubmission();
   }
 
   getPhaseQuestion(): string {
@@ -124,9 +158,12 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   getPhaseInstruction(): string {
-    if (this.isWinningPhase()) {
+    if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
       console.log('Winning phase');
       return 'The winning submission is...';
+    } else if (this.isInNewStatTypePhase()) {
+      console.log('New stat type phase');
+      return 'The winning submissions are...';
     } else if (this.isVotingPhase()) {
       console.log('Voting phase');
       return 'The time has come to solidify our fate. Rank the descriptions on your device starting with your favorite first.';
