@@ -207,17 +207,9 @@ export class GameStateManagerComponent implements OnInit {
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
   }
 
-  private isGameInCollaborativeTextPhaseForState(gameState: GameState) {
-    return gameState === GameState.WHERE_ARE_WE || 
-           gameState === GameState.WHAT_DO_WE_FEAR ||
-           gameState === GameState.WHO_ARE_WE || 
-           gameState === GameState.WHAT_IS_COMING || 
-           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF || 
-           gameState === GameState.WHERE_ARE_WE_VOTE || 
-           gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
-           gameState === GameState.WHO_ARE_WE_VOTE || 
-           gameState === GameState.WHAT_IS_COMING_VOTE || 
-           gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
+  isGameInFearQuestions() {
+    return this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE || this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER
+    || this.gameState === GameState.WHAT_IS_COMING || this.gameState === GameState.WHAT_IS_COMING_VOTE || this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER;
   }
 
   isGameInCollaborativeTextWritingPhase() {
@@ -229,7 +221,7 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInLocationCreationPhase() {
-    return this.gameState === GameState.WHERE_CAN_WE_GO;
+    return this.gameState === GameState.WHERE_CAN_WE_GO || this.gameState === GameState.WHAT_OCCUPATIONS_ARE_THERE;
   }
 
   getTimerDuration(): number {
@@ -256,10 +248,16 @@ export class GameStateManagerComponent implements OnInit {
     if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
       return 'JustTryYourBest_NoTension.wav';
     }
-    if (this.isGameInWritingPhase() || this.isGameInWriteEndingsPhase() || this.isGameInCollaborativeTextPhase()) {
+    if (this.isGameInWritingPhase() 
+      || this.isGameInWriteEndingsPhase() 
+      || (this.isGameInCollaborativeTextPhase() && !this.isGameInFearQuestions())
+      || this.isGameInLocationCreationPhase()) {
       return 'FolkSoundscape_1.wav';
     }
-    if (this.gameState === GameState.ROUND2 || this.isGameInRitualPhase() || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {
+    if (this.isGameInRitualPhase() || this.isGameInFearQuestions()) {
+      return 'Ritual_TestLoop.wav';
+    }
+    if (this.gameState === GameState.ROUND2 || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {
       return 'JustTryYourBest_TensionTail_BanjoTag.wav';
     }
     return '';
