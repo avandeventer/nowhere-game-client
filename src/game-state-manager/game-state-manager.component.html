@@ -84,6 +84,13 @@
             </mat-card>
         </div>
     </div>
+    
+    <app-timer 
+        [duration]="getTimerDuration()" 
+        [label]="'Location Creation'"
+        [autoStart]="true"
+        (timerComplete)="onLocationCreationTimerComplete()">
+    </app-timer>
 }
 
 @if (isGameInLocationSelectPhase()) {
@@ -119,6 +126,13 @@
             </mat-card>
         </div>
     </div>
+    
+    <app-timer 
+        [duration]="getTimerDuration()" 
+        [label]="'Writing Phase'"
+        [autoStart]="true"
+        (timerComplete)="onWritingTimerComplete()">
+    </app-timer>
 }
 
 @if (isGameInAdventurePhase()) {
@@ -158,6 +172,20 @@
     </div>
 }
 
+@if (isGameInWriteEndingTextPhase()) {
+    <app-collaborative-text 
+        [gameCode]="gameCode" 
+        [gameState]="gameState">
+    </app-collaborative-text>
+    
+    <app-timer 
+        [duration]="getTimerDuration()" 
+        [label]="'Ending Text Writing'"
+        [autoStart]="true"
+        (timerComplete)="onEndingTextTimerComplete()">
+    </app-timer>
+}
+
 @if (isGameInWriteEndingsPhase()) {
     <div class="location-layout">
         <div class="location-panel">
@@ -167,15 +195,15 @@
         </div>
         <div class="card-column">
             <mat-card class="game-session-display">
-                @if (totalPointsTowardsVictory > 8) {
+                @if (totalPointsTowardsVictory > 10) {
                     {{gameSessionDisplay.successText}}<br><br>
                 } 
 
-                @if (totalPointsTowardsVictory >= -8 && totalPointsTowardsVictory <= 8) {
+                @if (totalPointsTowardsVictory >= -10 && totalPointsTowardsVictory <= 10) {
                     {{gameSessionDisplay.neutralText}}<br><br>
                 }
 
-                @if (totalPointsTowardsVictory < -8) {
+                @if (totalPointsTowardsVictory < -10) {
                     {{gameSessionDisplay.failureText}}<br><br>
                 }
             </mat-card>

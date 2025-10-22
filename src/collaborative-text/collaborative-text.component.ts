@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { GameService } from '../services/game-session.service';
 import { GameState } from '../assets/game-state';
 import { TextSubmission } from '../assets/collaborative-text-phase';
-import { StatType } from 'src/assets/stat-type';
 
 @Component({
   selector: 'app-collaborative-text',
@@ -152,6 +151,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE:
       case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS:
         return 'What are we capable of?';
+      case GameState.WRITE_ENDING_TEXT:
+        return 'How will our story end?';
       default:
         return 'Collaborative Writing';
     }
@@ -169,35 +170,45 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       return 'The time has come to solidify our fate. Rank the descriptions on your device starting with your favorite first.';
     } else {
       console.log('Collaborative text phase');
-      return this.getCollaborativeTextInstruction();
+        return this.getCollaborativeTextInstruction();
     }
   }
 
   getCollaborativeTextInstruction() {
     let collaborativeTextInstruction = '';
 
+    let collaborativeTextSimpleModeInstruction = '<br><br>Submit as many ideas as you can from your device!';
+    let collaborativeTextCollaborativeModeInstruction = '<br><br>Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
     switch (this.gameState) {
       case GameState.WHERE_ARE_WE:
         collaborativeTextInstruction = 'We will begin by describing our world.';
         break;
       case GameState.WHAT_DO_WE_FEAR:
         collaborativeTextInstruction = 'What do we fear? What person, group, or entity holds power in this world?';
+        collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
         break;
       case GameState.WHO_ARE_WE:
         collaborativeTextInstruction = 'Define who we are together. What is our goal?';
+        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       case GameState.WHAT_IS_COMING:
-        collaborativeTextInstruction = 'Something is coming. An event that will occur at the end of the season where we will encounter ' + this.favorEntity + ' and be judged. What must we each do when it arrives to ensure our success or survival?';
+        collaborativeTextInstruction = 'An event will occur at the end of the season where we will be judged by ' + this.favorEntity + '. What must we each do when they arrive to ensure our success or survival?';
+        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       case GameState.WHAT_ARE_WE_CAPABLE_OF:
-        collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you thing we will need to be good at to survive.';
+        collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you think we will need to be good at to survive.';
+        collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
+        break;
+      case GameState.WRITE_ENDING_TEXT:
+        collaborativeTextInstruction = 'Based on how well we have done as a group, write the ending text that will be displayed. This will determine how our story concludes.';
+        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       default:
         return 'Do your best to answer the question above!';
     }
 
     console.log('Collaborative text instruction:', collaborativeTextInstruction);
-    return collaborativeTextInstruction + ' Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
+    return collaborativeTextInstruction;
   }
 
   isVotingPhase(): boolean {
@@ -214,6 +225,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_COMING || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
+           this.gameState === GameState.WRITE_ENDING_TEXT ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE || 
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE || 
@@ -231,6 +243,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHAT_DO_WE_FEAR ||
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_COMING || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF;
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
+           this.gameState === GameState.WRITE_ENDING_TEXT;
   }
 }

@@ -45,6 +45,9 @@ export class GameStateManagerComponent implements OnInit {
   isMusicEnabled: boolean = true;
   private currentMusicTrack: string = '';
   
+  // Timer properties
+  private previousGameState: GameState = GameState.INIT;
+  
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated.emit(gameSessionCreated);
     this.gameState = GameState.INIT;
@@ -83,6 +86,13 @@ export class GameStateManagerComponent implements OnInit {
   
       console.log('New game state received:', this.gameState);
       console.log('New adventureMap:', this.adventureMap);
+      
+      // Check if game state changed and reset timer if needed
+      if (previousGameState !== this.gameState) {
+        this.previousGameState = previousGameState;
+        console.log('Game state changed from', previousGameState, 'to', this.gameState);
+        // Timer will automatically reset when the component re-renders with new duration
+      }
       
       this.updateBackgroundMusic();
       
@@ -224,8 +234,18 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.WHERE_CAN_WE_GO || this.gameState === GameState.WHAT_OCCUPATIONS_ARE_THERE;
   }
 
+  isGameInWriteEndingTextPhase() {
+    return this.gameState === GameState.WRITE_ENDING_TEXT;
+  }
+
   getTimerDuration(): number {
-    return (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) ? 60 : 90;
+    if (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) {
+      return 60;
+    }
+    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingTextPhase()) {
+      return 180; // 3 minutes for writing, location creation, and ending text phases
+    }
+    return 90;
   }
 
   toggleMusic(): void {
@@ -248,6 +268,7 @@ export class GameStateManagerComponent implements OnInit {
     if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
       return 'JustTryYourBest_NoTension.wav';
     }
+    
     if (this.isGameInWritingPhase() 
       || this.isGameInWriteEndingsPhase() 
       || (this.isGameInCollaborativeTextPhase() && !this.isGameInFearQuestions())
@@ -268,6 +289,51 @@ export class GameStateManagerComponent implements OnInit {
    */
   onCollaborativeTextTimerComplete() {
     console.log('Collaborative text timer completed, advancing to next game phase...');
+    this.timerService.onTimerComplete(this.gameCode).subscribe({
+      next: (response) => {
+        console.log('Game phase advanced successfully', response);
+      },
+      error: (error) => {
+        console.error('Error advancing game phase:', error);
+      }
+    });
+  }
+
+  /**
+   * Handles timer completion for writing phases
+   */
+  onWritingTimerComplete() {
+    console.log('Writing timer completed, advancing to next game phase...');
+    this.timerService.onTimerComplete(this.gameCode).subscribe({
+      next: (response) => {
+        console.log('Game phase advanced successfully', response);
+      },
+      error: (error) => {
+        console.error('Error advancing game phase:', error);
+      }
+    });
+  }
+
+  /**
+   * Handles timer completion for location creation phases
+   */
+  onLocationCreationTimerComplete() {
+    console.log('Location creation timer completed, advancing to next game phase...');
+    this.timerService.onTimerComplete(this.gameCode).subscribe({
+      next: (response) => {
+        console.log('Game phase advanced successfully', response);
+      },
+      error: (error) => {
+        console.error('Error advancing game phase:', error);
+      }
+    });
+  }
+
+  /**
+   * Handles timer completion for ending text phase
+   */
+  onEndingTextTimerComplete() {
+    console.log('Ending text timer completed, advancing to next game phase...');
     this.timerService.onTimerComplete(this.gameCode).subscribe({
       next: (response) => {
         console.log('Game phase advanced successfully', response);

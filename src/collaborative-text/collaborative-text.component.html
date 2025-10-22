@@ -1,7 +1,7 @@
 <div class="collaborative-text-display" [class.animate-in]="showDisplay">
   <div class="question-container">
     <h1 class="collaborative-question">{{ getPhaseQuestion() }}</h1>
-    <p class="collaborative-instruction">{{ getPhaseInstruction() }}</p>
+    <p class="collaborative-instruction" [innerHTML]="getPhaseInstruction()"></p>
     
     @if (isWinningPhase() && winningSubmissions.length > 0) {
       <div class="winning-submission">
@@ -14,7 +14,6 @@
             }
           </div>
         } @else {
-          <!-- Show single submission with animation for other phases -->
           <div class="winning-text" [class.typing]="isAnimating">
             {{ currentDisplayText }}<span class="cursor" [class.blinking]="isAnimating">|</span>
           </div>
