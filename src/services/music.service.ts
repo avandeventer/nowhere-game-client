@@ -47,7 +47,9 @@ export class MusicService {
     }
 
     this.backgroundMusic.pause();
-    this.backgroundMusic.src = `assets/music/${trackName}`;
+    
+    this.backgroundMusic.src = `https://storage.googleapis.com/nowhere_images/music/${trackName}`;
+    
     this.backgroundMusic.load();
     this.backgroundMusic.play().catch(error => {
       console.log('Autoplay prevented:', error);

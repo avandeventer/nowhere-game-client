@@ -160,13 +160,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   getPhaseInstruction(): string {
     if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
-      console.log('Winning phase');
       return 'The winning submission is...';
     } else if (this.isInNewStatTypePhase()) {
-      console.log('New stat type phase');
       return 'The winning submissions are...';
     } else if (this.isVotingPhase()) {
-      console.log('Voting phase');
       return 'The time has come to solidify our fate. Rank the descriptions on your device starting with your favorite first.';
     } else {
       console.log('Collaborative text phase');
