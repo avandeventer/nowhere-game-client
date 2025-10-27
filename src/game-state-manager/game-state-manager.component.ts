@@ -240,12 +240,12 @@ export class GameStateManagerComponent implements OnInit {
 
   getTimerDuration(): number {
     if (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) {
-      return 60;
+      return 90;
     }
-    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingTextPhase()) {
+    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase()) {
       return 180; // 3 minutes for writing, location creation, and ending text phases
     }
-    return 90;
+    return 120;
   }
 
   toggleMusic(): void {
@@ -285,10 +285,10 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   /**
-   * Handles timer completion for collaborative text phases
+   * Handles timer completion for all game phases
    */
-  onCollaborativeTextTimerComplete() {
-    console.log('Collaborative text timer completed, advancing to next game phase...');
+  onTimerComplete() {
+    console.log(`Timer completed for game phase: ${this.gameState}, advancing to next phase...`);
     this.timerService.onTimerComplete(this.gameCode).subscribe({
       next: (response) => {
         console.log('Game phase advanced successfully', response);
@@ -298,50 +298,4 @@ export class GameStateManagerComponent implements OnInit {
       }
     });
   }
-
-  /**
-   * Handles timer completion for writing phases
-   */
-  onWritingTimerComplete() {
-    console.log('Writing timer completed, advancing to next game phase...');
-    this.timerService.onTimerComplete(this.gameCode).subscribe({
-      next: (response) => {
-        console.log('Game phase advanced successfully', response);
-      },
-      error: (error) => {
-        console.error('Error advancing game phase:', error);
-      }
-    });
-  }
-
-  /**
-   * Handles timer completion for location creation phases
-   */
-  onLocationCreationTimerComplete() {
-    console.log('Location creation timer completed, advancing to next game phase...');
-    this.timerService.onTimerComplete(this.gameCode).subscribe({
-      next: (response) => {
-        console.log('Game phase advanced successfully', response);
-      },
-      error: (error) => {
-        console.error('Error advancing game phase:', error);
-      }
-    });
-  }
-
-  /**
-   * Handles timer completion for ending text phase
-   */
-  onEndingTextTimerComplete() {
-    console.log('Ending text timer completed, advancing to next game phase...');
-    this.timerService.onTimerComplete(this.gameCode).subscribe({
-      next: (response) => {
-        console.log('Game phase advanced successfully', response);
-      },
-      error: (error) => {
-        console.error('Error advancing game phase:', error);
-      }
-    });
-  }
-
 }

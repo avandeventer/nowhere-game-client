@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { timer, Subscription } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
@@ -8,18 +8,26 @@ import { map, takeWhile } from 'rxjs/operators';
   templateUrl: './timer.component.html',
   styleUrl: './timer.component.scss'
 })
-export class TimerComponent implements OnInit, OnDestroy {
+export class TimerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() duration: number = 90; // Duration in seconds
   @Input() label: string = 'Time Remaining';
   @Input() autoStart: boolean = true;
+  @Input() manualStart: boolean = false; // New input to trigger manual start
   @Output() timerComplete = new EventEmitter<void>();
   @Output() timerTick = new EventEmitter<number>();
 
   currentCountdown: number = 0;
   private timerSubscription?: Subscription;
+  private hasStarted: boolean = false;
 
   ngOnInit() {
     if (this.autoStart) {
+      this.startTimer();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['manualStart'] && changes['manualStart'].currentValue && !this.hasStarted) {
       this.startTimer();
     }
   }
@@ -30,6 +38,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   startTimer() {
     this.stopTimer(); // Stop any existing timer
+    this.hasStarted = true;
 
     this.currentCountdown = this.duration;
     

@@ -7,6 +7,7 @@ import { environment } from '../environments/environments';
 import { HttpConstants } from '../assets/http-constants';
 import { Player } from '../assets/player';
 import { TextSubmission } from '../assets/collaborative-text-phase';
+import { ActivePlayerSession } from '../assets/active-player-session';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
