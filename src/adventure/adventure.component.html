@@ -44,12 +44,10 @@
                 <div>
                     <div class="fade-in">{{currentTurnPlayer?.userName}} has learned things about {{favorEntity}}</div>
                     @if (activePlayerSession.repercussions?.ending?.options?.[0]?.optionText != "") {
-                        <div class="fade-in">************</div>
                         <div class="fade-in">If you wanted to try to impress them you could {{activePlayerSession.repercussions?.ending?.options?.[0]?.optionText}}</div>
                     }
 
                     @if (activePlayerSession.repercussions?.ending?.options?.[1]?.optionText != "") {
-                        <div class="fade-in">************</div>
                         <div class="fade-in">If you wanted to try to weaken them you could {{activePlayerSession.repercussions?.ending?.options?.[1]?.optionText}}</div>
                     }
                 </div>
