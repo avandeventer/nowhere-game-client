@@ -1,7 +1,9 @@
 <div class="timer-container">
   <div class="timer-display">
-    <span class="timer-label">{{ label }}:</span>
-    <span class="timer-value" [class.timer-warning]="currentCountdown <= 10">
+    <span class="timer-label">{{ getDisplayLabel() }}:</span>
+    <span class="timer-value" 
+          [class.timer-warning]="currentCountdown <= 10 && hasTimerStarted()"
+          [class.timer-not-started]="!hasTimerStarted()">
       {{ formatTime(currentCountdown) }}
     </span>
   </div>
