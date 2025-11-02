@@ -7,6 +7,7 @@ export class GameSessionDisplay {
     successText: string;
     neutralText: string;
     failureText: string;
+    entity: string = "";
 
     constructor() {
         this.mapDescription = "";
@@ -17,5 +18,6 @@ export class GameSessionDisplay {
         this.successText = "";
         this.neutralText = "";
         this.failureText = "";
+        this.entity = "";
     }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GameService } from '../services/game-session.service';
 import { GameState } from '../assets/game-state';
 import { TextSubmission } from '../assets/collaborative-text-phase';
+import { GameSessionDisplay } from 'src/assets/game-session-display';
 
 @Component({
   selector: 'app-collaborative-text',
@@ -21,18 +22,23 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   displayIndex = 0;
   showDisplay = false;
   favorEntity: string = 'the Entity';
+  gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
 
   constructor(private gameService: GameService) {}
 
   ngOnInit() { 
+    this.loadGameSessionDisplay();
     setTimeout(() => {
       this.showDisplay = true;
     }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['gameState'] && this.isWinningPhase()) {
-      this.loadWinningSubmission();
+    if (changes['gameState']) {
+      if (this.isWinningPhase()) {
+        this.loadWinningSubmission();
+      }
+      this.loadGameSessionDisplay();
     }
 
     if (this.isCollaborativeTextWritingPhase()) {
@@ -49,9 +55,6 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       this.gameService.getWinningSubmission(this.gameCode).subscribe({
         next: (submissions) => {
           this.winningSubmissions = submissions;
-          if (this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER && submissions.length > 0) {
-            this.favorEntity = submissions[0].currentText || 'the Entity';
-          }
           this.startTextAnimation();
         },
         error: (error) => {
@@ -63,6 +66,17 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       this.currentDisplayText = '';
       this.displayIndex = 0;
     }
+  }
+
+  loadGameSessionDisplay() {
+    this.gameService.getGameSessionDisplay(this.gameCode).subscribe({
+      next: (display) => {
+        this.gameSessionDisplay = display;
+      },
+      error: (error) => {
+        console.error('Error loading game session display:', error);
+      }
+    });
   }
 
   isInNewStatTypePhase(): boolean {
@@ -189,6 +203,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       case GameState.WHAT_IS_COMING:
+        this.favorEntity = this.gameSessionDisplay.entity ? this.gameSessionDisplay.entity : 'the Entity';
         collaborativeTextInstruction = 'An event will occur at the end of the season where we will be judged by ' + this.favorEntity + '. What must we each do when they arrive to ensure our success or survival?';
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;

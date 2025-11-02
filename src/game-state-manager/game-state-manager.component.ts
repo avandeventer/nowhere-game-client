@@ -132,9 +132,9 @@ export class GameStateManagerComponent implements OnInit {
       case GameState.PREAMBLE:
         return this.gameSessionDisplay.mapDescription;
       case GameState.PREAMBLE_AGAIN:
-        return this.gameSessionDisplay.goalDescription;
+        return this.gameSessionDisplay.playerDescription;
       case GameState.ENDING_PREAMBLE:
-        return this.gameSessionDisplay.endingDescription;
+        return this.gameSessionDisplay.goalDescription + this.gameSessionDisplay.endingDescription;
       default:
         return this.gameSessionDisplay.mapDescription;
     }

@@ -8,6 +8,7 @@ import { HttpConstants } from '../assets/http-constants';
 import { Player } from '../assets/player';
 import { TextSubmission } from '../assets/collaborative-text-phase';
 import { ActivePlayerSession } from '../assets/active-player-session';
+import { GameSessionDisplay } from 'src/assets/game-session-display';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -32,9 +33,9 @@ export class GameService {
     );
   }
 
-  getGameSessionDisplay(gameCode: string): Observable<any> {
+  getGameSessionDisplay(gameCode: string): Observable<GameSessionDisplay> {
     const parameter = "?gameCode=" + gameCode;
-    return this.http.get(environment.nowhereBackendUrl + HttpConstants.DISPLAY_PATH + parameter);
+    return this.http.get<GameSessionDisplay>(environment.nowhereBackendUrl + HttpConstants.DISPLAY_PATH + parameter) as Observable<GameSessionDisplay>;
   }
 
   getPlayers(gameCode: string): Observable<Player[]> {
