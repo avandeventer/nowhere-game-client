@@ -55,7 +55,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       this.gameService.getWinningSubmission(this.gameCode).subscribe({
         next: (submissions) => {
           this.winningSubmissions = submissions;
-          this.startTextAnimation();
+          // For WHAT_WILL_BECOME_OF_US, don't display the text - keep it secret
+          if (!this.isSecretWinningPhase()) {
+            this.startTextAnimation();
+          }
         },
         error: (error) => {
           console.error('Error loading winning submissions:', error);
@@ -88,7 +91,12 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
            this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
+  }
+
+  isSecretWinningPhase(): boolean {
+    return this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
   }
 
   private startTextAnimation() {
@@ -165,6 +173,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE:
       case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS:
         return 'What are we capable of?';
+      case GameState.WHAT_WILL_BECOME_OF_US:
+      case GameState.WHAT_WILL_BECOME_OF_US_VOTE:
+      case GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER:
+        return 'What will become of us?';
       case GameState.WRITE_ENDING_TEXT:
         return 'How will our story end?';
       default:
@@ -173,7 +185,9 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   getPhaseInstruction(): string {
-    if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
+    if (this.isSecretWinningPhase()) {
+      return 'The endings have been determined and will remain secret until the finale.';
+    } else if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
       return 'The winning submission is...';
     } else if (this.isInNewStatTypePhase()) {
       return 'The winning submissions are...';
@@ -211,6 +225,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
         collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you think we will need to be good at to survive.';
         collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
         break;
+      case GameState.WHAT_WILL_BECOME_OF_US:
+        collaborativeTextInstruction = 'Write the ending text for your assigned outcome type.';
+        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
+        break;
       case GameState.WRITE_ENDING_TEXT:
         collaborativeTextInstruction = 'Based on how well we have done as a group, write the ending text that will be displayed. This will determine how our story concludes.';
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
@@ -228,7 +246,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE ||
            this.gameState === GameState.WHAT_IS_COMING_VOTE ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE;
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE;
   }
 
   isCollaborativeTextPhase(): boolean {
@@ -237,17 +256,20 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_COMING || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US ||
            this.gameState === GameState.WRITE_ENDING_TEXT ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE || 
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
            this.gameState === GameState.WHO_ARE_WE_VOTE || 
            this.gameState === GameState.WHAT_IS_COMING_VOTE || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE ||
            this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
            this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
            this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
+           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
   }
 
   isCollaborativeTextWritingPhase(): boolean {
@@ -256,6 +278,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
            this.gameState === GameState.WHO_ARE_WE || 
            this.gameState === GameState.WHAT_IS_COMING || 
            this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
+           this.gameState === GameState.WHAT_WILL_BECOME_OF_US ||
            this.gameState === GameState.WRITE_ENDING_TEXT;
   }
 }

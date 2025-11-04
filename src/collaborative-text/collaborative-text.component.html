@@ -5,7 +5,12 @@
     
     @if (isWinningPhase() && winningSubmissions.length > 0) {
       <div class="winning-submission">
-        @if (isInNewStatTypePhase()) {
+        @if (isSecretWinningPhase()) {
+          <!-- Secret phase - don't display the winning text -->
+          <div class="secret-message">
+            <p>The endings have been determined and will remain secret until the finale.</p>
+          </div>
+        } @else if (isInNewStatTypePhase()) {
           <div class="multiple-submissions">
             @for (submission of winningSubmissions; track submission.submissionId) {
               <div class="submission-item">

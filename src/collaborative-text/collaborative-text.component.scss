@@ -133,3 +133,16 @@
     font-size: 1.2rem;
   }
 }
+
+.secret-message {
+  padding: 20px;
+  text-align: center;
+  
+  p {
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0;
+    font-style: italic;
+    opacity: 0.9;
+  }
+}
