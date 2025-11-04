@@ -102,7 +102,7 @@ export class LocationComponent implements OnInit {
       const maxAllowedRadius = 180; // <-- tweak this to keep buttons inside your visual circle
       const maxRadiusByHeight = window.innerHeight / 2; // Example threshold
       const maxRadiusByWidth = window.innerWidth / 2;
-      const dynamicRadius = mapCenter - (totalButtons * 10);
+      const dynamicRadius = mapCenter - (totalButtons * 20);
       const radius = Math.min(dynamicRadius, maxAllowedRadius, maxRadiusByHeight, maxRadiusByWidth);
           
       const angle = (2 * Math.PI / totalButtons) * locationId; // Evenly spaced angle
