@@ -9,6 +9,7 @@ import { ActiveGameStateSession } from 'src/assets/active-game-state-session';
 import { LocationComponent } from 'src/location/location.component';
 import { FinaleComponent } from 'src/finale/finale.component';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
+import { WinState } from 'src/assets/win-state';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,6 +40,7 @@ export class GameStateManagerComponent implements OnInit {
   totalPointsTowardsVictory: number = 0;
   favorStat: StatType = new StatType();
   qrCodeUrl: string = '';
+  winState: WinState = new WinState();
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
   // Music toggle properties
@@ -92,6 +94,11 @@ export class GameStateManagerComponent implements OnInit {
         this.previousGameState = previousGameState;
         console.log('Game state changed from', previousGameState, 'to', this.gameState);
         // Timer will automatically reset when the component re-renders with new duration
+      }
+      
+      // Load victory state when entering write endings phase
+      if (this.isGameInWriteEndingsPhase() && previousGameState !== this.gameState) {
+        this.loadVictoryState();
       }
       
       this.updateBackgroundMusic();
@@ -269,6 +276,11 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   private getMusicTrackForGameState(): string {
+    // Play epilogue music for SUCCESS or DESTROYED states
+    if (this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) {
+      return 'Nowhere_Epilogue_Loop_V1.wav';
+    }
+    
     if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
       return 'JustTryYourBest_NoTension.wav';
     }
@@ -288,18 +300,47 @@ export class GameStateManagerComponent implements OnInit {
     return '';
   }
 
+  private loadVictoryState() {
+    this.gameService.getVictory(this.gameCode)
+      .subscribe({
+        next: (winState: WinState) => {
+          console.log('Victory state loaded:', winState);
+          this.winState = winState;
+          // Update music after loading victory state
+          this.updateBackgroundMusic();
+        },
+        error: (error: any) => {
+          console.error('Error loading victory state', error);
+        }
+      });
+  }
+
   /**
    * Handles timer completion for all game phases
    */
   onTimerComplete() {
     console.log(`Timer completed for game phase: ${this.gameState}, advancing to next phase...`);
-    this.timerService.onTimerComplete(this.gameCode).subscribe({
-      next: (response) => {
-        console.log('Game phase advanced successfully', response);
-      },
-      error: (error) => {
-        console.error('Error advancing game phase:', error);
-      }
-    });
+    
+    // For write phases, set writeTimerDone instead of advancing
+    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase()) {
+      this.timerService.setWriteTimerDone(this.gameCode).subscribe({
+        next: (response) => {
+          console.log('writeTimerDone set successfully', response);
+        },
+        error: (error) => {
+          console.error('Error setting writeTimerDone:', error);
+        }
+      });
+    } else {
+      // For other phases, advance to next phase
+      this.timerService.onTimerComplete(this.gameCode).subscribe({
+        next: (response) => {
+          console.log('Game phase advanced successfully', response);
+        },
+        error: (error) => {
+          console.error('Error advancing game phase:', error);
+        }
+      });
+    }
   }
 }

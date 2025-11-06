@@ -194,21 +194,17 @@
     <div class="location-layout">
         <div class="location-panel">
             <div class="map">
-                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+                @if (winState.outcomeImage) {
+                    <img [src]="winState.outcomeImage" alt="Outcome" class="pyre">
+                } @else {
+                    <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+                }
             </div>
         </div>
         <div class="card-column">
             <mat-card class="game-session-display">
-                @if (totalPointsTowardsVictory > 10) {
-                    {{gameSessionDisplay.successText}}<br><br>
-                } 
-
-                @if (totalPointsTowardsVictory >= -10 && totalPointsTowardsVictory <= 10) {
-                    {{gameSessionDisplay.neutralText}}<br><br>
-                }
-
-                @if (totalPointsTowardsVictory < -10) {
-                    {{gameSessionDisplay.failureText}}<br><br>
+                @if (winState.outcomeText) {
+                    {{winState.outcomeText}}<br><br>
                 }
             </mat-card>
             <mat-card class="instructions" appearance="outlined">

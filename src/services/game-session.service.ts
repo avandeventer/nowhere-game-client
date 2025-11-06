@@ -9,6 +9,7 @@ import { Player } from '../assets/player';
 import { TextSubmission } from '../assets/collaborative-text-phase';
 import { ActivePlayerSession } from '../assets/active-player-session';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
+import { WinState } from 'src/assets/win-state';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -52,5 +53,13 @@ export class GameService {
     };
 
     return this.http.get<TextSubmission[]>(environment.nowhereBackendUrl + '/collaborativeText/winner', { params });
+  }
+
+  getVictory(gameCode: string): Observable<WinState> {
+    const params = {
+      gameCode: gameCode
+    };
+
+    return this.http.get<WinState>(environment.nowhereBackendUrl + HttpConstants.VICTORY_PATH, { params });
   }
 }

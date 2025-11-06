@@ -32,4 +32,21 @@ export class TimerService {
     console.log('Timer completed, advancing to next game phase...');
     return this.nextGamePhase(gameCode);
   }
+
+  /**
+   * Sets writeTimerDone to true for the active player session
+   * @param gameCode The current game code
+   * @returns Observable of the updated ActivePlayerSession
+   */
+  setWriteTimerDone(gameCode: string): Observable<any> {
+    console.log('Setting writeTimerDone to true for game:', gameCode);
+    const activePlayerSession = {
+      gameCode: gameCode,
+      writeTimerDone: true
+    };
+    return this.http.put(
+      environment.nowhereBackendUrl + HttpConstants.ACTIVE_PLAYER_SESSION_PATH,
+      activePlayerSession
+    );
+  }
 }

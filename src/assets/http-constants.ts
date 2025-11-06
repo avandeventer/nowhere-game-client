@@ -15,4 +15,5 @@ export abstract class HttpConstants {
     static readonly ADMIN_STORY: string = "/admin/story/all";
     static readonly DISPLAY_PATH: string = "/display";
     static readonly ADVENTURE_MAP_PATH: string = "/adventure-map";
+    static readonly VICTORY_PATH: string = "/victory";
 }
