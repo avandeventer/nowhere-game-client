@@ -186,7 +186,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   getPhaseInstruction(): string {
     if (this.isSecretWinningPhase()) {
-      return 'The endings have been determined and will remain secret until the finale.';
+      return 'The threads before us have now been sealed. Only our choices ahead can reveal them to us. Now we must build this place.';
     } else if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
       return 'The winning submission is...';
     } else if (this.isInNewStatTypePhase()) {
@@ -204,6 +204,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
     let collaborativeTextSimpleModeInstruction = '<br><br>Submit as many ideas as you can from your device!';
     let collaborativeTextCollaborativeModeInstruction = '<br><br>Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
+    this.favorEntity = this.gameSessionDisplay.entity ? this.gameSessionDisplay.entity : 'the Entity';
+
     switch (this.gameState) {
       case GameState.WHERE_ARE_WE:
         collaborativeTextInstruction = 'We will begin by describing our world.';
@@ -217,7 +219,6 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       case GameState.WHAT_IS_COMING:
-        this.favorEntity = this.gameSessionDisplay.entity ? this.gameSessionDisplay.entity : 'the Entity';
         collaborativeTextInstruction = 'An event will occur at the end of the season where we will be judged by ' + this.favorEntity + '. What must we each do when they arrive to ensure our success or survival?';
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
@@ -226,7 +227,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
         collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
         break;
       case GameState.WHAT_WILL_BECOME_OF_US:
-        collaborativeTextInstruction = 'Write the ending text for your assigned outcome type.';
+        collaborativeTextInstruction = 'What will become of us when our confrontation with ' + this.favorEntity + ' is over?';
+        collaborativeTextCollaborativeModeInstruction = '<br><br>Your friends will help, but each of us starts with a different prompt for this one!';
         collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
         break;
       case GameState.WRITE_ENDING_TEXT:
