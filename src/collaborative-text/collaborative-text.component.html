@@ -1,24 +1,35 @@
-<div class="collaborative-text-display" [class.animate-in]="showDisplay">
-  <div class="question-container">
-    <h1 class="collaborative-question">{{ getPhaseQuestion() }}</h1>
-    <p class="collaborative-instruction" [innerHTML]="getPhaseInstruction()"></p>
-    
-    @if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
-      <div class="winning-submission">
-        @if (isInNewStatTypePhase()) {
-          <div class="multiple-submissions">
-            @for (submission of winningSubmissions; track submission.submissionId) {
-              <div class="submission-item">
-                <div class="submission-text">{{ submission.currentText }}</div>
-              </div>
-            }
-          </div>
-        } @else {
-          <div class="winning-text" [class.typing]="isAnimating">
-            {{ currentDisplayText }}<span class="cursor" [class.blinking]="isAnimating">|</span>
-          </div>
-        }
-      </div>
-    }
+<div class="collaborative-text-wrapper" [class.animate-in]="showDisplay">
+  @if (phaseInfo?.showGameBoard) {
+    <div class="game-board-wrapper">
+      <app-game-board [gameCode]="gameCode"></app-game-board>
+    </div>
+  }
+  <div class="collaborative-text-display">
+    <div class="question-container">
+      <h1 class="collaborative-question">{{ getPhaseQuestion() }}</h1>
+      <p class="collaborative-instruction" [innerHTML]="getPhaseInstruction()"></p>
+      
+      @if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
+        <div class="winning-submission">
+          @if (isInNewStatTypePhase()) {
+            <div class="multiple-submissions">
+              @for (submission of winningSubmissions; track submission.submissionId) {
+                <div class="submission-item">
+                  <div class="submission-text">{{ submission.currentText }}</div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="winning-text" [class.typing]="isAnimating">
+              {{ currentDisplayText }}<span class="cursor" [class.blinking]="isAnimating">|</span>
+            </div>
+          }
+        </div>
+      }
+      
+      @if (phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
+        <app-story [story]="phaseInfo?.storyToIterateOn"></app-story>
+      }
+    </div>
   </div>
 </div>

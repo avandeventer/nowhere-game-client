@@ -4,17 +4,21 @@ import { GameService } from '../services/game-session.service';
 import { GameState } from '../assets/game-state';
 import { TextSubmission } from '../assets/collaborative-text-phase';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
+import { CollaborativeTextPhaseInfo, CollaborativeMode, PhaseType } from '../assets/collaborative-text-phase-info';
+import { GameBoardComponent } from '../game-board/game-board.component';
+import { StoryComponent } from '../story/story.component';
 
 @Component({
   selector: 'app-collaborative-text',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GameBoardComponent, StoryComponent],
   templateUrl: './collaborative-text.component.html',
   styleUrl: './collaborative-text.component.scss'
 })
 export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Input() gameCode: string = '';
   @Input() gameState: GameState = GameState.WHERE_ARE_WE;
+  @Input() phaseInfo: CollaborativeTextPhaseInfo | null = null;
 
   winningSubmissions: TextSubmission[] = [];
   isAnimating = false;
@@ -28,6 +32,9 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   ngOnInit() { 
     this.loadGameSessionDisplay();
+    if (this.isWinningPhase()) {
+      this.loadWinningSubmission();
+    }
     setTimeout(() => {
       this.showDisplay = true;
     }, 1000);
@@ -39,6 +46,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
         this.loadWinningSubmission();
       }
       this.loadGameSessionDisplay();
+    }
+
+    if (changes['phaseInfo'] && this.isWinningPhase()) {
+      this.loadWinningSubmission();
     }
 
     if (this.isCollaborativeTextWritingPhase()) {
@@ -82,17 +93,13 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     });
   }
 
+
   isInNewStatTypePhase(): boolean {
     return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
   }
 
   isWinningPhase(): boolean {
-    return this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
+    return this.phaseInfo?.phaseType === PhaseType.WINNING;
   }
 
   isSecretWinningPhase(): boolean {
@@ -152,135 +159,28 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   getPhaseQuestion(): string {
-    switch (this.gameState) {
-      case GameState.WHERE_ARE_WE:
-      case GameState.WHERE_ARE_WE_VOTE:
-      case GameState.WHERE_ARE_WE_VOTE_WINNER:
-        return 'Where are we?';
-      case GameState.WHAT_DO_WE_FEAR:
-      case GameState.WHAT_DO_WE_FEAR_VOTE:
-      case GameState.WHAT_DO_WE_FEAR_VOTE_WINNER:
-        return 'What do we fear?';
-      case GameState.WHO_ARE_WE:
-      case GameState.WHO_ARE_WE_VOTE:
-      case GameState.WHO_ARE_WE_VOTE_WINNER:
-        return 'Who are we?';
-      case GameState.WHAT_IS_COMING:
-      case GameState.WHAT_IS_COMING_VOTE:
-      case GameState.WHAT_IS_COMING_VOTE_WINNER:
-        return 'What is coming?';
-      case GameState.WHAT_ARE_WE_CAPABLE_OF:
-      case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE:
-      case GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS:
-        return 'What are we capable of?';
-      case GameState.WHAT_WILL_BECOME_OF_US:
-      case GameState.WHAT_WILL_BECOME_OF_US_VOTE:
-      case GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER:
-        return 'What will become of us?';
-      case GameState.WRITE_ENDING_TEXT:
-        return 'How will our story end?';
-      default:
-        return 'Collaborative Writing';
+    if (this.phaseInfo) {
+      return this.phaseInfo.phaseQuestion;
     }
+    return '';
   }
 
   getPhaseInstruction(): string {
-    if (this.isSecretWinningPhase()) {
-      return 'The threads before us have now been sealed. Only our choices ahead can reveal them to us. Now we must build this place.';
-    } else if (this.isWinningPhase() && !this.isInNewStatTypePhase()) {
-      return 'The winning submission is...';
-    } else if (this.isInNewStatTypePhase()) {
-      return 'The winning submissions are...';
-    } else if (this.isVotingPhase()) {
-      return 'The time has come to solidify our fate. Rank the descriptions on your device starting with your favorite first.';
-    } else {
-      console.log('Collaborative text phase');
-        return this.getCollaborativeTextInstruction();
+    if (this.phaseInfo) {
+      if (this.isCollaborativeTextWritingPhase() && this.phaseInfo.collaborativeModeInstructions) {
+        return this.phaseInfo.phaseInstructions + '<br><br>' + this.phaseInfo.collaborativeModeInstructions;
+      }
+      return this.phaseInfo.phaseInstructions;
     }
-  }
-
-  getCollaborativeTextInstruction() {
-    let collaborativeTextInstruction = '';
-
-    let collaborativeTextSimpleModeInstruction = '<br><br>Submit as many ideas as you can from your device!';
-    let collaborativeTextCollaborativeModeInstruction = '<br><br>Look to your device and don\'t worry about thinking too hard about what you say. Your friends will help!';
-    this.favorEntity = this.gameSessionDisplay.entity ? this.gameSessionDisplay.entity : 'the Entity';
-
-    switch (this.gameState) {
-      case GameState.WHERE_ARE_WE:
-        collaborativeTextInstruction = 'We will begin by describing our world.';
-        break;
-      case GameState.WHAT_DO_WE_FEAR:
-        collaborativeTextInstruction = 'What do we fear? What person, group, or entity holds power in this world?';
-        collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
-        break;
-      case GameState.WHO_ARE_WE:
-        collaborativeTextInstruction = 'Define who we are together. What is our goal?';
-        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
-        break;
-      case GameState.WHAT_IS_COMING:
-        collaborativeTextInstruction = 'An event will occur at the end of the season where we will be judged by ' + this.favorEntity + '. What must we each do when they arrive to ensure our success or survival?';
-        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
-        break;
-      case GameState.WHAT_ARE_WE_CAPABLE_OF:
-        collaborativeTextInstruction = 'We will need certain skills in order to overcome. List anything you think we will need to be good at to survive.';
-        collaborativeTextInstruction += collaborativeTextSimpleModeInstruction;
-        break;
-      case GameState.WHAT_WILL_BECOME_OF_US:
-        collaborativeTextInstruction = 'What will become of us when our confrontation with ' + this.favorEntity + ' is over?';
-        collaborativeTextCollaborativeModeInstruction = '<br><br>Your friends will help, but each of us starts with a different prompt for this one!';
-        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
-        break;
-      case GameState.WRITE_ENDING_TEXT:
-        collaborativeTextInstruction = 'Based on how well we have done as a group, write the ending text that will be displayed. This will determine how our story concludes.';
-        collaborativeTextInstruction += collaborativeTextCollaborativeModeInstruction;
-        break;
-      default:
-        return 'Do your best to answer the question above!';
-    }
-
-    console.log('Collaborative text instruction:', collaborativeTextInstruction);
-    return collaborativeTextInstruction;
+    
+    return 'The winning submission is...';
   }
 
   isVotingPhase(): boolean {
-    return this.gameState === GameState.WHERE_ARE_WE_VOTE ||
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE ||
-           this.gameState === GameState.WHAT_IS_COMING_VOTE ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE;
-  }
-
-  isCollaborativeTextPhase(): boolean {
-    return this.gameState === GameState.WHERE_ARE_WE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR ||
-           this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_COMING || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US ||
-           this.gameState === GameState.WRITE_ENDING_TEXT ||
-           this.gameState === GameState.WHERE_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_IS_COMING_VOTE || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE ||
-           this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
+    return this.phaseInfo?.phaseType === PhaseType.VOTING;
   }
 
   isCollaborativeTextWritingPhase(): boolean {
-    return this.gameState === GameState.WHERE_ARE_WE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR ||
-           this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_COMING || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US ||
-           this.gameState === GameState.WRITE_ENDING_TEXT;
+    return this.phaseInfo?.phaseType === PhaseType.SUBMISSION;
   }
 }

@@ -12,10 +12,18 @@
             <mat-panel-title>
               {{ entry.map.adventureMap.name }} - {{ selectedSaveGameName }}
             </mat-panel-title>
-            <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId)">
+            <mat-slide-toggle
+              [checked]="isDungeonMode(entry.map.adventureMap.adventureId)"
+              (change)="toggleGameMode(entry.map.adventureMap.adventureId)"
+              (click)="$event.stopPropagation()"
+              style="margin-right: 8px;"
+            >
+              {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Dungeon Mode' : 'Town Mode' }}
+            </mat-slide-toggle>
+            <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId); $event.stopPropagation()">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button matSuffix (click)="deactivateEditMapForm()">
+            <button mat-icon-button matSuffix (click)="deactivateEditMapForm(); $event.stopPropagation()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-expansion-panel-header>

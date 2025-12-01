@@ -21,6 +21,7 @@ import { TimerService } from 'src/services/timer.service';
 import { TimerComponent } from 'src/timer/timer.component';
 import { PlayerProgressComponent } from 'src/player-progress/player-progress.component';
 import { CollaborativeTextComponent } from 'src/collaborative-text/collaborative-text.component';
+import { CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
 
 @Component({
     selector: 'game-state-manager',
@@ -41,6 +42,7 @@ export class GameStateManagerComponent implements OnInit {
   favorStat: StatType = new StatType();
   qrCodeUrl: string = '';
   winState: WinState = new WinState();
+  collaborativeTextPhaseInfo: CollaborativeTextPhaseInfo | null = null;
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
   // Music toggle properties
@@ -68,6 +70,8 @@ export class GameStateManagerComponent implements OnInit {
     this.populateGameSessionDisplay(this.gameCode);
     this.setupBackgroundMusic();
     this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${this.gameCode}`;
+    // Load initial phase info
+    this.loadCollaborativeTextPhaseInfo();
     this.gameService.listenForGameStateChanges(this.gameCode)
       .subscribe((newState) => {
       const previousGameState = this.gameState;
@@ -94,6 +98,8 @@ export class GameStateManagerComponent implements OnInit {
         this.previousGameState = previousGameState;
         console.log('Game state changed from', previousGameState, 'to', this.gameState);
         // Timer will automatically reset when the component re-renders with new duration
+        // Load phase info when game state changes
+        this.loadCollaborativeTextPhaseInfo();
       }
       
       // Load victory state when entering write endings phase
@@ -107,6 +113,20 @@ export class GameStateManagerComponent implements OnInit {
       this.musicService.isMusicEnabled$.subscribe(enabled => {
         this.isMusicEnabled = enabled;
       });
+      });
+  }
+
+  private loadCollaborativeTextPhaseInfo() {
+    if (!this.gameCode) return;
+    
+    this.gameService.getCollaborativeTextPhaseInfo(this.gameCode).subscribe({
+      next: (phaseInfo: CollaborativeTextPhaseInfo) => {
+        this.collaborativeTextPhaseInfo = phaseInfo;
+      },
+      error: (error) => {
+        console.error('Error loading collaborative text phase info:', error);
+        this.collaborativeTextPhaseInfo = null;
+      }
     });
   }
 
@@ -207,24 +227,11 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInCollaborativeTextPhase() {
-    return this.gameState === GameState.WHERE_ARE_WE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR ||
-           this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_COMING || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF|| 
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US ||
-           this.gameState === GameState.WHERE_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE || 
-           this.gameState === GameState.WHAT_IS_COMING_VOTE || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE ||
-           this.gameState === GameState.WHERE_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_DO_WE_FEAR_VOTE_WINNER ||
-           this.gameState === GameState.WHO_ARE_WE_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_IS_COMING_VOTE_WINNER ||
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
+    // Check if we're in any collaborative text phase (submission, voting, or winning)
+    return this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
+           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
+           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING ||
+           this.gameState === GameState.WRITE_ENDING_TEXT;
   }
 
   isGameInFearQuestions() {
@@ -233,12 +240,8 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInCollaborativeTextWritingPhase() {
-    return this.gameState === GameState.WHERE_ARE_WE || 
-           this.gameState === GameState.WHAT_DO_WE_FEAR ||
-           this.gameState === GameState.WHO_ARE_WE || 
-           this.gameState === GameState.WHAT_IS_COMING || 
-           this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF ||
-           this.gameState === GameState.WHAT_WILL_BECOME_OF_US;
+    return this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
+           this.gameState === GameState.WRITE_ENDING_TEXT;
   }
 
   isGameInLocationCreationPhase() {

@@ -1,0 +1,34 @@
+@if (story) {
+  <div class="story-container">
+    <mat-card class="encounter-header">
+      <h2>You've encountered</h2>
+      <mat-card class="story-card">
+        @if (story.encounterLabel?.encounterLabel) {
+          <mat-card-header>
+            <h1>{{ story.encounterLabel?.encounterLabel }}</h1>
+          </mat-card-header>
+        }
+        <mat-card-content>
+          @if (story.prompt) {
+            <div class="story-prompt">
+              <p>{{ story.prompt }}</p>
+            </div>
+          }
+          
+          @if (story.options && story.options.length > 0) {
+            <div class="options-section">
+              <div class="options-list">
+                @for (option of getOptions(); track option.optionId || $index) {
+                  @if (option.optionText) {
+                    <button mat-flat-button class="option-button">{{ option.optionText }}</button>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </mat-card>
+  </div>
+}
+

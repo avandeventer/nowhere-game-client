@@ -54,7 +54,8 @@
 @if (isGameInCollaborativeTextPhase()) {
     <app-collaborative-text 
         [gameCode]="gameCode" 
-        [gameState]="gameState">
+        [gameState]="gameState"
+        [phaseInfo]="collaborativeTextPhaseInfo">
     </app-collaborative-text>
     
     @if (isGameInCollaborativeTextWritingPhase()) {
@@ -178,7 +179,8 @@
 @if (isGameInWriteEndingTextPhase()) {
     <app-collaborative-text 
         [gameCode]="gameCode" 
-        [gameState]="gameState">
+        [gameState]="gameState"
+        [phaseInfo]="collaborativeTextPhaseInfo">
     </app-collaborative-text>
     
     <app-timer 

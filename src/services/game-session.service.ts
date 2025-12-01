@@ -10,6 +10,8 @@ import { TextSubmission } from '../assets/collaborative-text-phase';
 import { ActivePlayerSession } from '../assets/active-player-session';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { WinState } from 'src/assets/win-state';
+import { CollaborativeTextPhaseInfo } from '../assets/collaborative-text-phase-info';
+import { GameBoard } from '../assets/game-board';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -61,5 +63,13 @@ export class GameService {
     };
 
     return this.http.get<WinState>(environment.nowhereBackendUrl + HttpConstants.VICTORY_PATH, { params });
+  }
+
+  getCollaborativeTextPhaseInfo(gameCode: string): Observable<CollaborativeTextPhaseInfo> {
+    return this.http.get<CollaborativeTextPhaseInfo>(`${environment.nowhereBackendUrl}/collaborativeText/phaseInfo?gameCode=${gameCode}`);
+  }
+
+  getGameBoard(gameCode: string): Observable<GameBoard> {
+    return this.http.get<GameBoard>(`${environment.nowhereBackendUrl}/game-board?gameCode=${gameCode}`);
   }
 }

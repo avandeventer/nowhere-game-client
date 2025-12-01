@@ -21,12 +21,14 @@ import { AdventureMapFormComponent } from 'src/adventure-map-form/adventure-map-
 import { AdventureMap } from 'src/assets/adventure-map';
 import { MatChip } from '@angular/material/chips';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { GameMode } from 'src/assets/game-mode';
 
 @Component({
     selector: 'game-session',
     styleUrl: './game-session.component.scss',
     templateUrl: './game-session.component.html',
-    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, MatButtonToggleModule]
+    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, MatButtonToggleModule, MatSlideToggleModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
@@ -47,6 +49,7 @@ export class GameSessionComponent {
   newSettingFormActivated: boolean = false;
   activatedEditMapFormAdventureId: string = "";
   selectedToggle: string = 'selectAdventure'; // 'bold' for Select Adventure, 'italic' for Create New Adventure
+  gameModeMap: Map<string, GameMode> = new Map(); // Maps adventureId to GameMode
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated = gameSessionCreated;
@@ -74,6 +77,9 @@ export class GameSessionComponent {
         this.adventureId = firstMapEntry.map.adventureMap.adventureId;
         this.saveGameId = saveGames[0].saveGame.id;
         this.selectedSaveGameName = saveGames[0].saveGame.name;
+        if(!this.gameModeMap.has(this.adventureId)) {
+          this.gameModeMap.set(this.adventureId, GameMode.TOWN_MODE);
+        }
       }
     }
   }
@@ -132,13 +138,29 @@ export class GameSessionComponent {
       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 0);
   }
+  
+  toggleGameMode(adventureId: string) {
+    const currentMode = this.gameModeMap.get(adventureId) || GameMode.TOWN_MODE;
+    const newMode = currentMode === GameMode.TOWN_MODE ? GameMode.DUNGEON_MODE : GameMode.TOWN_MODE;
+    this.gameModeMap.set(adventureId, newMode);
+  }
+  
+  getGameMode(adventureId: string): GameMode {
+    return this.gameModeMap.get(adventureId) || GameMode.TOWN_MODE;
+  }
+  
+  isDungeonMode(adventureId: string): boolean {
+    return this.getGameMode(adventureId) === GameMode.DUNGEON_MODE;
+  }
     
   createGame() {
+    const gameMode = this.getGameMode(this.adventureId);
     const createGameParameters = "?userProfileId=" + this.userProfile.id 
     + "&adventureId=" + this.adventureId 
     + "&saveGameId=" + this.saveGameId
     + "&storiesToWritePerRound=" + this.storiesToWritePerRound
-    + "&storiesToPlayPerRound=" + this.storiesToPlayPerRound;
+    + "&storiesToPlayPerRound=" + this.storiesToPlayPerRound
+    + "&gameMode=" + gameMode;
 
     this.http
       .post<GameSession>(environment.nowhereBackendUrl + HttpConstants.GAME_SESSION_PATH + createGameParameters, {})
