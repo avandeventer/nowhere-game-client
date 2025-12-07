@@ -11,7 +11,7 @@
       
       @if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
         <div class="winning-submission">
-          @if (isInNewStatTypePhase()) {
+          @if (isInMultipleWinnersPhase()) {
             <div class="multiple-submissions">
               @for (submission of winningSubmissions; track submission.submissionId) {
                 <div class="submission-item">

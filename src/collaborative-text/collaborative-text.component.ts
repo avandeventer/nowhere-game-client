@@ -94,8 +94,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
 
-  isInNewStatTypePhase(): boolean {
-    return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS;
+  isInMultipleWinnersPhase(): boolean {
+    return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS || this.gameState === GameState.HOW_DOES_THIS_RESOLVE_WINNERS || this.gameState === GameState.WHAT_CAN_WE_TRY_WINNERS;
   }
 
   isWinningPhase(): boolean {
@@ -103,7 +103,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   isSecretWinningPhase(): boolean {
-    return this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER;
+    return this.gameState === GameState.WHAT_WILL_BECOME_OF_US_VOTE_WINNER || this.gameState === GameState.HOW_DOES_THIS_RESOLVE_WINNERS;
   }
 
   private startTextAnimation() {
