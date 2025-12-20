@@ -1,15 +1,16 @@
 <div class="collaborative-text-wrapper" [class.animate-in]="showDisplay">
-  @if (phaseInfo?.showGameBoard) {
-    <div class="game-board-wrapper">
-      <app-game-board [gameCode]="gameCode"></app-game-board>
-    </div>
-  }
   <div class="collaborative-text-display">
     <div class="question-container">
       <h1 class="collaborative-question">{{ getPhaseQuestion() }}</h1>
       <p class="collaborative-instruction" [innerHTML]="getPhaseInstruction()"></p>
       
-      @if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
+      @if (phaseInfo?.showGameBoard) {
+        <div class="game-board-wrapper">
+          <app-game-board [gameCode]="gameCode" [gameBoard]="gameBoard"></app-game-board>
+        </div>
+      } @else if (phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
+        <app-story [story]="phaseInfo?.storyToIterateOn"></app-story>
+      } @else if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
         <div class="winning-submission">
           @if (isInMultipleWinnersPhase()) {
             <div class="multiple-submissions">
@@ -25,11 +26,18 @@
             </div>
           }
         </div>
-      }
-      
-      @if (phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
-        <app-story [story]="phaseInfo?.storyToIterateOn"></app-story>
+      } @else {
+        <div class="no-content">
+          <p>No content to display.</p>
+        </div>
       }
     </div>
+    
+    @if (phaseInfo?.collaborativeModeInstructions) {
+      <div class="collaborative-mode-container">
+        <h2 class="collaborative-mode-title">{{ getCollaborativeModeLabel() }}</h2>
+        <p class="collaborative-mode-instruction" [innerHTML]="phaseInfo?.collaborativeModeInstructions"></p>
+      </div>
+    }
   </div>
 </div>

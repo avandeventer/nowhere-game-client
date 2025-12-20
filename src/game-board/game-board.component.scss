@@ -138,3 +138,25 @@
   color: #1976d2;
 }
 
+// Animation styles for grid movement
+.board-grid {
+  transition: transform 0.6s ease-in-out;
+  will-change: transform;
+}
+
+.board-grid.animating.move-north {
+  transform: translateY(-100%);
+}
+
+.board-grid.animating.move-south {
+  transform: translateY(100%);
+}
+
+.board-grid.animating.move-east {
+  transform: translateX(100%);
+}
+
+.board-grid.animating.move-west {
+  transform: translateX(-100%);
+}
+

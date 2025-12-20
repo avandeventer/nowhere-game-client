@@ -3,10 +3,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 40px;
   max-width: 90vw;
   z-index: 1000;
   opacity: 0;
@@ -19,18 +15,63 @@
   }
 }
 
+.collaborative-text-display {
+  position: relative;
+}
+
 .game-board-wrapper {
   flex-shrink: 0;
 }
 
 .collaborative-text-display {
   background: var(--mat-optgroup-label-text-color) !important;  // Adjust this based on your theme
-  color: var(--mat-option-selected-state-layer-color) !important;  // Text color from theme
+  color: var(--mat-optgroup-label-text-color) !important;  // Text color from theme
   padding: 40px;
   border-radius: 20px;
   text-align: center;
   max-width: 80vw;
   max-height: 80vh;
+  margin: 0 auto;
+}
+
+.collaborative-mode-container {
+  position: absolute;
+  top: 20px;
+  right: -20px;
+  transform: translateX(100%);
+  background: var(--mat-app-background-color) !important;
+  color: var(--mat-app-text-color) !important;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: left;
+  max-width: 280px;
+  min-width: 250px;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+}
+
+.collaborative-mode-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--mat-optgroup-label-text-color) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--mat-app-text-color);
+  padding-bottom: 8px;
+}
+
+.collaborative-mode-instruction {
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--mat-app-text-color) !important;
+  line-height: 1.5;
 }
 
 .question-container {
@@ -128,15 +169,22 @@
 
 // Responsive design
 @media (max-width: 768px) {
-  .collaborative-text-wrapper {
-    flex-direction: column;
-    gap: 20px;
-  }
-
   .collaborative-text-display {
     padding: 20px;
     max-width: 95vw;
     max-height: 90vh;
+  }
+
+  .collaborative-mode-container {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    max-width: 95vw;
+    min-width: auto;
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
   }
 
   .collaborative-question {

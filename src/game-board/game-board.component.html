@@ -7,7 +7,12 @@
         <mat-card-title>Dungeon Map</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="board-grid">
+        <div class="board-grid" 
+             [class.animating]="isAnimating"
+             [class.move-north]="animationDirection === 'north'"
+             [class.move-south]="animationDirection === 'south'"
+             [class.move-east]="animationDirection === 'east'"
+             [class.move-west]="animationDirection === 'west'">
           <!-- Top row: Northwest, North, Northeast -->
           <div class="board-row">
             <div class="board-cell northwest">

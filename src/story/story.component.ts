@@ -18,5 +18,16 @@ export class StoryComponent {
   getOptions(): Option[] {
     return this.story?.options || [];
   }
+
+  getSelectedOption(): Option | undefined {
+    if (!this.story?.selectedOptionId) {
+      return undefined;
+    }
+    return this.getOptions().find(option => option.optionId === this.story?.selectedOptionId);
+  }
+
+  isOptionSelected(option: Option): boolean {
+    return this.story?.selectedOptionId === option.optionId;
+  }
 }
 

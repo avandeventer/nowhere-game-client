@@ -20,7 +20,7 @@ export class GameService {
     private http: HttpClient
   ) {}
 
-  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; didWeSucceed: boolean; activePlayerSession: any | null; activeGameStateSession: any | null; totalPointsTowardsVictory: number | null; adventureMap: any | null; collaborativeTextPhases: any | null}> {
+  listenForGameStateChanges(gameCode: string): Observable<{ gameState: string | null; didWeSucceed: boolean; activePlayerSession: any | null; activeGameStateSession: any | null; totalPointsTowardsVictory: number | null; adventureMap: any | null; collaborativeTextPhases: any | null; gameBoard: GameBoard | null}> {
     const gameDocRef: DocumentReference = doc(this.firestore, `gameSessions/${gameCode}`) as DocumentReference;
 
     return docData(gameDocRef).pipe(
@@ -31,7 +31,8 @@ export class GameService {
         activeGameStateSession: data?.activeGameStateSession ?? null,
         totalPointsTowardsVictory: data?.totalPointsTowardsVictory ?? 0,
         adventureMap: data?.adventureMap ?? null,
-        collaborativeTextPhases: data?.collaborativeTextPhases ?? null
+        collaborativeTextPhases: data?.collaborativeTextPhases ?? null,
+        gameBoard: data?.gameBoard ?? null
       }))
     );
   }

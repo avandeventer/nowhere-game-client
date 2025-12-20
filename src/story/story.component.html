@@ -20,12 +20,23 @@
               <div class="options-list">
                 @for (option of getOptions(); track option.optionId || $index) {
                   @if (option.optionText) {
-                    <button mat-flat-button class="option-button">{{ option.optionText }}</button>
+                    <button mat-flat-button 
+                            class="option-button" 
+                            [class.selected]="isOptionSelected(option)">
+                      {{ option.optionText }}
+                    </button>
                   }
                 }
               </div>
+              @if (getSelectedOption()?.successText) {
+                <div class="success-text">
+                  <p>{{ getSelectedOption()?.successText }}</p>
+                </div>
+              }
             </div>
           }
+
+          
         </mat-card-content>
       </mat-card>
     </mat-card>

@@ -78,5 +78,28 @@
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
+  
+  .option-button {
+    &.selected {
+      background-color: #4caf50;
+      color: white;
+      font-weight: 600;
+    }
+  }
+}
+
+.success-text {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #4caf50;
+  
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.87);
+    margin: 0;
+  }
 }
 

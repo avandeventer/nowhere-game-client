@@ -7,6 +7,7 @@ import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { CollaborativeTextPhaseInfo, CollaborativeMode, PhaseType } from '../assets/collaborative-text-phase-info';
 import { GameBoardComponent } from '../game-board/game-board.component';
 import { StoryComponent } from '../story/story.component';
+import { GameBoard } from '../assets/game-board';
 
 @Component({
   selector: 'app-collaborative-text',
@@ -19,6 +20,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Input() gameCode: string = '';
   @Input() gameState: GameState = GameState.WHERE_ARE_WE;
   @Input() phaseInfo: CollaborativeTextPhaseInfo | null = null;
+  @Input() gameBoard: GameBoard | null = null;
 
   winningSubmissions: TextSubmission[] = [];
   isAnimating = false;
@@ -167,13 +169,19 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   getPhaseInstruction(): string {
     if (this.phaseInfo) {
-      if (this.isCollaborativeTextWritingPhase() && this.phaseInfo.collaborativeModeInstructions) {
-        return this.phaseInfo.phaseInstructions + '<br><br>' + this.phaseInfo.collaborativeModeInstructions;
-      }
       return this.phaseInfo.phaseInstructions;
     }
     
     return 'The winning submission is...';
+  }
+
+  getCollaborativeModeLabel(): string {
+    if (this.phaseInfo?.collaborativeMode === CollaborativeMode.RAPID_FIRE) {
+      return 'RAPID FIRE';
+    } else if (this.phaseInfo?.collaborativeMode === CollaborativeMode.SHARE_TEXT) {
+      return 'COLLABORATIVE MODE';
+    }
+    return '';
   }
 
   isVotingPhase(): boolean {

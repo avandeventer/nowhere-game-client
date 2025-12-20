@@ -22,6 +22,7 @@ import { TimerComponent } from 'src/timer/timer.component';
 import { PlayerProgressComponent } from 'src/player-progress/player-progress.component';
 import { CollaborativeTextComponent } from 'src/collaborative-text/collaborative-text.component';
 import { CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
+import { GameBoard } from 'src/assets/game-board';
 
 @Component({
     selector: 'game-state-manager',
@@ -43,6 +44,7 @@ export class GameStateManagerComponent implements OnInit {
   qrCodeUrl: string = '';
   winState: WinState = new WinState();
   collaborativeTextPhaseInfo: CollaborativeTextPhaseInfo | null = null;
+  gameBoard: GameBoard | null = null;
   @Output() gameSessionCreated = new EventEmitter<boolean>();
   
   // Music toggle properties
@@ -84,6 +86,7 @@ export class GameStateManagerComponent implements OnInit {
       this.didWeSucceed = newState.didWeSucceed;
       this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
       this.adventureMap = newState.adventureMap as unknown as AdventureMap;
+      this.gameBoard = newState.gameBoard as unknown as GameBoard;
       this.favorStat = this.adventureMap !== null 
           && this.adventureMap.statTypes !== null 
           && this.adventureMap.statTypes.find(stat => stat.favorType) !== undefined 

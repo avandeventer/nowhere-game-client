@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { GameService } from '../services/game-session.service';
 import { GameBoard } from '../assets/game-board';
 import { Encounter } from '../assets/encounter';
+import { PlayerCoordinates } from '../assets/player-coordinates';
 
 @Component({
   selector: 'app-game-board',
@@ -15,9 +16,12 @@ import { Encounter } from '../assets/encounter';
 })
 export class GameBoardComponent implements OnInit, OnChanges {
   @Input() gameCode: string = '';
+  @Input() gameBoard: GameBoard | null = null;
   
-  gameBoard: GameBoard | null = null;
   isLoading = false;
+  previousCoordinates: PlayerCoordinates | null = null;
+  isAnimating = false;
+  animationDirection: 'north' | 'south' | 'east' | 'west' | null = null;
   currentEncounter: Encounter | null = null;
   northEncounter: Encounter | null = null;
   southEncounter: Encounter | null = null;
@@ -31,13 +35,62 @@ export class GameBoardComponent implements OnInit, OnChanges {
   constructor(private gameService: GameService) {}
 
   ngOnInit() {
-    this.loadGameBoard();
+    if (!this.gameBoard && this.gameCode) {
+      this.loadGameBoard();
+    } else if (this.gameBoard) {
+      this.updateDisplayedEncounters();
+      this.previousCoordinates = this.gameBoard.playerCoordinates ? 
+        { xCoordinate: this.gameBoard.playerCoordinates.xCoordinate, yCoordinate: this.gameBoard.playerCoordinates.yCoordinate } : null;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['gameCode'] && this.gameCode) {
+    if (changes['gameBoard'] && this.gameBoard) {
+      const newCoords = this.gameBoard.playerCoordinates;
+      const oldCoords = this.previousCoordinates;
+      
+      // Check if coordinates changed
+      if (oldCoords && newCoords && 
+          (oldCoords.xCoordinate !== newCoords.xCoordinate || 
+           oldCoords.yCoordinate !== newCoords.yCoordinate)) {
+        this.detectMovementDirection(oldCoords, newCoords);
+      }
+      
+      this.updateDisplayedEncounters();
+      this.previousCoordinates = newCoords ? 
+        { xCoordinate: newCoords.xCoordinate, yCoordinate: newCoords.yCoordinate } : null;
+    } else if (changes['gameCode'] && this.gameCode && !this.gameBoard) {
       this.loadGameBoard();
     }
+  }
+
+  private detectMovementDirection(oldCoords: PlayerCoordinates, newCoords: PlayerCoordinates) {
+    const deltaX = newCoords.xCoordinate - oldCoords.xCoordinate;
+    const deltaY = newCoords.yCoordinate - oldCoords.yCoordinate;
+    
+    // Determine direction of movement (grid moves opposite to player movement)
+    if (deltaY > 0) {
+      // Player moved north, grid slides south
+      this.animationDirection = 'south';
+    } else if (deltaY < 0) {
+      // Player moved south, grid slides north
+      this.animationDirection = 'north';
+    } else if (deltaX > 0) {
+      // Player moved east, grid slides west
+      this.animationDirection = 'west';
+    } else if (deltaX < 0) {
+      // Player moved west, grid slides east
+      this.animationDirection = 'east';
+    }
+    
+    // Trigger animation
+    this.isAnimating = true;
+    
+    // Reset after animation completes
+    setTimeout(() => {
+      this.isAnimating = false;
+      this.animationDirection = null;
+    }, 600); // Match CSS transition duration
   }
 
   private loadGameBoard() {
@@ -48,6 +101,8 @@ export class GameBoardComponent implements OnInit, OnChanges {
       next: (gameBoard: GameBoard) => {
         this.gameBoard = gameBoard;
         this.updateDisplayedEncounters();
+        this.previousCoordinates = gameBoard.playerCoordinates ? 
+          { xCoordinate: gameBoard.playerCoordinates.xCoordinate, yCoordinate: gameBoard.playerCoordinates.yCoordinate } : null;
         this.isLoading = false;
       },
       error: (error) => {
