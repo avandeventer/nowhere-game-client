@@ -231,10 +231,10 @@ export class GameStateManagerComponent implements OnInit {
 
   isGameInCollaborativeTextPhase() {
     // Check if we're in any collaborative text phase (submission, voting, or winning)
-    return this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
+    return (this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING ||
-           this.gameState === GameState.WRITE_ENDING_TEXT;
+           this.gameState === GameState.WRITE_ENDING_TEXT) && this.gameState !== GameState.INIT && this.gameState !== GameState.PREAMBLE;
   }
 
   isGameInFearQuestions() {
