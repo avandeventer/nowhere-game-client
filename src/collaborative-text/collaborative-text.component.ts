@@ -30,6 +30,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   showDisplay = false;
   favorEntity: string = 'the Entity';
   gameSessionDisplay: GameSessionDisplay = new GameSessionDisplay();
+  private hasLoadedWinningSubmission = false;
 
   constructor(private gameService: GameService) {}
 
@@ -45,10 +46,24 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['gameState']) {
+      // Reset flag when gameState changes
+      this.hasLoadedWinningSubmission = false;
       if (this.isWinningPhase()) {
         this.loadWinningSubmission();
       }
       this.loadGameSessionDisplay();
+    }
+
+    // Check if phaseInfo changed to a winning phase (but avoid reloading if we just loaded it)
+    if (changes['phaseInfo'] && this.isWinningPhase()) {
+      const previousPhaseInfo = changes['phaseInfo'].previousValue as CollaborativeTextPhaseInfo | null;
+      
+      // Only load if phaseInfo changed from non-winning to winning, or if it's the first time
+      // and we haven't already loaded it in this change cycle
+      if ((!previousPhaseInfo || previousPhaseInfo.phaseType !== PhaseType.WINNING) 
+          && !this.hasLoadedWinningSubmission) {
+        this.loadWinningSubmission();
+      }
     }
 
     if (this.isCollaborativeTextWritingPhase()) {
@@ -62,6 +77,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   private loadWinningSubmission() {
     if (this.isWinningPhase()) {
+      this.hasLoadedWinningSubmission = true;
       this.gameService.getWinningSubmission(this.gameCode).subscribe({
         next: (submissions) => {
           this.winningSubmissions = submissions;
@@ -69,17 +85,20 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
           if (!this.isSecretWinningPhase()) {
             this.startTextAnimation();
           }
-          // Emit event to notify parent that phaseInfo should be reloaded
+          
+          console.log('Winning submission loaded');
           this.winningSubmissionLoaded.emit();
         },
         error: (error) => {
           console.error('Error loading winning submissions:', error);
+          this.hasLoadedWinningSubmission = false; // Reset on error so it can retry
         }
       });
     } else {
       this.winningSubmissions = [];
       this.currentDisplayText = '';
       this.displayIndex = 0;
+      this.hasLoadedWinningSubmission = false;
     }
   }
 
