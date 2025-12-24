@@ -21,7 +21,7 @@ import { TimerService } from 'src/services/timer.service';
 import { TimerComponent } from 'src/timer/timer.component';
 import { PlayerProgressComponent } from 'src/player-progress/player-progress.component';
 import { CollaborativeTextComponent } from 'src/collaborative-text/collaborative-text.component';
-import { CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
+import { CollaborativeMode, CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
 import { GameBoard } from 'src/assets/game-board';
 
 @Component({
@@ -261,6 +261,10 @@ export class GameStateManagerComponent implements OnInit {
     }
     if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase()) {
       return 180; // 3 minutes for writing, location creation, and ending text phases
+    } else if (this.isGameInCollaborativeTextWritingPhase()) {
+      if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.RAPID_FIRE) {
+        return 90;
+      }
     }
     return 120;
   }
