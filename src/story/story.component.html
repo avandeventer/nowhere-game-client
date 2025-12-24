@@ -9,7 +9,7 @@
           </mat-card-header>
         }
         <mat-card-content>
-          @if (story.prompt) {
+          @if (story.prompt && !getSelectedOption()?.successText) {
             <div class="story-prompt">
               <p>{{ story.prompt }}</p>
             </div>

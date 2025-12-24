@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../services/game-session.service';
 import { GameState } from '../assets/game-state';
@@ -21,6 +21,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Input() gameState: GameState = GameState.WHERE_ARE_WE;
   @Input() phaseInfo: CollaborativeTextPhaseInfo | null = null;
   @Input() gameBoard: GameBoard | null = null;
+  @Output() winningSubmissionLoaded = new EventEmitter<void>();
 
   winningSubmissions: TextSubmission[] = [];
   isAnimating = false;
@@ -50,10 +51,6 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       this.loadGameSessionDisplay();
     }
 
-    if (changes['phaseInfo'] && this.isWinningPhase()) {
-      this.loadWinningSubmission();
-    }
-
     if (this.isCollaborativeTextWritingPhase()) {
       this.showDisplay = false;
       // Reset animation after it completes
@@ -72,6 +69,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
           if (!this.isSecretWinningPhase()) {
             this.startTextAnimation();
           }
+          // Emit event to notify parent that phaseInfo should be reloaded
+          this.winningSubmissionLoaded.emit();
         },
         error: (error) => {
           console.error('Error loading winning submissions:', error);

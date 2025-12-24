@@ -119,7 +119,7 @@ export class GameStateManagerComponent implements OnInit {
       });
   }
 
-  private loadCollaborativeTextPhaseInfo() {
+  public loadCollaborativeTextPhaseInfo() {
     if (!this.gameCode) return;
     
     this.gameService.getCollaborativeTextPhaseInfo(this.gameCode).subscribe({
