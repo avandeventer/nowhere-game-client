@@ -18,14 +18,24 @@
           @if (story.options && story.options.length > 0) {
             <div class="options-section">
               <div class="options-list">
-                @for (option of getOptions(); track option.optionId || $index) {
-                  @if (option.optionText) {
+                @if (getSelectedOption()?.successText) {
+                  @if (getSelectedOption(); as selectedOption) {
                     <button mat-flat-button 
-                            class="option-button" 
-                            [class.selected]="isOptionSelected(option)">
-                      {{ option.optionText }}
+                              class="option-button" 
+                              [class.selected]="isOptionSelected(selectedOption)">
+                      {{ selectedOption.optionText }}
                     </button>
                   }
+                } @else {
+                    @for (option of getOptions(); track option.optionId || $index) {
+                      @if (option.optionText) {
+                        <button mat-flat-button 
+                                class="option-button" 
+                                [class.selected]="isOptionSelected(option)">
+                          {{ option.optionText }}
+                        </button>
+                      }
+                    }
                 }
               </div>
               @if (getSelectedOption()?.successText) {

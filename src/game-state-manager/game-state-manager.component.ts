@@ -233,8 +233,8 @@ export class GameStateManagerComponent implements OnInit {
     // Check if we're in any collaborative text phase (submission, voting, or winning)
     return (this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
-           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING ||
-           this.gameState === GameState.WRITE_ENDING_TEXT) && this.gameState !== GameState.INIT && this.gameState !== GameState.PREAMBLE;
+           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING) 
+           && this.gameState !== GameState.INIT && this.gameState !== GameState.PREAMBLE;
   }
 
   isGameInFearQuestions() {
@@ -291,13 +291,18 @@ export class GameStateManagerComponent implements OnInit {
       return 'Nowhere_Epilogue_Loop_V1.wav';
     }
     
-    if (this.isGameInitialized() || this.isGameInLocationSelectPhase() || this.gameState === GameState.ROUND1) {
+    if (this.isGameInitialized() 
+      || this.isGameInLocationSelectPhase() 
+      || this.gameState === GameState.ROUND1
+      || this.isStoryOverDungeonMode()
+    ) {
       return 'JustTryYourBest_NoTension.wav';
     }
     
     if (this.isGameInWritingPhase() 
       || this.isGameInWriteEndingsPhase() 
-      || (this.isGameInCollaborativeTextPhase() && !this.isGameInFearQuestions())
+      || (this.isGameInCollaborativeTextPhase() 
+      && !this.isGameInFearQuestions())
       || this.isGameInLocationCreationPhase()) {
       return 'FolkSoundscape_1.wav';
     }
@@ -308,6 +313,10 @@ export class GameStateManagerComponent implements OnInit {
       return 'JustTryYourBest_TensionTail_BanjoTag.wav';
     }
     return '';
+  }
+
+  private isStoryOverDungeonMode(): boolean {
+    return this.gameState == GameState.MAKE_CHOICE_WINNER;
   }
 
   private loadVictoryState() {
