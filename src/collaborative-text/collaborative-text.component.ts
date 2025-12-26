@@ -66,12 +66,21 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       }
     }
 
-    if (this.isCollaborativeTextWritingPhase()) {
-      this.showDisplay = false;
-      // Reset animation after it completes
-      setTimeout(() => {
-        this.showDisplay = true;
-      }, 1000);
+    // Trigger animation when phaseInfo changes from non-writing to writing phase
+    // This handles both gameState transitions and phaseInfo-only updates
+    if (changes['phaseInfo']) {
+      const previousPhaseInfo: CollaborativeTextPhaseInfo | null 
+        = changes['phaseInfo']?.previousValue as CollaborativeTextPhaseInfo | null;
+      const isNowWritingPhase = this.isCollaborativeTextWritingPhase();
+      const wasWritingPhase = previousPhaseInfo?.phaseType === PhaseType.SUBMISSION;
+      
+      // Only animate if transitioning into a writing phase (not already in one)
+      if (isNowWritingPhase && !wasWritingPhase) {
+        this.showDisplay = false;
+        setTimeout(() => {
+          this.showDisplay = true;
+        }, 1000);
+      }
     }
   }
 
