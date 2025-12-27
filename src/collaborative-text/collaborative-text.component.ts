@@ -111,6 +111,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     }
   }
 
+  isCampfireMode(): boolean {
+    return this.gameState === GameState.CAMPFIRE || this.gameState === GameState.CAMPFIRE_WINNERS;
+  }
+
   loadGameSessionDisplay() {
     this.gameService.getGameSessionDisplay(this.gameCode).subscribe({
       next: (display) => {

@@ -8,7 +8,7 @@
         <div class="game-board-wrapper">
           <app-game-board [gameCode]="gameCode" [gameBoard]="gameBoard"></app-game-board>
         </div>
-      } @else if (phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
+      } @else if (phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt && !isCampfireMode()) {
         <app-story [story]="phaseInfo?.storyToIterateOn"></app-story>
       } @else if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
         <div class="winning-submission">

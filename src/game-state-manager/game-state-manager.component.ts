@@ -234,7 +234,7 @@ export class GameStateManagerComponent implements OnInit {
     return (this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING) 
-           && this.gameState !== GameState.INIT && this.gameState !== GameState.PREAMBLE;
+           && this.gameState !== GameState.INIT && !this.isGameInPreamblePhase();
   }
 
   isGameInFearQuestions() {
