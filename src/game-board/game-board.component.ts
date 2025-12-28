@@ -128,12 +128,16 @@ export class GameBoardComponent implements OnInit, OnChanges {
       return 'help_outline';
     }
     if (encounter.encounterType === EncounterType.FINAL) {
-      return 'skull'; // Ominous icon for final boss
+      return 'https://storage.googleapis.com/nowhere_images/location_icons/Skull.png';
     }
     if (encounter.visited) {
       return 'check_circle';
     }
     return 'explore';
+  }
+
+  isEncounterIconImage(encounter: Encounter | null): boolean {
+    return encounter?.encounterType === EncounterType.FINAL;
   }
 
   isFinalEncounter(encounter: Encounter | null): boolean {

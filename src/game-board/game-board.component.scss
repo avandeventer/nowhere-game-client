@@ -127,6 +127,17 @@
   margin-bottom: 8px;
 }
 
+.encounter-icon.encounter-image {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.encounter-icon.encounter-image.current-icon {
+  width: 56px;
+  height: 56px;
+}
+
 .board-cell.current .encounter-icon {
   color: #1976d2;
 }

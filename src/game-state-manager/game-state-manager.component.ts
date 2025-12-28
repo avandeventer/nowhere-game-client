@@ -297,11 +297,11 @@ export class GameStateManagerComponent implements OnInit {
 
   private getMusicTrackForGameState(): string {
     // Play epilogue music for SUCCESS or DESTROYED states
-    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || this.roundNumber === 4) {
+    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || (this.roundNumber === 4 && this.isGameInCampfirePhase())) {
       return 'Nowhere_Epilogue_Loop_V1.wav';
     }
 
-    if (this.isGameInRitualPhase() || this.isGameInFearQuestions() || (this.roundNumber >= 3 && this.roundNumber < 5 && !this.isGameInCampfirePhase())) {
+    if (this.isGameInRitualPhase() || this.isGameInFearQuestions() || (this.roundNumber === 4 && !this.isGameInCampfirePhase())) {
       return 'Ritual_TestLoop.wav';
     }
     

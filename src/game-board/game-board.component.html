@@ -21,7 +21,11 @@
                   <div class="direction-arrow east-arrow">→</div>
                 }
                 @if (currentEncounter) {
-                  <mat-icon class="encounter-icon current-icon">{{ getEncounterIcon(currentEncounter) }}</mat-icon>
+                  @if (isEncounterIconImage(currentEncounter)) {
+                    <img [src]="getEncounterIcon(currentEncounter)" alt="Final Encounter" class="encounter-icon current-icon encounter-image">
+                  } @else {
+                    <mat-icon class="encounter-icon current-icon">{{ getEncounterIcon(currentEncounter) }}</mat-icon>
+                  }
                   <div class="encounter-label current-location">
                     <strong>You have encountered:</strong><br>
                     {{ currentEncounter.encounterLabel.encounterLabel }}
@@ -42,7 +46,11 @@
               @if (eastEncounter) {
                 <div class="board-cell east" 
                      [class.final-encounter]="isFinalEncounter(eastEncounter)">
-                  <mat-icon class="encounter-icon">{{ getEncounterIcon(eastEncounter) }}</mat-icon>
+                  @if (isEncounterIconImage(eastEncounter)) {
+                    <img [src]="getEncounterIcon(eastEncounter)" alt="Final Encounter" class="encounter-icon encounter-image">
+                  } @else {
+                    <mat-icon class="encounter-icon">{{ getEncounterIcon(eastEncounter) }}</mat-icon>
+                  }
                   <div class="encounter-label">{{ eastEncounter.encounterLabel.encounterLabel }}</div>
                 </div>
               }
