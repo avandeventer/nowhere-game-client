@@ -4,102 +4,47 @@
   <div class="game-board-container">
     <mat-card class="game-board-card">
       <mat-card-header>
-        <mat-card-title>Dungeon Map</mat-card-title>
+        <mat-card-title>The Path Ahead</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <div class="board-grid" 
-             [class.animating]="isAnimating"
-             [class.move-north]="animationDirection === 'north'"
-             [class.move-south]="animationDirection === 'south'"
-             [class.move-east]="animationDirection === 'east'"
-             [class.move-west]="animationDirection === 'west'">
-          <!-- Top row: Northwest, North, Northeast -->
-          <div class="board-row">
-            <div class="board-cell northwest">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(northwestEncounter) }}</mat-icon>
-              @if (northwestEncounter) {
-                <div class="encounter-label">{{ northwestEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-            <div class="board-cell north">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(northEncounter) }}</mat-icon>
-              @if (northEncounter) {
-                <div class="encounter-label">{{ northEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-            <div class="board-cell northeast">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(northeastEncounter) }}</mat-icon>
-              @if (northeastEncounter) {
-                <div class="encounter-label">{{ northeastEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-          </div>
-          
-          <!-- Middle row: West, Current, East -->
-          <div class="board-row">
-            <div class="board-cell west">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(westEncounter) }}</mat-icon>
-              @if (westEncounter) {
-                <div class="encounter-label">{{ westEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-            
-            <div class="board-cell current">
-              <div class="direction-arrow north-arrow">↑</div>
-              <div class="direction-arrow south-arrow">↓</div>
-              <div class="direction-arrow east-arrow">→</div>
-              <div class="direction-arrow west-arrow">←</div>
-              <mat-icon class="encounter-icon current-icon">location_on</mat-icon>
-              @if (currentEncounter) {
-                <div class="encounter-label current-location">
-                  <strong>You have encountered:</strong><br>
-                  {{ currentEncounter.encounterLabel.encounterLabel }}
+        <div class="board-grid-wrapper">
+          <div class="board-grid" 
+               [class.animating]="isAnimating"
+               [class.move-east]="animationDirection === 'east'"
+               [class.move-west]="animationDirection === 'west'">
+            <!-- Single row: Current, Campfire, then all East encounters with campfires between -->
+            <div class="board-row">
+              <!-- Current encounter (leftmost) -->
+              <div class="board-cell current" 
+                   [class.final-encounter]="isFinalEncounter(currentEncounter)">
+                @if (eastEncounter) {
+                  <div class="direction-arrow east-arrow">→</div>
+                }
+                @if (currentEncounter) {
+                  <mat-icon class="encounter-icon current-icon">{{ getEncounterIcon(currentEncounter) }}</mat-icon>
+                  <div class="encounter-label current-location">
+                    <strong>You have encountered:</strong><br>
+                    {{ currentEncounter.encounterLabel.encounterLabel }}
+                  </div>
+                } @else {
+                  <mat-icon class="encounter-icon current-icon">location_on</mat-icon>
+                }
+              </div>
+              
+              <!-- Campfire after current if there's an east encounter -->
+              @if (shouldShowCampfireAfterCurrent()) {
+                <div class="board-cell campfire">
+                  <img src="assets/images/pyre.gif" alt="Campfire" class="campfire-icon">
                 </div>
               }
-            </div>
-            
-            <div class="board-cell east">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(eastEncounter) }}</mat-icon>
+              
+              <!-- Only the first east encounter -->
               @if (eastEncounter) {
-                <div class="encounter-label">{{ eastEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-          </div>
-          
-          <!-- Bottom row: Southwest, South, Southeast -->
-          <div class="board-row">
-            <div class="board-cell southwest">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(southwestEncounter) }}</mat-icon>
-              @if (southwestEncounter) {
-                <div class="encounter-label">{{ southwestEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-            <div class="board-cell south">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(southEncounter) }}</mat-icon>
-              @if (southEncounter) {
-                <div class="encounter-label">{{ southEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
-              }
-            </div>
-            <div class="board-cell southeast">
-              <mat-icon class="encounter-icon">{{ getEncounterIcon(southeastEncounter) }}</mat-icon>
-              @if (southeastEncounter) {
-                <div class="encounter-label">{{ southeastEncounter.encounterLabel.encounterLabel }}</div>
-              } @else {
-                <div class="empty-cell">-</div>
+                <div class="board-cell east" 
+                     [class.final-encounter]="isFinalEncounter(eastEncounter)">
+                  <mat-icon class="encounter-icon">{{ getEncounterIcon(eastEncounter) }}</mat-icon>
+                  <div class="encounter-label">{{ eastEncounter.encounterLabel.encounterLabel }}</div>
+                </div>
               }
             </div>
           </div>

@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { GameService } from '../services/game-session.service';
 import { GameBoard } from '../assets/game-board';
-import { Encounter } from '../assets/encounter';
+import { Encounter, EncounterType } from '../assets/encounter';
 import { PlayerCoordinates } from '../assets/player-coordinates';
 
 @Component({
@@ -21,16 +21,9 @@ export class GameBoardComponent implements OnInit, OnChanges {
   isLoading = false;
   previousCoordinates: PlayerCoordinates | null = null;
   isAnimating = false;
-  animationDirection: 'north' | 'south' | 'east' | 'west' | null = null;
+  animationDirection: 'east' | 'west' | null = null;
   currentEncounter: Encounter | null = null;
-  northEncounter: Encounter | null = null;
-  southEncounter: Encounter | null = null;
   eastEncounter: Encounter | null = null;
-  westEncounter: Encounter | null = null;
-  northwestEncounter: Encounter | null = null;
-  northeastEncounter: Encounter | null = null;
-  southeastEncounter: Encounter | null = null;
-  southwestEncounter: Encounter | null = null;
 
   constructor(private gameService: GameService) {}
 
@@ -66,16 +59,10 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
   private detectMovementDirection(oldCoords: PlayerCoordinates, newCoords: PlayerCoordinates) {
     const deltaX = newCoords.xCoordinate - oldCoords.xCoordinate;
-    const deltaY = newCoords.yCoordinate - oldCoords.yCoordinate;
     
     // Determine direction of movement (grid moves opposite to player movement)
-    if (deltaY > 0) {
-      // Player moved north, grid slides south
-      this.animationDirection = 'south';
-    } else if (deltaY < 0) {
-      // Player moved south, grid slides north
-      this.animationDirection = 'north';
-    } else if (deltaX > 0) {
+    // Since player only moves east, we only need to handle east/west
+    if (deltaX > 0) {
       // Player moved east, grid slides west
       this.animationDirection = 'west';
     } else if (deltaX < 0) {
@@ -124,17 +111,8 @@ export class GameBoardComponent implements OnInit, OnChanges {
     // Get current location encounter
     this.currentEncounter = this.getEncounterAt(x, y);
     
-    // Get adjacent encounters (north, south, east, west)
-    this.northEncounter = this.getEncounterAt(x, y + 1);
-    this.southEncounter = this.getEncounterAt(x, y - 1);
+    // Get only the first east encounter
     this.eastEncounter = this.getEncounterAt(x + 1, y);
-    this.westEncounter = this.getEncounterAt(x - 1, y);
-    
-    // Get diagonal encounters
-    this.northwestEncounter = this.getEncounterAt(x - 1, y + 1);
-    this.northeastEncounter = this.getEncounterAt(x + 1, y + 1);
-    this.southeastEncounter = this.getEncounterAt(x + 1, y - 1);
-    this.southwestEncounter = this.getEncounterAt(x - 1, y - 1);
   }
 
   private getEncounterAt(x: number, y: number): Encounter | null {
@@ -149,10 +127,21 @@ export class GameBoardComponent implements OnInit, OnChanges {
     if (!encounter) {
       return 'help_outline';
     }
+    if (encounter.encounterType === EncounterType.FINAL) {
+      return 'skull'; // Ominous icon for final boss
+    }
     if (encounter.visited) {
       return 'check_circle';
     }
     return 'explore';
+  }
+
+  isFinalEncounter(encounter: Encounter | null): boolean {
+    return encounter?.encounterType === EncounterType.FINAL;
+  }
+
+  shouldShowCampfireAfterCurrent(): boolean {
+    return this.eastEncounter !== null;
   }
 }
 

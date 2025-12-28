@@ -1,7 +1,8 @@
 import { EncounterLabel } from './encounter-label';
 
 export enum EncounterType {
-  NORMAL = 'NORMAL'
+  NORMAL = 'NORMAL',
+  FINAL = 'FINAL'
 }
 
 export interface Encounter {

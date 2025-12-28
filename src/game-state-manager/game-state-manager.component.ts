@@ -42,6 +42,7 @@ export class GameStateManagerComponent implements OnInit {
   totalPointsTowardsVictory: number = 0;
   favorStat: StatType = new StatType();
   qrCodeUrl: string = '';
+  roundNumber: number = 1;
   winState: WinState = new WinState();
   collaborativeTextPhaseInfo: CollaborativeTextPhaseInfo | null = null;
   gameBoard: GameBoard | null = null;
@@ -87,6 +88,7 @@ export class GameStateManagerComponent implements OnInit {
       this.totalPointsTowardsVictory = newState.totalPointsTowardsVictory ?? 0;
       this.adventureMap = newState.adventureMap as unknown as AdventureMap;
       this.gameBoard = newState.gameBoard as unknown as GameBoard;
+      this.roundNumber = newState.roundNumber as unknown as number;
       this.favorStat = this.adventureMap !== null 
           && this.adventureMap.statTypes !== null 
           && this.adventureMap.statTypes.find(stat => stat.favorType) !== undefined 
@@ -145,13 +147,14 @@ export class GameStateManagerComponent implements OnInit {
   getInstructionDisplay() {
     switch (this.gameState) {
       case GameState.PREAMBLE:
-        return `You are about to embark on a journey into the unknown. You'll each choose where you'll spend your time and then your friends will determine what happens to you there. 
-        Be wary that some of you will encounter the entity who holds the most power in this world, ${this.favorStat.favorEntity}, which means that the rest of you will need to describe what makes them who they are.`;
+        return `You are about to step into the unknown. You'll each define this world for a brief time and then you and your friends will determine what happens to you here. 
+        Be wary of ${this.favorStat.favorEntity}.`;
       case GameState.PREAMBLE_AGAIN:
-        return `The final challenge draws closer. The world is stranger because of the choices you've made so far and some of the things you see this round will build on what you saw in the last round. Be prepared to write
-        sequel encounters that connected to a specific players or to specific locations!`;
+        return `The final challenge draws closer. Soon we will encounter ${this.favorStat.favorEntity}.`;
       case GameState.ENDING_PREAMBLE:
-        return `The final challenge begins. You will each encounter ${this.favorStat.favorEntity} and your choices will determine the fate of everyone in ${this.adventureMap.name}. Luckily, we have learned a lot about ${this.favorStat.favorEntity} by now! All that's left is to decide whether you want to impress them or defy them.`;
+        return `The final challenge begins. We enter the domain of ${this.favorStat.favorEntity} and your choices will determine the fate of everyone in ${this.adventureMap.name}. Will we absolve ${this.favorStat.favorEntity} or defy them?`;
+      case GameState.EPILOGUE_PREAMBLE:
+        return `Our journey ends whether we want it to or not`;
       default:
         return this.gameSessionDisplay.mapDescription;
     }
@@ -164,7 +167,9 @@ export class GameStateManagerComponent implements OnInit {
       case GameState.PREAMBLE_AGAIN:
         return this.gameSessionDisplay.playerDescription;
       case GameState.ENDING_PREAMBLE:
-        return this.gameSessionDisplay.goalDescription + this.gameSessionDisplay.endingDescription;
+        return this.gameSessionDisplay.goalDescription;
+      case GameState.EPILOGUE_PREAMBLE:
+        return this.gameSessionDisplay.endingDescription;
       default:
         return this.gameSessionDisplay.mapDescription;
     }
@@ -201,7 +206,8 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   isGameInPreamblePhase() {
-    return this.gameState === GameState.PREAMBLE || this.gameState === GameState.PREAMBLE_AGAIN || this.gameState === GameState.ENDING_PREAMBLE;
+    return this.gameState === GameState.PREAMBLE || this.gameState === GameState.PREAMBLE_AGAIN 
+    || this.gameState === GameState.ENDING_PREAMBLE || this.gameState === GameState.EPILOGUE_PREAMBLE;
   }
 
   isGameInSecondPhase() {
@@ -255,6 +261,10 @@ export class GameStateManagerComponent implements OnInit {
     return this.gameState === GameState.WRITE_ENDING_TEXT;
   }
 
+  isGameInCampfirePhase() {
+    return this.gameState === GameState.CAMPFIRE || this.gameState === GameState.CAMPFIRE_WINNERS;
+  }
+
   getTimerDuration(): number {
     if (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) {
       return 90;
@@ -263,7 +273,7 @@ export class GameStateManagerComponent implements OnInit {
       return 180; // 3 minutes for writing, location creation, and ending text phases
     } else if (this.isGameInCollaborativeTextWritingPhase()) {
       if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.RAPID_FIRE) {
-        return 90;
+        return 60;
       }
     }
     return 120;
@@ -287,8 +297,12 @@ export class GameStateManagerComponent implements OnInit {
 
   private getMusicTrackForGameState(): string {
     // Play epilogue music for SUCCESS or DESTROYED states
-    if (this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) {
+    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || this.roundNumber === 5) {
       return 'Nowhere_Epilogue_Loop_V1.wav';
+    }
+
+    if (this.isGameInRitualPhase() || this.isGameInFearQuestions() || (this.roundNumber >= 3 && this.roundNumber < 5 && !this.isGameInCampfirePhase())) {
+      return 'Ritual_TestLoop.wav';
     }
     
     if (this.isGameInitialized() 
@@ -306,9 +320,7 @@ export class GameStateManagerComponent implements OnInit {
       || this.isGameInLocationCreationPhase()) {
       return 'FolkSoundscape_1.wav';
     }
-    if (this.isGameInRitualPhase() || this.isGameInFearQuestions()) {
-      return 'Ritual_TestLoop.wav';
-    }
+
     if (this.gameState === GameState.ROUND2 || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {
       return 'JustTryYourBest_TensionTail_BanjoTag.wav';
     }
