@@ -297,7 +297,7 @@ export class GameStateManagerComponent implements OnInit {
 
   private getMusicTrackForGameState(): string {
     // Play epilogue music for SUCCESS or DESTROYED states
-    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || this.roundNumber === 5) {
+    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || this.roundNumber === 4) {
       return 'Nowhere_Epilogue_Loop_V1.wav';
     }
 
