@@ -131,6 +131,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS || this.gameState === GameState.HOW_DOES_THIS_RESOLVE_WINNERS || this.gameState === GameState.WHAT_CAN_WE_TRY_WINNERS;
   }
 
+  isMakeChoicePhase(): boolean {
+    return this.gameState === GameState.MAKE_CHOICE || this.gameState === GameState.MAKE_CHOICE_VOTING || this.gameState === GameState.MAKE_CHOICE_WINNER;
+  }
+
   isWinningPhase(): boolean {
     return this.phaseInfo?.phaseType === PhaseType.WINNING;
   }
