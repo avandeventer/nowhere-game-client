@@ -31,8 +31,29 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['manualStart'] && changes['manualStart'].currentValue && !this.hasStarted) {
-      this.startTimer();
+    if (changes['manualStart']) {
+      console.log('Timer ngOnChanges - manualStart:', {
+        currentValue: changes['manualStart'].currentValue,
+        previousValue: changes['manualStart'].previousValue,
+        firstChange: changes['manualStart'].firstChange,
+        hasStarted: this.hasStarted
+      });
+      // Restart timer when manualStart transitions from false/undefined to true
+      // This handles both initial start and restarting for new phases
+      if (changes['manualStart'].currentValue === true && changes['manualStart'].previousValue !== true) {
+        console.log('Timer: Starting timer due to manualStart transition');
+        this.startTimer();
+      } else if (changes['manualStart'].currentValue === false && changes['manualStart'].previousValue === true) {
+        console.log('Timer: Stopping timer due to manualStart going false');
+        this.stopTimer();
+      }
+    }
+    if (changes['duration']) {
+      console.log('Timer ngOnChanges - duration:', {
+        currentValue: changes['duration'].currentValue,
+        previousValue: changes['duration'].previousValue,
+        hasStarted: this.hasStarted
+      });
     }
     // Update countdown if duration changes and timer hasn't started
     if (changes['duration'] && !this.hasStarted) {
@@ -68,6 +89,7 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
       this.timerSubscription.unsubscribe();
       this.timerSubscription = undefined;
     }
+    this.hasStarted = false;
   }
 
   resetTimer() {
