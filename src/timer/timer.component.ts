@@ -89,6 +89,7 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
       this.timerSubscription.unsubscribe();
       this.timerSubscription = undefined;
     }
+    this.currentCountdown = this.duration;
     this.hasStarted = false;
   }
 
