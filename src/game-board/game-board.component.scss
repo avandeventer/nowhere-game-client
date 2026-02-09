@@ -99,14 +99,8 @@
   text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
-.board-cell.current .east-arrow {
-  right: -36px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.board-cell.current .west-arrow {
-  left: -36px;
+.board-cell.east .west-arrow {
+  left: -18px;
   top: 50%;
   transform: translateY(-50%);
 }

@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Story } from '../assets/story';
 import { Option } from '../assets/option';
+import { GameState } from 'src/assets/game-state';
 
 @Component({
   selector: 'app-story',
@@ -14,6 +15,7 @@ import { Option } from '../assets/option';
 })
 export class StoryComponent implements OnChanges {
   @Input() story: Story | undefined = new Story();
+  @Input() gameState: GameState = GameState.INIT;
   
   // Track displayed options to add new ones when they appear
   private displayedOptions: Option[] = [];
@@ -55,7 +57,7 @@ export class StoryComponent implements OnChanges {
   }
 
   getSelectedOption(): Option | undefined {
-    if (!this.story?.selectedOptionId) {
+    if (!this.story?.selectedOptionId || this.gameState !== GameState.MAKE_OUTCOME_CHOICE_WINNER) {
       return undefined;
     }
     return this.getOptions().find(option => option.optionId === this.story?.selectedOptionId);

@@ -24,6 +24,7 @@ export class GameBoardComponent implements OnInit, OnChanges {
   animationDirection: 'east' | 'west' | null = null;
   currentEncounter: Encounter | null = null;
   eastEncounter: Encounter | null = null;
+  farEastEncounter: Encounter | null = null;
 
   constructor(private gameService: GameService) {}
 
@@ -110,9 +111,10 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
     // Get current location encounter
     this.currentEncounter = this.getEncounterAt(x, y);
-    
-    // Get only the first east encounter
+
+    // Get the next two east encounters
     this.eastEncounter = this.getEncounterAt(x + 1, y);
+    this.farEastEncounter = this.getEncounterAt(x + 2, y);
   }
 
   private getEncounterAt(x: number, y: number): Encounter | null {
@@ -142,10 +144,6 @@ export class GameBoardComponent implements OnInit, OnChanges {
 
   isFinalEncounter(encounter: Encounter | null): boolean {
     return encounter?.encounterType === EncounterType.FINAL;
-  }
-
-  shouldShowCampfireAfterCurrent(): boolean {
-    return this.eastEncounter !== null;
   }
 }
 
