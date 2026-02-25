@@ -353,7 +353,11 @@ export class GameStateManagerComponent implements OnInit {
     console.log(`Timer completed for game phase: ${this.gameState}, advancing to next phase...`);
     
     // For write phases, set writeTimerDone instead of advancing
-    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase()) {
+    if (this.isGameInWritingPhase() 
+      || this.isGameInLocationCreationPhase() 
+      || this.isGameInWriteEndingsPhase()
+      || this.isGameInCollaborativeTextWritingPhase()
+    ) {
       this.timerService.setWriteTimerDone(this.gameCode).subscribe({
         next: (response) => {
           console.log('writeTimerDone set successfully', response);
