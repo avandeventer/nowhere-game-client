@@ -9,7 +9,7 @@
           <app-game-board [gameCode]="gameCode" [gameBoard]="gameBoard"></app-game-board>
         </div>
       } @else if (isMakeChoicePhase() && phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
-        <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState"></app-story>
+        <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState" [outcomeDisplay]="outcomeDisplay"></app-story>
       } @else if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
         <div class="winning-submission">
           @if (isInMultipleWinnersPhase()) {

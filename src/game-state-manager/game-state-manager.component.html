@@ -57,6 +57,7 @@
         [gameState]="gameState"
         [phaseInfo]="collaborativeTextPhaseInfo"
         [gameBoard]="gameBoard"
+        [outcomeDisplay]="activePlayerSession.outcomeDisplay || []"
         (winningSubmissionLoaded)="loadCollaborativeTextPhaseInfo()">
     </app-collaborative-text>
     
@@ -184,6 +185,7 @@
         [gameState]="gameState"
         [phaseInfo]="collaborativeTextPhaseInfo"
         [gameBoard]="gameBoard"
+        [outcomeDisplay]="activePlayerSession.outcomeDisplay || []"
         (winningSubmissionLoaded)="loadCollaborativeTextPhaseInfo()">
     </app-collaborative-text>
     

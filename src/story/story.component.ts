@@ -16,6 +16,7 @@ import { GameState } from 'src/assets/game-state';
 export class StoryComponent implements OnChanges {
   @Input() story: Story | undefined = new Story();
   @Input() gameState: GameState = GameState.INIT;
+  @Input() outcomeDisplay: String[] = [];
   
   // Track displayed options to add new ones when they appear
   private displayedOptions: Option[] = [];

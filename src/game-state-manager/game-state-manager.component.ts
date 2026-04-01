@@ -309,22 +309,29 @@ export class GameStateManagerComponent implements OnInit {
       || this.isGameInLocationSelectPhase() 
       || this.gameState === GameState.ROUND1
       || this.isStoryOverDungeonMode()
+      || (this.isGameInVotingOrWinningPhase() && this.roundNumber == 1)
     ) {
       return 'JustTryYourBest_NoTension.wav';
     }
     
     if (this.isGameInWritingPhase() 
       || this.isGameInWriteEndingsPhase() 
-      || (this.isGameInCollaborativeTextPhase() 
+      || (this.isGameInCollaborativeTextWritingPhase() 
       && !this.isGameInFearQuestions())
       || this.isGameInLocationCreationPhase()) {
       return 'FolkSoundscape_1.wav';
     }
 
-    if (this.gameState === GameState.ROUND2 || this.isGameInEndingPhase() || this.isGameInFinalePhase()) {
+    if (this.gameState === GameState.ROUND2 || this.isGameInEndingPhase() || this.isGameInFinalePhase() 
+      || (this.isGameInVotingOrWinningPhase() && this.roundNumber == 2)) {
       return 'JustTryYourBest_TensionTail_BanjoTag.wav';
     }
     return '';
+  }
+
+  private isGameInVotingOrWinningPhase(): boolean {
+    return this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING 
+    || this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING;
   }
 
   private isStoryOverDungeonMode(): boolean {
