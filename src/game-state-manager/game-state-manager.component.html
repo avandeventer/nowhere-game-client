@@ -234,7 +234,9 @@
 @if (isGameInEndingPhase()) {
     <div class="location-layout">
         <div class="location-panel">
-          <location [gameCode]="gameCode"></location>
+            <div class="map">
+                <img src="assets/images/pyre.gif" alt="Pyre" class="pyre">
+            </div>
         </div>
         <div class="card-column">
             <adventure [gameCode]="gameCode" [gameState]="gameState" [activePlayerSession]="activePlayerSession"></adventure>

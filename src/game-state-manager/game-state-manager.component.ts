@@ -240,7 +240,7 @@ export class GameStateManagerComponent implements OnInit {
     return (this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING) 
-           && this.gameState !== GameState.INIT && !this.isGameInPreamblePhase();
+           && this.gameState !== GameState.INIT && this.gameState !== GameState.ENDING && !this.isGameInPreamblePhase();
   }
 
   isGameInFearQuestions() {
@@ -297,7 +297,10 @@ export class GameStateManagerComponent implements OnInit {
 
   private getMusicTrackForGameState(): string {
     // Play epilogue music for SUCCESS or DESTROYED states
-    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED')) || (this.roundNumber === 4 && this.isGameInCampfirePhase())) {
+    if ((this.winState && (this.winState.state === 'SUCCESS' || this.winState.state === 'DESTROYED'))
+       || (this.roundNumber === 4 && this.isGameInCampfirePhase())
+      || this.gameState === GameState.ENDING  
+    ) {
       return 'Nowhere_Epilogue_Loop_V1.wav';
     }
 

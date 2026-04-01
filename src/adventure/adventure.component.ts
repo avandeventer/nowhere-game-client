@@ -99,7 +99,7 @@ export class AdventureComponent implements OnInit {
       case GameState.RITUAL:
         return `${this.currentTurnPlayer?.userName} is making their final choice. Choose what you'll do from your phone. Will you attempt to impress ${this.favorEntity} or will you do the unthinkable and try to oppose them?`;
       case GameState.ENDING:
-        return `${this.currentTurnPlayer?.userName}'s fate is sealed`
+        return `${this.currentTurnPlayer?.userName} has grown and changed.`
       default:
         return "Look to your phone for answers!"
     } 
