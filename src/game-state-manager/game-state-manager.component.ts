@@ -311,7 +311,7 @@ export class GameStateManagerComponent implements OnInit {
       || this.isGameInLocationSelectPhase() 
       || this.gameState === GameState.ROUND1
       || this.isStoryOverDungeonMode()
-      || (this.isGameInVotingOrWinningPhase() && this.roundNumber == 1)
+      || (this.isGameInVotingOrWinningPhase() && this.roundNumber == 1 && this.gameState !== GameState.LOCATION_VOTING)
     ) {
       return 'JustTryYourBest_NoTension.wav';
     }
