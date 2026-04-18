@@ -275,7 +275,7 @@ export class GameStateManagerComponent implements OnInit {
         return 60;
       }
     }
-    return 120;
+    return 180;
   }
 
   toggleMusic(): void {
