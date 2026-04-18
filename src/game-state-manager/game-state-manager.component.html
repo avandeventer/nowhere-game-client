@@ -41,19 +41,19 @@
         </div>
 
         <div class="card-column">
-            <mat-card class="instructions" appearance="outlined">
-                {{getInstructionDisplay()}}
-            </mat-card>
             <mat-card class="game-session-display">
                 {{getGameSessionDisplay()}}
+            </mat-card>
+            <mat-card class="instructions" appearance="outlined">
+                {{getInstructionDisplay()}}
             </mat-card>
         </div>
     </div>
 }
 
 @if (isGameInCollaborativeTextPhase()) {
-    <app-collaborative-text 
-        [gameCode]="gameCode" 
+    <app-collaborative-text
+        [gameCode]="gameCode"
         [gameState]="gameState"
         [phaseInfo]="collaborativeTextPhaseInfo"
         [gameBoard]="gameBoard"
@@ -71,6 +71,7 @@
         </app-timer>
     }
 }
+
 
 @if (isGameInLocationCreationPhase()) {
     <div class="location-layout">
@@ -248,7 +249,9 @@
     <finale [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></finale>
 }
 
-<app-player-progress 
-    [gameCode]="gameCode" 
-    [activeGameStateSession]="activeGameStateSession">
-</app-player-progress>
+@if (gameState !== 'MAKE_CHOICE_VOTING') {
+  <app-player-progress
+      [gameCode]="gameCode"
+      [activeGameStateSession]="activeGameStateSession">
+  </app-player-progress>
+}

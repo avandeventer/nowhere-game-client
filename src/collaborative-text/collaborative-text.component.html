@@ -8,8 +8,51 @@
         <div class="game-board-wrapper">
           <app-game-board [gameCode]="gameCode" [gameBoard]="gameBoard"></app-game-board>
         </div>
+      } @else if (isLocationVotingPhase() && phaseInfo?.locationVotingSubmissions?.length) {
+        <div class="fork-container">
+          <div class="fork-left">
+            <mat-icon class="traveler-icon">group</mat-icon>
+          </div>
+          <div class="fork-paths">
+            @for (submission of phaseInfo!.locationVotingSubmissions!; track submission.submissionId) {
+              <div class="fork-path">
+                <div class="path-connector"></div>
+                <mat-card class="location-display-card">
+                  @if (submission.outcomeType) {
+                    <img [src]="submission.outcomeType" [alt]="submission.currentText" class="location-display-image" />
+                  }
+                  <p class="location-display-label">{{ submission.currentText }}</p>
+                </mat-card>
+              </div>
+            }
+          </div>
+        </div>
       } @else if (isMakeChoicePhase() && phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
-        <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState" [outcomeDisplay]="outcomeDisplay"></app-story>
+        <div class="story-with-location">
+          @if (phaseInfo?.storyToIterateOn?.location?.iconDirectory) {
+            <div class="story-location-aside">
+              <span class="story-location-label">You've stumbled upon</span>
+              <img [src]="phaseInfo!.storyToIterateOn!.location!.iconDirectory" [alt]="phaseInfo!.storyToIterateOn!.location!.label" class="story-location-icon" />
+              <span class="story-location-label">{{ phaseInfo!.storyToIterateOn!.location!.label }}</span>
+              @if (phaseInfo?.playersAtLocation?.length) {
+                <div class="location-also-here">
+                  <div class="location-also-bubbles">
+                    @for (player of phaseInfo!.playersAtLocation!; track player.authorId; let i = $index) {
+                      <div class="location-bubble-wrapper">
+                        <div class="location-bubble" [style.background-color]="getBubbleColor(i)"></div>
+                        <span class="location-bubble-label">{{ player.displayName }}</span>
+                      </div>
+                    }
+                  </div>
+                  <span class="location-also-label">{{ phaseInfo!.playersAtLocation!.length === 1 ? 'is also here' : 'are also here' }}</span>
+                </div>
+              }
+            </div>
+          }
+          <div class="story-location-story">
+            <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState" [outcomeDisplay]="outcomeDisplay" [activePlayers]="phaseInfo?.activePlayers || []"></app-story>
+          </div>
+        </div>
       } @else if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
         <div class="winning-submission">
           @if (isInMultipleWinnersPhase()) {

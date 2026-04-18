@@ -68,3 +68,31 @@
 .music-toggle-container mat-icon {
   color: #333 !important;
 }
+
+// Location voting display
+.location-vote-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.location-display-card {
+  border-radius: 10px;
+  text-align: center;
+  padding: 8px;
+}
+
+.location-display-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.location-display-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}

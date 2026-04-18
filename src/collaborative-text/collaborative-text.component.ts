@@ -8,11 +8,13 @@ import { CollaborativeTextPhaseInfo, CollaborativeMode, PhaseType } from '../ass
 import { GameBoardComponent } from '../game-board/game-board.component';
 import { StoryComponent } from '../story/story.component';
 import { GameBoard } from '../assets/game-board';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-collaborative-text',
   standalone: true,
-  imports: [CommonModule, GameBoardComponent, StoryComponent],
+  imports: [CommonModule, GameBoardComponent, StoryComponent, MatCardModule, MatIconModule],
   templateUrl: './collaborative-text.component.html',
   styleUrl: './collaborative-text.component.scss'
 })
@@ -132,6 +134,11 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
     return this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF_VOTE_WINNERS || this.gameState === GameState.HOW_DOES_THIS_RESOLVE_WINNERS || this.gameState === GameState.WHAT_CAN_WE_TRY_WINNERS;
   }
 
+  getBubbleColor(index: number): string {
+    const colors = ['#4caf50', '#2196f3', '#ff9800', '#e91e63', '#9c27b0', '#f44336', '#00bcd4', '#ffeb3b'];
+    return colors[index % colors.length];
+  }
+
   isMakeChoicePhase(): boolean {
     return this.gameState === GameState.MAKE_CHOICE || this.gameState === GameState.MAKE_CHOICE_VOTING 
     || this.gameState === GameState.MAKE_CHOICE_WINNER 
@@ -221,6 +228,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
       return 'COLLABORATIVE MODE';
     }
     return '';
+  }
+
+  isLocationVotingPhase(): boolean {
+    return this.gameState === GameState.LOCATION_VOTING || this.gameState === GameState.LOCATION_WINNING;
   }
 
   isVotingPhase(): boolean {

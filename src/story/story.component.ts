@@ -17,6 +17,15 @@ export class StoryComponent implements OnChanges {
   @Input() story: Story | undefined = new Story();
   @Input() gameState: GameState = GameState.INIT;
   @Input() outcomeDisplay: String[] = [];
+  @Input() activePlayers: { authorId: string; displayName: string }[] = [];
+
+  getEncounterHeader(): string {
+    const names = this.activePlayers.map(p => p.displayName);
+    if (names.length === 0) return "You've encountered";
+    if (names.length === 1) return `${names[0]} has encountered`;
+    if (names.length === 2) return `${names[0]} and ${names[1]} have encountered`;
+    return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]} have encountered`;
+  }
   
   // Track displayed options to add new ones when they appear
   private displayedOptions: Option[] = [];

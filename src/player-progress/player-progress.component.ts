@@ -31,6 +31,10 @@ export class PlayerProgressComponent implements OnInit, OnChanges {
     if (changes['activeGameStateSession'] && this.activeGameStateSession) {
       this.updateCompletedPlayers();
     }
+
+    if (changes['gameState']) {
+      this.loadPlayers();
+    }
   }
 
   private loadPlayers() {
@@ -73,6 +77,11 @@ export class PlayerProgressComponent implements OnInit, OnChanges {
   getPlayerName(playerId: string): string {
     const player = this.players.find(p => p.authorId === playerId);
     return player ? player.userName : 'Unknown Player';
+  }
+
+  getPlayerClass(playerId: string): string {
+    const player = this.players.find(p => p.authorId === playerId);
+    return player && player.playerClass ? ` - ${player.playerClass.name}` : '';
   }
 
   getPlayerProgress(): number {

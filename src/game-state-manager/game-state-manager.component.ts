@@ -147,8 +147,7 @@ export class GameStateManagerComponent implements OnInit {
   getInstructionDisplay() {
     switch (this.gameState) {
       case GameState.PREAMBLE:
-        return `You are about to step into the unknown. You'll each define this world for a brief time and then you and your friends will determine what happens to you here. 
-        Be wary of ${this.favorStat.favorEntity}.`;
+        return `The barrier between reality and fiction is thin here. You'll work together to define the things that inhabit ${this.adventureMap.name} and then you'll each decide the path you take through it.`;
       case GameState.PREAMBLE_AGAIN:
         return `The final challenge draws closer. Soon we will encounter ${this.favorStat.favorEntity}.`;
       case GameState.ENDING_PREAMBLE:
@@ -239,7 +238,7 @@ export class GameStateManagerComponent implements OnInit {
     // Check if we're in any collaborative text phase (submission, voting, or winning)
     return (this.collaborativeTextPhaseInfo?.phaseType === PhaseType.SUBMISSION ||
            this.collaborativeTextPhaseInfo?.phaseType === PhaseType.VOTING ||
-           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING) 
+           this.collaborativeTextPhaseInfo?.phaseType === PhaseType.WINNING)
            && this.gameState !== GameState.INIT && this.gameState !== GameState.ENDING && !this.isGameInPreamblePhase();
   }
 
