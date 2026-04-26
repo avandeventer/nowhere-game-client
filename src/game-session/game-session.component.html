@@ -7,19 +7,20 @@
   @if (selectedToggle === 'selectAdventure') {
     <mat-accordion>
       @for (entry of adventureMapsList; track entry.key) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
+        <mat-expansion-panel [expanded]="adventureId === entry.map.adventureMap.adventureId">
+          <mat-expansion-panel-header [class.selected-panel]="adventureId === entry.map.adventureMap.adventureId">
             <mat-panel-title>
-              {{ entry.map.adventureMap.name }} - {{ selectedSaveGameName }}
+              {{ entry.map.adventureMap.name }}
             </mat-panel-title>
             <mat-slide-toggle
-              [checked]="isDungeonMode(entry.map.adventureMap.adventureId)"
+              [checked]="!isDungeonMode(entry.map.adventureMap.adventureId)"
               (change)="toggleGameMode(entry.map.adventureMap.adventureId)"
               (click)="$event.stopPropagation()"
-              style="margin-right: 8px;"
-            >
+              style="flex-shrink: 0;"
+            ></mat-slide-toggle>
+            <span style="min-width: 90px; flex-shrink: 0; font-size: 14px; margin-right: 8px;">
               {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Dungeon Mode' : 'Town Mode' }}
-            </mat-slide-toggle>
+            </span>
             <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId); $event.stopPropagation()">
               <mat-icon>edit</mat-icon>
             </button>

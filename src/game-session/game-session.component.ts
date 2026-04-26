@@ -77,8 +77,9 @@ export class GameSessionComponent {
         this.adventureId = firstMapEntry.map.adventureMap.adventureId;
         this.saveGameId = saveGames[0].saveGame.id;
         this.selectedSaveGameName = saveGames[0].saveGame.name;
+        console.log("Selected save game: " + firstMapEntry.map.adventureMap.name)
         if(!this.gameModeMap.has(this.adventureId)) {
-          this.gameModeMap.set(this.adventureId, GameMode.TOWN_MODE);
+          this.gameModeMap.set(this.adventureId, GameMode.DUNGEON_MODE);
         }
       }
     }
@@ -140,13 +141,13 @@ export class GameSessionComponent {
   }
   
   toggleGameMode(adventureId: string) {
-    const currentMode = this.gameModeMap.get(adventureId) || GameMode.TOWN_MODE;
+    const currentMode = this.gameModeMap.get(adventureId) || GameMode.DUNGEON_MODE;
     const newMode = currentMode === GameMode.TOWN_MODE ? GameMode.DUNGEON_MODE : GameMode.TOWN_MODE;
     this.gameModeMap.set(adventureId, newMode);
   }
   
   getGameMode(adventureId: string): GameMode {
-    return this.gameModeMap.get(adventureId) || GameMode.TOWN_MODE;
+    return this.gameModeMap.get(adventureId) || GameMode.DUNGEON_MODE;
   }
   
   isDungeonMode(adventureId: string): boolean {

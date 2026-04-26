@@ -1,3 +1,22 @@
+mat-expansion-panel-header {
+  ::ng-deep .mdc-switch {
+    --mdc-switch-track-width: 52px;
+    width: var(--mdc-switch-track-width);
+    flex-shrink: 0;
+  }
+}
+
+.selected-panel {
+    background-color: var(--mat-sys-primary-container) !important;
+    color: var(--mat-sys-on-primary-container) !important;
+}
+
+mat-list-item.selected {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+    border-radius: 4px;
+}
+
 .adventure-form-wrapper {
     padding: 1rem;
     width: 100%;
