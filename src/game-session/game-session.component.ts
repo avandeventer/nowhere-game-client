@@ -149,6 +149,7 @@ export class GameSessionComponent {
 
   activateEditMapForm(activatedEditMapFormAdventureId: string) {
     this.activatedEditMapFormAdventureId = activatedEditMapFormAdventureId;
+    this.expandedAdventureId = activatedEditMapFormAdventureId;
   }
 
   deactivateEditMapForm() {

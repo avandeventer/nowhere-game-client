@@ -35,11 +35,10 @@ mat-expansion-panel-header {
     text-align: right;
 }
 
-.adventure-game-mode-toggle {
-    margin-left: auto;
-    margin-right: 0;
-    // background-color: var(--mat-form-field-filled-container-color);
-    // background-color: var(--mat-stepper-header-done-state-icon-foreground-color);
+.adventure-game-mode-toggle-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
 }
 
 .resume-game-prompt {

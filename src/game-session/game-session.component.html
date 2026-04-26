@@ -4,14 +4,16 @@
       <span>You have a previous game session (<strong>{{ cachedGameCode }}</strong>). Rejoin it?</span>
       <div class="resume-game-actions">
         <button mat-flat-button (click)="resumeCachedGame()">Rejoin Previous Game</button>
-        <button mat-stroked-button (click)="discardCachedGame()">Start Fresh</button>
+        <button mat-stroked-button (click)="discardCachedGame()">Dismiss</button>
       </div>
     </div>
   }
-  <mat-button-toggle-group class="adventure-game-mode-toggle" aria-label="Font Style" [value]="selectedToggle" (change)="onToggleChange($event.value)">
-    <mat-button-toggle value="selectAdventure">Select Adventure</mat-button-toggle>
-    <mat-button-toggle value="createNewAdventure">Create New Adventure</mat-button-toggle>
-  </mat-button-toggle-group><br><br>
+  <div class="adventure-game-mode-toggle-wrapper">
+    <mat-button-toggle-group aria-label="Font Style" [value]="selectedToggle" (change)="onToggleChange($event.value)">
+      <mat-button-toggle value="selectAdventure">Select Adventure Map</mat-button-toggle>
+      <mat-button-toggle value="createNewAdventure">Create New Adventure Map</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
   @if (selectedToggle === 'selectAdventure' && !rejoinCode.value) {
     <mat-accordion>
@@ -33,14 +35,16 @@
                 style="flex-shrink: 0;"
               ></mat-slide-toggle>
               <span style="min-width: 90px; flex-shrink: 0; font-size: 14px; margin-right: 8px;">
-                {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Dungeon Mode' : 'Town Mode' }}
+                {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Share Text Mode' : 'Legacy Mode' }}
               </span>
               <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId); $event.stopPropagation()">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button matSuffix (click)="deactivateEditMapForm(); $event.stopPropagation()">
-                <mat-icon>close</mat-icon>
-              </button>
+              @if (activatedEditMapFormAdventureId === entry.map.adventureMap.adventureId) {
+                <button mat-icon-button matSuffix (click)="deactivateEditMapForm(); $event.stopPropagation()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
             </mat-expansion-panel-header>
 
             @if (activatedEditMapFormAdventureId === entry.map.adventureMap.adventureId) {
