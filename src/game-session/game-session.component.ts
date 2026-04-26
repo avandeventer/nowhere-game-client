@@ -48,8 +48,32 @@ export class GameSessionComponent {
   storiesToPlayPerRound: number = 1;
   newSettingFormActivated: boolean = false;
   activatedEditMapFormAdventureId: string = "";
-  selectedToggle: string = 'selectAdventure'; // 'bold' for Select Adventure, 'italic' for Create New Adventure
-  gameModeMap: Map<string, GameMode> = new Map(); // Maps adventureId to GameMode
+  selectedToggle: string = 'selectAdventure';
+  gameModeMap: Map<string, GameMode> = new Map();
+  expandedAdventureId: string = '';
+  selectedAdventureMapName: string = '';
+  cachedGameCode: string = '';
+
+  private static readonly GAME_CODE_CACHE_KEY = 'nowhere_game_code';
+
+  private saveGameCodeCache(gameCode: string) {
+    localStorage.setItem(GameSessionComponent.GAME_CODE_CACHE_KEY, gameCode);
+  }
+
+  private clearGameCodeCache() {
+    localStorage.removeItem(GameSessionComponent.GAME_CODE_CACHE_KEY);
+    this.cachedGameCode = '';
+  }
+
+  resumeCachedGame() {
+    this.rejoinCode.setValue(this.cachedGameCode);
+    this.clearGameCodeCache();
+    this.initializeGame();
+  }
+
+  discardCachedGame() {
+    this.clearGameCodeCache();
+  }
 
   setNewGame(gameSessionCreated: boolean) {
     this.gameSessionCreated = gameSessionCreated;
@@ -77,7 +101,11 @@ export class GameSessionComponent {
         this.adventureId = firstMapEntry.map.adventureMap.adventureId;
         this.saveGameId = saveGames[0].saveGame.id;
         this.selectedSaveGameName = saveGames[0].saveGame.name;
+        this.selectedAdventureMapName = firstMapEntry.map.adventureMap.name;
+        this.expandedAdventureId = this.adventureId;
         console.log("Selected save game: " + firstMapEntry.map.adventureMap.name)
+        const cached = localStorage.getItem(GameSessionComponent.GAME_CODE_CACHE_KEY);
+        if (cached) this.cachedGameCode = cached;
         if(!this.gameModeMap.has(this.adventureId)) {
           this.gameModeMap.set(this.adventureId, GameMode.DUNGEON_MODE);
         }
@@ -127,10 +155,12 @@ export class GameSessionComponent {
     this.activatedEditMapFormAdventureId = "";
   }
 
-  selectSaveGame(adventureId: string, saveGameId: string, selectedSaveGameName: string) {
+  selectSaveGame(adventureId: string, saveGameId: string, selectedSaveGameName: string, adventureMapName: string = '') {
     this.adventureId = adventureId;
     this.saveGameId = saveGameId;
     this.selectedSaveGameName = selectedSaveGameName;
+    this.selectedAdventureMapName = adventureMapName;
+    this.expandedAdventureId = adventureId;
     this.activatedSaveGameId = 'none';
 
     // Scroll to the selected item
@@ -140,6 +170,29 @@ export class GameSessionComponent {
     }, 0);
   }
   
+  onPanelOpened(adventureId: string) {
+    this.expandedAdventureId = adventureId;
+    const mapEntry = this.adventureMapsList.find(e => e.map.adventureMap.adventureId === adventureId);
+    if (mapEntry) {
+      const saveGames = this.getSaveGamesList(mapEntry.map);
+      if (saveGames.length > 0) {
+        this.adventureId = adventureId;
+        this.saveGameId = saveGames[0].saveGame.id;
+        this.selectedSaveGameName = saveGames[0].saveGame.name;
+        this.selectedAdventureMapName = mapEntry.map.adventureMap.name;
+        if (!this.gameModeMap.has(adventureId)) {
+          this.gameModeMap.set(adventureId, GameMode.DUNGEON_MODE);
+        }
+      }
+    }
+  }
+
+  onPanelClosed(adventureId: string) {
+    if (this.expandedAdventureId === adventureId) {
+      this.expandedAdventureId = '';
+    }
+  }
+
   toggleGameMode(adventureId: string) {
     const currentMode = this.gameModeMap.get(adventureId) || GameMode.DUNGEON_MODE;
     const newMode = currentMode === GameMode.TOWN_MODE ? GameMode.DUNGEON_MODE : GameMode.TOWN_MODE;
@@ -170,6 +223,7 @@ export class GameSessionComponent {
           console.log('Game created!', response);
           
           this.gameCode = response.gameCode;
+          this.saveGameCodeCache(response.gameCode);
           this.gameSessionCreated = true;
           this.startGame.emit(true);
         },
@@ -225,6 +279,7 @@ export class GameSessionComponent {
         next: (response) => {
           console.log('Game rejoined!', response);
           this.gameCode = response.gameCode;
+          this.saveGameCodeCache(response.gameCode);
           this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${response.gameCode}`;
           this.gameSessionCreated = true;
           this.startGame.emit(true);

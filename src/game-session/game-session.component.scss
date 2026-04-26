@@ -6,15 +6,12 @@ mat-expansion-panel-header {
   }
 }
 
-.selected-panel {
-    background-color: var(--mat-sys-primary-container) !important;
-    color: var(--mat-sys-on-primary-container) !important;
-}
-
-mat-list-item.selected {
-    background-color: var(--mat-sys-secondary-container);
-    color: var(--mat-sys-on-secondary-container);
+.selected-name {
+    color: #2e7d32;
+    font-weight: 500;
+    border: 1px solid #66bb6a;
     border-radius: 4px;
+    padding: 1px 6px;
 }
 
 .adventure-form-wrapper {
@@ -43,6 +40,38 @@ mat-list-item.selected {
     margin-right: 0;
     // background-color: var(--mat-form-field-filled-container-color);
     // background-color: var(--mat-stepper-header-done-state-icon-foreground-color);
+}
+
+.resume-game-prompt {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--mat-sys-primary);
+    background-color: var(--mat-form-field-filled-container-color);
+}
+
+.resume-game-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.change-selection-btn {
+    margin-top: 4px;
+}
+
+.create-game-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.selection-summary {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 .create-new-adventure-description {

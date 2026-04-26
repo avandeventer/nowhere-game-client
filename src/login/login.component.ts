@@ -13,15 +13,46 @@ import { MatChipSet, MatChip } from '@angular/material/chips'
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
+    styleUrl: './login.component.scss',
     imports: [GameSessionComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatChipSet, MatChip]
 })
 export class LoginComponent {
+
+    ngOnInit() {
+        const cached = this.loadLoginCache();
+        if (cached) {
+            this.loginForm.patchValue({ email: cached.email, password: cached.password });
+            this.loginWithCredentials(cached.email, cached.password);
+        }
+    }
 
     loginForm: FormGroup;
     createNewProfile: boolean = false;
     loginSuccessful: boolean = false;
     userProfile: UserProfile = new UserProfile();
     gameSessionCreated: boolean = false;
+
+    private static readonly CACHE_KEY = 'nowhere_login';
+    private static readonly CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+    private saveLoginCache(email: string, password: string) {
+        const entry = { email, password, expiresAt: Date.now() + LoginComponent.CACHE_TTL_MS };
+        localStorage.setItem(LoginComponent.CACHE_KEY, JSON.stringify(entry));
+    }
+
+    private clearLoginCache() {
+        localStorage.removeItem(LoginComponent.CACHE_KEY);
+    }
+
+    private loadLoginCache(): { email: string; password: string } | null {
+        try {
+            const raw = localStorage.getItem(LoginComponent.CACHE_KEY);
+            if (!raw) return null;
+            const entry = JSON.parse(raw);
+            if (Date.now() > entry.expiresAt) { this.clearLoginCache(); return null; }
+            return { email: entry.email, password: entry.password };
+        } catch { return null; }
+    }
 
     constructor(private http: HttpClient, private fb: FormBuilder) {
         console.log('Login initialized');
@@ -94,6 +125,7 @@ export class LoginComponent {
                     console.log('User profile created!', response);
                     this.userProfile = response;
                     this.loginSuccessful = true;
+                    this.saveLoginCache(this.email.value ?? '', this.password.value ?? '');
                 },
                 error: (error) => {
                     console.error('Error creating game', error);
@@ -104,31 +136,30 @@ export class LoginComponent {
 
     changeProfile() {
         this.loginSuccessful = false;
+        this.clearLoginCache();
     }
 
     login() {
         if (this.loginForm.invalid) return;
+        this.loginWithCredentials(this.email?.value ?? '', this.password?.value ?? '');
+    }
 
-        const params = {
-            email: this.email?.value ?? '',
-            password: this.password?.value ?? ''
-        };
-
+    private loginWithCredentials(email: string, password: string) {
         this.http.get<UserProfile>(
             environment.nowhereBackendUrl + HttpConstants.USER_PROFILE,
-            {
-              params
-            })
+            { params: { email, password } })
             .subscribe({
-            next: (response) => {
-                console.log('User login succeeded!', response);
-                this.userProfile = response;
-                this.loginSuccessful = true;
-            },
-            error: (error) => {
-                console.error('Error logging in', error);
-            },
-        });
+                next: (response) => {
+                    console.log('User login succeeded!', response);
+                    this.userProfile = response;
+                    this.loginSuccessful = true;
+                    this.saveLoginCache(email, password);
+                },
+                error: (error) => {
+                    console.error('Error logging in', error);
+                    this.clearLoginCache();
+                },
+            });
     }
 
     refreshLogin(userProfileId: string) {

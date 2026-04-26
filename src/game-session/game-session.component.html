@@ -1,134 +1,159 @@
 @if(!gameSessionCreated) {
+  @if (cachedGameCode) {
+    <div class="resume-game-prompt">
+      <span>You have a previous game session (<strong>{{ cachedGameCode }}</strong>). Rejoin it?</span>
+      <div class="resume-game-actions">
+        <button mat-flat-button (click)="resumeCachedGame()">Rejoin Previous Game</button>
+        <button mat-stroked-button (click)="discardCachedGame()">Start Fresh</button>
+      </div>
+    </div>
+  }
   <mat-button-toggle-group class="adventure-game-mode-toggle" aria-label="Font Style" [value]="selectedToggle" (change)="onToggleChange($event.value)">
     <mat-button-toggle value="selectAdventure">Select Adventure</mat-button-toggle>
     <mat-button-toggle value="createNewAdventure">Create New Adventure</mat-button-toggle>
   </mat-button-toggle-group><br><br>
-  
-  @if (selectedToggle === 'selectAdventure') {
+
+  @if (selectedToggle === 'selectAdventure' && !rejoinCode.value) {
     <mat-accordion>
       @for (entry of adventureMapsList; track entry.key) {
-        <mat-expansion-panel [expanded]="adventureId === entry.map.adventureMap.adventureId">
-          <mat-expansion-panel-header [class.selected-panel]="adventureId === entry.map.adventureMap.adventureId">
-            <mat-panel-title>
-              {{ entry.map.adventureMap.name }}
-            </mat-panel-title>
-            <mat-slide-toggle
-              [checked]="!isDungeonMode(entry.map.adventureMap.adventureId)"
-              (change)="toggleGameMode(entry.map.adventureMap.adventureId)"
-              (click)="$event.stopPropagation()"
-              style="flex-shrink: 0;"
-            ></mat-slide-toggle>
-            <span style="min-width: 90px; flex-shrink: 0; font-size: 14px; margin-right: 8px;">
-              {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Dungeon Mode' : 'Town Mode' }}
-            </span>
-            <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId); $event.stopPropagation()">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button matSuffix (click)="deactivateEditMapForm(); $event.stopPropagation()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-expansion-panel-header>
-    
-          @if (activatedEditMapFormAdventureId === entry.map.adventureMap.adventureId) {
-            <adventure-map-form 
-              class="adventure-form-wrapper"
-              (adventureMapOutput)="addAdventureMap($event)"
-              [userProfileId]="userProfile.id"
-              [adventureMap]="entry.map.adventureMap"
-            ></adventure-map-form>  
-          }
+        @if (!expandedAdventureId || expandedAdventureId === entry.map.adventureMap.adventureId) {
+          <mat-expansion-panel
+            [expanded]="expandedAdventureId === entry.map.adventureMap.adventureId"
+            (opened)="onPanelOpened(entry.map.adventureMap.adventureId)"
+            (closed)="onPanelClosed(entry.map.adventureMap.adventureId)"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span [class.selected-name]="adventureId === entry.map.adventureMap.adventureId">{{ entry.map.adventureMap.name }}</span>
+              </mat-panel-title>
+              <mat-slide-toggle
+                [checked]="!isDungeonMode(entry.map.adventureMap.adventureId)"
+                (change)="toggleGameMode(entry.map.adventureMap.adventureId)"
+                (click)="$event.stopPropagation()"
+                style="flex-shrink: 0;"
+              ></mat-slide-toggle>
+              <span style="min-width: 90px; flex-shrink: 0; font-size: 14px; margin-right: 8px;">
+                {{ isDungeonMode(entry.map.adventureMap.adventureId) ? 'Dungeon Mode' : 'Town Mode' }}
+              </span>
+              <button mat-icon-button (click)="activateEditMapForm(entry.map.adventureMap.adventureId); $event.stopPropagation()">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matSuffix (click)="deactivateEditMapForm(); $event.stopPropagation()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-expansion-panel-header>
 
-          @else {
-            <mat-nav-list>
-              @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
-                <mat-list-item [class.selected]="saveEntry.saveGame.id === saveGameId" style="align-items: flex-start;">
-                  <div class="list-content" style="width: 100%;">
-                    @if (activatedSaveGameId === saveEntry.saveGame.id) {
-                        <div style="display: flex; align-items: center; width: 100%;">
-                            <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
-                                <mat-form-field appearance="outline" style="width: 100%;">
-                                <mat-label>Rename Save Game</mat-label>
-                                <input matInput [formControl]="saveGameName" placeholder="{{saveEntry.saveGame.name}}">
-                                <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
-                                    <mat-icon>close</mat-icon>
-                                </button>                                
-                                <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id)">
-                                    <mat-icon>check</mat-icon>
-                                </button>
-                                </mat-form-field>
-                            </form>
+            @if (activatedEditMapFormAdventureId === entry.map.adventureMap.adventureId) {
+              <adventure-map-form
+                class="adventure-form-wrapper"
+                (adventureMapOutput)="addAdventureMap($event)"
+                [userProfileId]="userProfile.id"
+                [adventureMap]="entry.map.adventureMap"
+              ></adventure-map-form>
+            }
+
+            @else {
+              <mat-nav-list>
+                @for (saveEntry of getSaveGamesList(entry.map); track saveEntry.key) {
+                  <mat-list-item [class.selected]="saveEntry.saveGame.id === saveGameId" style="align-items: flex-start;">
+                    <div class="list-content" style="width: 100%;">
+                      @if (activatedSaveGameId === saveEntry.saveGame.id) {
+                          <div style="display: flex; align-items: center; width: 100%;">
+                              <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
+                                  <mat-form-field appearance="outline" style="width: 100%;">
+                                  <mat-label>Rename Save Game</mat-label>
+                                  <input matInput [formControl]="saveGameName" placeholder="{{saveEntry.saveGame.name}}">
+                                  <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
+                                      <mat-icon>close</mat-icon>
+                                  </button>
+                                  <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id)">
+                                      <mat-icon>check</mat-icon>
+                                  </button>
+                                  </mat-form-field>
+                              </form>
+                          </div>
+                      } @else {
+                        <div style="display: flex; justify-content: space-between; align-items: center;" (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id, saveEntry.saveGame.name, entry.map.adventureMap.name)">
+                          <span [class.selected-name]="saveEntry.saveGame.id === saveGameId">Save Game: {{ saveEntry.saveGame.name || 'Default Save Game' }}</span>
+                          @if (eligibleForPreviousStories(saveEntry.saveGame)) {
+                            <mat-checkbox
+                              [checked]="false"
+                              (change)="setStoriesToPlay($event.checked)"
+                            >Use previous stories?</mat-checkbox>
+                          }
+                          <button mat-icon-button (click)="activateEditNameBox(saveEntry.saveGame.id); $event.stopPropagation()">
+                            <mat-icon>edit</mat-icon>
+                          </button>
                         </div>
+                      }
+                    </div>
+                  </mat-list-item>
+                }
+
+                <mat-list-item>
+                  <div class="list-content" style="width: 100%;">
+                    @if (activatedSaveGameId === '') {
+                      <div class="adventure-map-wrapper">
+                          <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
+                              <mat-form-field appearance="outline" style="width: 100%; font-weight: 400">
+                                  <mat-label>Create New Save Game</mat-label>
+                                  <input matInput [formControl]="saveGameName" placeholder="New Save Game">
+                                  <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
+                                      <mat-icon>close</mat-icon>
+                                  </button>
+                                  <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, '')">
+                                      <mat-icon>check</mat-icon>
+                                  </button>
+                              </mat-form-field>
+                          </form>
+                      </div>
                     } @else {
-                      <div style="display: flex; justify-content: space-between; align-items: center;" (click)="selectSaveGame(entry.map.adventureMap.adventureId, saveEntry.saveGame.id, saveEntry.saveGame.name)">
-                        <span>Save Game: {{ saveEntry.saveGame.name }}</span>
-                        @if (eligibleForPreviousStories(saveEntry.saveGame)) {
-                          <mat-checkbox
-                            [checked]="false"
-                            (change)="setStoriesToPlay($event.checked)"
-                          >Use previous stories?</mat-checkbox>
-                        }
-                        <button mat-icon-button (click)="activateEditNameBox(saveEntry.saveGame.id); $event.stopPropagation()">
+                      <div class="adventure-map-wrapper" (click)="activateEditNameBox('')">
+                        <span>Create New Save Game</span>
+                        <button mat-icon-button>
                           <mat-icon>edit</mat-icon>
                         </button>
                       </div>
                     }
                   </div>
                 </mat-list-item>
-              }
-      
-              <mat-list-item>
-                <div class="list-content" style="width: 100%;">
-                  @if (activatedSaveGameId === '') {
-                    <div class="adventure-map-wrapper">
-                        <form (submit)="onFormSubmit($event)" style="flex: 1;" (click)="$event.stopPropagation()" style="width: 100%;">
-                            <mat-form-field appearance="outline" style="width: 100%; font-weight: 400">
-                                <mat-label>Create New Save Game</mat-label>
-                                <input matInput [formControl]="saveGameName" placeholder="New Save Game">
-                                <button mat-icon-button matSuffix (click)="deactivateEditNameBox()">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                                <button mat-icon-button matSuffix (click)="upsertSaveGame(entry.map.adventureMap.adventureId, '')">
-                                    <mat-icon>check</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </form>
-                    </div>
-                  } @else {
-                    <div class="adventure-map-wrapper" (click)="activateEditNameBox('')">
-                      <span>Create New Save Game</span>
-                      <button mat-icon-button>
-                        <mat-icon>edit</mat-icon>
-                      </button>
-                    </div>
-                  }
-                </div>
-              </mat-list-item>
-            </mat-nav-list>
-          }
+              </mat-nav-list>
+            }
+          </mat-expansion-panel>
+        }
+      }
+      @if (!expandedAdventureId) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title (click)="toggleNewAdventureMapForm()">
+              <div>Create New Setting</div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <adventure-map-form
+            class="adventure-form-wrapper"
+            [userProfileId]="userProfile.id"
+            (adventureMapOutput)="addAdventureMap($event)"
+          >
+          </adventure-map-form>
         </mat-expansion-panel>
       }
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title (click)="toggleNewAdventureMapForm()">
-            <div>Create New Setting</div>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <adventure-map-form 
-          class="adventure-form-wrapper"
-          [userProfileId]="userProfile.id"
-          (adventureMapOutput)="addAdventureMap($event)"
-        >
-        </adventure-map-form>
-      </mat-expansion-panel>
-    </mat-accordion><br>
-  } @else {
+    </mat-accordion>
+    @if (expandedAdventureId) {
+      <div style="display: flex; justify-content: flex-end;">
+        <button mat-flat-button class="change-selection-btn" (click)="expandedAdventureId = ''">
+          <mat-icon>unfold_more</mat-icon> Change Map Selection
+        </button>
+      </div>
+    }
+    <br>
+  } @else if (selectedToggle === 'createNewAdventure') {
     <div class="create-new-adventure-description">
       <h3>Create New Adventure</h3>
       <p>This game mode will guide you through an additional phase at the start where players will create their own setting and then play in it!</p>
       <p>Note that this will add an additional 30-45 minutes to the game! We suggest playing at least once in an existing setting before you try this out!</p>
     </div>
   }
-  
+
   @if (!newSettingFormActivated) {
     <form class="join-game">
         <mat-form-field class="full-width">
@@ -136,13 +161,22 @@
             <input matInput type="text" id="rejoin" [formControl]="rejoinCode" placeholder="Rejoin Existing Game" />
         </mat-form-field>
     </form>
-    <button mat-flat-button (click)="initializeGame()">Create Game</button> <br>
+    <div class="create-game-row">
+      <button mat-flat-button (click)="initializeGame()">{{ rejoinCode.value ? 'Rejoin Game' : 'Create Game' }}</button>
+      @if (!rejoinCode.value && adventureId) {
+        <span class="selection-summary">
+          <span class="selected-name">{{ selectedAdventureMapName }}</span>
+          &middot;
+          <span class="selected-name">{{ selectedSaveGameName || 'Default Save Game' }}</span>
+        </span>
+      }
+    </div>
     <p>Type a code in the above box to rejoin an existing game. Leave it blank to start a new one.</p>
   }
 } @else {
-    <div class="game-code">Join game on your device with this code: 
+    <div class="game-code">Join game on your device with this code:
       <mat-chip>{{gameCode}}</mat-chip>
     </div>
-    
+
     <game-state-manager [gameCode]="gameCode" (gameSessionCreated)="setNewGame($event)"></game-state-manager>
 }

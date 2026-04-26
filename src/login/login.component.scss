@@ -1,0 +1,30 @@
+.login-page {
+    position: fixed;
+    inset: 0;
+    background-image: url('https://storage.googleapis.com/nowhere_images/location_icons/Book.png');
+    background-size: cover;
+    background-position: center 40%;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8vh;
+    z-index: 0;
+}
+
+.login-modal {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+    width: 100%;
+    max-width: 440px;
+    backdrop-filter: blur(6px);
+    position: relative;
+    z-index: 1;
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+    }
+}
