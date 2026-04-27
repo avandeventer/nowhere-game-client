@@ -26,7 +26,12 @@
           >
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <span [class.selected-name]="adventureId === entry.map.adventureMap.adventureId">{{ entry.map.adventureMap.name }}</span>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span [class.selected-name]="adventureId === entry.map.adventureMap.adventureId">{{ entry.map.adventureMap.name }}</span>
+                  @if (expandedAdventureId === entry.map.adventureMap.adventureId && entry.map.adventureMap.gameSessionDisplay?.mapDescription) {
+                    <span class="map-description">{{ entry.map.adventureMap.gameSessionDisplay.mapDescription }}</span>
+                  }
+                </div>
               </mat-panel-title>
               <mat-slide-toggle
                 [checked]="!isDungeonMode(entry.map.adventureMap.adventureId)"
@@ -145,7 +150,7 @@
     @if (expandedAdventureId) {
       <div style="display: flex; justify-content: flex-end;">
         <button mat-flat-button class="change-selection-btn" (click)="expandedAdventureId = ''">
-          <mat-icon>unfold_more</mat-icon> Change Map Selection
+          <mat-icon>unfold_more</mat-icon> Select a Different Map
         </button>
       </div>
     }
@@ -166,7 +171,7 @@
         </mat-form-field>
     </form>
     <div class="create-game-row">
-      <button mat-flat-button (click)="initializeGame()">{{ rejoinCode.value ? 'Rejoin Game' : 'Create Game' }}</button>
+      <button mat-flat-button (click)="initializeGame()" [disabled]="!rejoinCode.value && (!adventureId || !saveGameId)">{{ rejoinCode.value ? 'Rejoin Game' : 'Create Game' }}</button>
       @if (!rejoinCode.value && adventureId) {
         <span class="selection-summary">
           <span class="selected-name">{{ selectedAdventureMapName }}</span>

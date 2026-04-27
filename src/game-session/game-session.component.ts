@@ -94,23 +94,8 @@ export class GameSessionComponent {
   }
 
   ngOnInit() {
-    const firstMapEntry = this.adventureMapsList[0];
-    if (firstMapEntry) {
-      const saveGames = this.getSaveGamesList(firstMapEntry.map);
-      if (saveGames.length > 0) {
-        this.adventureId = firstMapEntry.map.adventureMap.adventureId;
-        this.saveGameId = saveGames[0].saveGame.id;
-        this.selectedSaveGameName = saveGames[0].saveGame.name;
-        this.selectedAdventureMapName = firstMapEntry.map.adventureMap.name;
-        this.expandedAdventureId = this.adventureId;
-        console.log("Selected save game: " + firstMapEntry.map.adventureMap.name)
-        const cached = localStorage.getItem(GameSessionComponent.GAME_CODE_CACHE_KEY);
-        if (cached) this.cachedGameCode = cached;
-        if(!this.gameModeMap.has(this.adventureId)) {
-          this.gameModeMap.set(this.adventureId, GameMode.DUNGEON_MODE);
-        }
-      }
-    }
+    const cached = localStorage.getItem(GameSessionComponent.GAME_CODE_CACHE_KEY);
+    if (cached) this.cachedGameCode = cached;
   }
 
   initializeGame() {
