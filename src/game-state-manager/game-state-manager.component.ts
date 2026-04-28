@@ -275,7 +275,7 @@ export class GameStateManagerComponent implements OnInit {
         return 60;
       }
     }
-    return 180;
+    return 150;
   }
 
   toggleMusic(): void {
@@ -338,6 +338,10 @@ export class GameStateManagerComponent implements OnInit {
 
   private isStoryOverDungeonMode(): boolean {
     return this.gameState == GameState.MAKE_CHOICE_WINNER;
+  }
+
+  nextGamePhase() {
+    this.gameService.nextGamePhase(this.gameCode);
   }
 
   private loadVictoryState() {

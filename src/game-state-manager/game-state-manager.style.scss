@@ -46,6 +46,18 @@
   }
 }
 
+.admin-next-phase-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .music-toggle-container {
   position: fixed;
   top: 20px;
