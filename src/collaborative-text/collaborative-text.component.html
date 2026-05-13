@@ -5,9 +5,11 @@
       <p class="collaborative-instruction" [innerHTML]="getPhaseInstruction()"></p>
       
       @if (phaseInfo?.showGameBoard) {
-        <div class="game-board-wrapper">
-          <app-game-board [gameCode]="gameCode" [gameBoard]="gameBoard"></app-game-board>
-        </div>
+        <app-location-display
+          [iconDirectory]="phaseInfo?.storyToIterateOn?.location?.iconDirectory?.toString() || ''"
+          [label]="phaseInfo?.storyToIterateOn?.location?.label?.toString() || ''"
+          [players]="phaseInfo?.playersAtLocation || []">
+        </app-location-display>
       } @else if (isLocationVotingPhase() && phaseInfo?.locationVotingSubmissions?.length) {
         <div class="fork-container">
           <div class="fork-left">
@@ -27,28 +29,8 @@
             }
           </div>
         </div>
-      } @else if (isMakeChoicePhase() && phaseInfo?.storyToIterateOn && phaseInfo?.storyToIterateOn?.prompt) {
+      } @else if (isMakeChoicePhase() && phaseInfo?.storyToIterateOn && (phaseInfo?.storyToIterateOn?.prompt || phaseInfo?.storyToIterateOn?.location?.options?.length)) {
         <div class="story-with-location">
-          @if (phaseInfo?.storyToIterateOn?.location?.iconDirectory) {
-            <div class="story-location-aside">
-              <span class="story-location-label">You've stumbled upon</span>
-              <img [src]="phaseInfo!.storyToIterateOn!.location!.iconDirectory" [alt]="phaseInfo!.storyToIterateOn!.location!.label" class="story-location-icon" />
-              <span class="story-location-label">{{ phaseInfo!.storyToIterateOn!.location!.label }}</span>
-              @if (phaseInfo?.playersAtLocation?.length) {
-                <div class="location-also-here">
-                  <div class="location-also-bubbles">
-                    @for (player of phaseInfo!.playersAtLocation!; track player.authorId; let i = $index) {
-                      <div class="location-bubble-wrapper">
-                        <div class="location-bubble" [style.background-color]="getBubbleColor(i)"></div>
-                        <span class="location-bubble-label">{{ player.displayName }}</span>
-                      </div>
-                    }
-                  </div>
-                  <span class="location-also-label">{{ phaseInfo!.playersAtLocation!.length === 1 ? 'is also here' : 'are also here' }}</span>
-                </div>
-              }
-            </div>
-          }
           <div class="story-location-story">
             <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState" [outcomeDisplay]="outcomeDisplay" [activePlayers]="phaseInfo?.activePlayers || []"></app-story>
           </div>

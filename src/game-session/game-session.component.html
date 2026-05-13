@@ -28,7 +28,7 @@
               <mat-panel-title>
                 <div style="display: flex; flex-direction: column; gap: 2px;">
                   <span [class.selected-name]="adventureId === entry.map.adventureMap.adventureId">{{ entry.map.adventureMap.name }}</span>
-                  @if (expandedAdventureId === entry.map.adventureMap.adventureId && entry.map.adventureMap.gameSessionDisplay?.mapDescription) {
+                  @if (expandedAdventureId === entry.map.adventureMap.adventureId && entry.map.adventureMap.gameSessionDisplay.mapDescription) {
                     <span class="map-description">{{ entry.map.adventureMap.gameSessionDisplay.mapDescription }}</span>
                   }
                 </div>

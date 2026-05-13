@@ -1,0 +1,21 @@
+@if (iconDirectory) {
+  <div class="location-display">
+    <div class="location-icon-circle">
+      <img [src]="iconDirectory" [alt]="label" class="location-icon" />
+    </div>
+    <span class="location-label">{{ label }}</span>
+    @if (players.length) {
+      <div class="players-here">
+        <div class="player-bubbles">
+          @for (player of players; track player.authorId; let i = $index) {
+            <div class="player-bubble-wrapper">
+              <div class="player-bubble" [style.background-color]="getBubbleColor(i)"></div>
+              <span class="player-bubble-label">{{ player.displayName }}</span>
+            </div>
+          }
+        </div>
+        <span class="players-label">{{ players.length === 1 ? 'is here' : 'are here' }}</span>
+      </div>
+    }
+  </div>
+}

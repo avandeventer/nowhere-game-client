@@ -9,6 +9,7 @@ export class Location {
     label: String;
     options: Option[];
     iconDirectory: String;
+    selectedOptionId: string;
 
     constructor () {
         this.locationId = 0;
@@ -18,5 +19,6 @@ export class Location {
         this.label = "";
         this.options = [];
         this.iconDirectory = "";
+        this.selectedOptionId = "";
     }
 }

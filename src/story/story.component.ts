@@ -26,27 +26,23 @@ export class StoryComponent implements OnChanges {
     if (names.length === 2) return `${names[0]} and ${names[1]} have encountered`;
     return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]} have encountered`;
   }
-  
-  // Track displayed options to add new ones when they appear
+
   private displayedOptions: Option[] = [];
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['story'] && this.story?.options) {
       const currentOptions = this.story.options;
-      
-      // Find new options that aren't already in displayedOptions
-      const newOptions = currentOptions.filter(newOption => 
-        !this.displayedOptions.some(displayedOption => 
+
+      const newOptions = currentOptions.filter(newOption =>
+        !this.displayedOptions.some(displayedOption =>
           displayedOption.optionId === newOption.optionId
         )
       );
-      
-      // Add new options to the displayed list
+
       if (newOptions.length > 0) {
         this.displayedOptions = [...this.displayedOptions, ...newOptions];
       }
-      
-      // Also update existing options if their data changed
+
       currentOptions.forEach(currentOption => {
         const displayedIndex = this.displayedOptions.findIndex(
           opt => opt.optionId === currentOption.optionId
@@ -58,23 +54,54 @@ export class StoryComponent implements OnChanges {
     }
   }
 
+  isLocationOptionChoicePhase(): boolean {
+    return this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_VOTING
+      || this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_WINNER;
+  }
+
+  isPartnerChoicePhase(): boolean {
+    return this.gameState === GameState.MAKE_PARTNER_CHOICE_VOTING
+      || this.gameState === GameState.MAKE_PARTNER_CHOICE_WINNER
+      || this.gameState === GameState.ACCEPT_PARTNER_CHOICE_VOTING
+      || this.gameState === GameState.ACCEPT_PARTNER_CHOICE_WINNER;
+  }
+
   getOptions(): Option[] {
-    // Return displayed options, or fall back to story options if displayedOptions is empty
     if (this.displayedOptions.length > 0) {
       return this.displayedOptions;
     }
     return this.story?.options || [];
   }
 
-  getSelectedOption(): Option | undefined {
-    if (!this.story?.selectedOptionId || this.gameState !== GameState.MAKE_OUTCOME_CHOICE_WINNER) {
-      return undefined;
+  getEffectiveOptions(): Option[] {
+    if (this.isLocationOptionChoicePhase()) {
+      return this.story?.location?.options || [];
     }
-    return this.getOptions().find(option => option.optionId === this.story?.selectedOptionId);
+    return this.getOptions();
+  }
+
+  getEffectiveSelectedOptionId(): string | undefined {
+    if (this.isLocationOptionChoicePhase()) {
+      return this.story?.location?.selectedOptionId || undefined;
+    }
+    return this.story?.selectedOptionId || undefined;
+  }
+
+  getSelectedOption(): Option | undefined {
+    const selectedId = this.getEffectiveSelectedOptionId();
+    if (!selectedId) return undefined;
+    return this.getEffectiveOptions().find(o => o.optionId === selectedId);
+  }
+
+  getEffectiveDisplayText(): string | undefined {
+    const option = this.getSelectedOption();
+    if (!option) return undefined;
+    const text = this.isLocationOptionChoicePhase() ? option.attemptText : option.successText;
+    return text || undefined;
   }
 
   isOptionSelected(option: Option): boolean {
-    return this.story?.selectedOptionId === option.optionId;
+    const selectedId = this.getEffectiveSelectedOptionId();
+    return !!selectedId && selectedId === option.optionId;
   }
 }
-

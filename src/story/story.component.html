@@ -3,46 +3,59 @@
     <mat-card class="encounter-header">
       <h2>{{ getEncounterHeader() }}</h2>
       <mat-card class="story-card">
-        @if (story.encounterLabel?.encounterLabel) {
+        @if (isLocationOptionChoicePhase()) {
+          @if (story.location?.label) {
+            <mat-card-header>
+              <h1>{{ story.location?.label }}</h1>
+            </mat-card-header>
+          }
+        } @else if (story.encounterLabel?.encounterLabel) {
           <mat-card-header>
             <h1>{{ story.encounterLabel?.encounterLabel }}</h1>
           </mat-card-header>
         }
+
         <mat-card-content>
-          @if (story.prompt && !getSelectedOption()?.successText) {
+          @if (story.prompt && !getEffectiveDisplayText() && !isPartnerChoicePhase()) {
             <div class="story-prompt">
               <p>{{ story.prompt }}</p>
             </div>
           }
-          
-          @if (story.options && story.options.length > 0) {
+
+          @if (gameState === 'ACCEPT_PARTNER_CHOICE_WINNER') {
+            @if (story.partnerIds && story.partnerIds.length > 0) {
+              <div class="success-text">Partnership accepted!</div>
+            } @else {
+              <div class="success-text">Not trustworthy enough! Partnership rejected!</div>
+            }
+          } @else if (isPartnerChoicePhase()) {
+            <div class="story-prompt">Choose your partner to reveal this encounter</div>
+          } @else if (getEffectiveOptions().length > 0) {
             <div class="options-section">
               <div class="options-list">
-                @if (getSelectedOption()?.successText) {
+                @if (getEffectiveDisplayText()) {
                   @if (getSelectedOption(); as selectedOption) {
-                    <button mat-flat-button 
-                              class="option-button" 
+                    <button mat-flat-button
+                              class="option-button"
                               [class.selected]="isOptionSelected(selectedOption)">
                       {{ selectedOption.optionText }}
                     </button>
                   }
                 } @else {
-                    @for (option of getOptions(); track option.optionId || $index) {
-                      @if (option.optionText) {
-                        <button mat-flat-button 
-                                class="option-button" 
-                                [class.selected]="isOptionSelected(option)">
-                          {{ option.optionText }}
-                        </button>
-                      }
+                  @for (option of getEffectiveOptions(); track option.optionId || $index) {
+                    @if (option.optionText) {
+                      <button mat-flat-button
+                              class="option-button"
+                              [class.selected]="isOptionSelected(option)">
+                        {{ option.optionText }}
+                      </button>
                     }
+                  }
                 }
               </div>
-              @if (getSelectedOption()?.successText || outcomeDisplay.length > 0) {
+              @if (getEffectiveDisplayText()) {
                 <div class="success-text">
-                  @if (getSelectedOption()?.successText) {
-                    <p>{{ getSelectedOption()?.successText }}</p>
-                  }
+                  <p>{{ getEffectiveDisplayText() }}</p>
                   @for (line of outcomeDisplay; track $index) {
                     <p class="outcome-display-line">{{ line }}</p>
                   }

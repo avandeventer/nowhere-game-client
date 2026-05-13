@@ -1,3 +1,9 @@
+@if (collaborativeTextPhaseInfo?.storyToIterateOn?.location?.iconDirectory) {
+  <div class="location-background"
+    [style.background-image]="'url(' + collaborativeTextPhaseInfo!.storyToIterateOn!.location!.iconDirectory!.toString() + ')'">
+  </div>
+}
+
 <div class="music-toggle-container">
     <button mat-icon-button (click)="toggleMusic()" [attr.aria-label]="isMusicEnabled ? 'Mute music' : 'Unmute music'">
         <mat-icon>{{isMusicEnabled ? 'volume_up' : 'volume_off'}}</mat-icon>

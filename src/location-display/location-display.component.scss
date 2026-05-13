@@ -1,0 +1,78 @@
+.location-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  gap: 8px;
+}
+
+.location-icon-circle {
+  width: 70%;
+  aspect-ratio: 1;
+  max-height: 300px;
+  border-radius: 50%;
+  background-color: var(--mat-option-selected-state-layer-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.location-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.location-label {
+  font-size: 1rem;
+  color: #fff;
+  text-align: center;
+}
+
+.players-here {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+  gap: 6px;
+}
+
+.player-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.player-bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.player-bubble {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.player-bubble-label {
+  font-size: 0.7rem;
+  color: #fff;
+  text-align: center;
+  max-width: 60px;
+  word-break: break-word;
+}
+
+.players-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-style: italic;
+}

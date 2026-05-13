@@ -7,6 +7,7 @@ import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { CollaborativeTextPhaseInfo, CollaborativeMode, PhaseType } from '../assets/collaborative-text-phase-info';
 import { GameBoardComponent } from '../game-board/game-board.component';
 import { StoryComponent } from '../story/story.component';
+import { LocationDisplayComponent } from '../location-display/location-display.component';
 import { GameBoard } from '../assets/game-board';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-collaborative-text',
   standalone: true,
-  imports: [CommonModule, GameBoardComponent, StoryComponent, MatCardModule, MatIconModule],
+  imports: [CommonModule, StoryComponent, MatCardModule, MatIconModule, LocationDisplayComponent],
   templateUrl: './collaborative-text.component.html',
   styleUrl: './collaborative-text.component.scss'
 })
@@ -140,10 +141,17 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   }
 
   isMakeChoicePhase(): boolean {
-    return this.gameState === GameState.MAKE_CHOICE || this.gameState === GameState.MAKE_CHOICE_VOTING 
+    return this.gameState === GameState.MAKE_CHOICE 
+    || this.gameState === GameState.MAKE_CHOICE_VOTING 
     || this.gameState === GameState.MAKE_CHOICE_WINNER 
     || this.gameState === GameState.MAKE_OUTCOME_CHOICE_VOTING 
-    || this.gameState === GameState.MAKE_OUTCOME_CHOICE_WINNER;
+    || this.gameState === GameState.MAKE_OUTCOME_CHOICE_WINNER
+    || this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_VOTING
+    || this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_WINNER
+    || this.gameState === GameState.ACCEPT_PARTNER_CHOICE_VOTING
+    || this.gameState === GameState.ACCEPT_PARTNER_CHOICE_WINNER
+    || this.gameState === GameState.MAKE_PARTNER_CHOICE_VOTING
+    || this.gameState === GameState.MAKE_PARTNER_CHOICE_WINNER;
   }
 
   isWinningPhase(): boolean {
