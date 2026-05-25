@@ -24,7 +24,7 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Input() gameState: GameState = GameState.WHERE_ARE_WE;
   @Input() phaseInfo: CollaborativeTextPhaseInfo | null = null;
   @Input() gameBoard: GameBoard | null = null;
-  @Input() outcomeDisplay: String[] = [];
+  @Input() outcomeDisplay: string[] = [];
   @Output() winningSubmissionLoaded = new EventEmitter<void>();
 
   winningSubmissions: TextSubmission[] = [];

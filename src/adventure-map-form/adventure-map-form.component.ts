@@ -11,7 +11,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { OutcomeStat } from 'src/assets/outcome-stat';
 import { PlayerStat } from 'src/assets/player-stat';
-import { StatType } from 'src/assets/stat-type';
 import { AdventureMapService } from 'src/services/adventure-map.service';
 
 @Component({
@@ -36,10 +35,52 @@ export class AdventureMapFormComponent implements OnInit {
   @Input() adventureMap: AdventureMap = new AdventureMap();
   adventureMapForm!: FormGroup;
   locationsFormActivated: boolean = false;
+  traitTypes: string[] = [];
+  availableImages: string[] = [];
+  expandedPickerIndex: number | null = null;
+  gameSessionDisplayCollapsed = true;
+  statsCollapsed = true;
+  locationsCollapsed = true;
+  expandedLocationIndices = new Set<number>();
+  expandedOptionIndices = new Map<number, Set<number>>();
+
+  toggleLocation(i: number): void {
+    if (this.expandedLocationIndices.has(i)) {
+      this.expandedLocationIndices.delete(i);
+    } else {
+      this.expandedLocationIndices.add(i);
+    }
+  }
+
+  toggleOption(locationIndex: number, optionIndex: number): void {
+    if (!this.expandedOptionIndices.has(locationIndex)) {
+      this.expandedOptionIndices.set(locationIndex, new Set());
+    }
+    const set = this.expandedOptionIndices.get(locationIndex)!;
+    if (set.has(optionIndex)) {
+      set.delete(optionIndex);
+    } else {
+      set.add(optionIndex);
+    }
+  }
+
+  isOptionExpanded(locationIndex: number, optionIndex: number): boolean {
+    return this.expandedOptionIndices.get(locationIndex)?.has(optionIndex) ?? false;
+  }
 
   constructor(private fb: FormBuilder, private adventureMapService: AdventureMapService) {}
 
   ngOnInit(): void {
+    this.adventureMapService.getTraitTypes().subscribe({
+      next: (types) => { this.traitTypes = types; },
+      error: (err) => { console.error('Error loading trait types:', err); }
+    });
+
+    this.adventureMapService.getLocationImages().subscribe({
+      next: (images) => { this.availableImages = images; },
+      error: (err) => { console.error('Error loading location images:', err); }
+    });
+
     this.adventureMapForm = this.fb.group({
       adventureId: [''],
       name: ['', Validators.required],
@@ -126,16 +167,50 @@ export class AdventureMapFormComponent implements OnInit {
         label: [''],
         description: [''],
         iconDirectory: [''],
-        options: this.fb.array([
-          this.createOptionGroup(), 
-          this.createOptionGroup()
-        ])
+        options: this.fb.array([this.createOptionGroup(), this.createOptionGroup()]),
+        traits: this.fb.array([])
       })
     );
   }
 
   getOptions(location: AbstractControl): FormArray {
     return location.get('options') as FormArray;
+  }
+
+  getTraits(location: AbstractControl): FormArray {
+    return location.get('traits') as FormArray;
+  }
+
+  addTrait(locationIndex: number): void {
+    const location = this.locations.at(locationIndex);
+    this.getTraits(location).push(this.fb.group({
+      traitId: [crypto.randomUUID()],
+      traitLabel: [''],
+      traitType: ['STANDARD']
+    }));
+  }
+
+  removeTrait(locationIndex: number, traitIndex: number): void {
+    const location = this.locations.at(locationIndex);
+    this.getTraits(location).removeAt(traitIndex);
+  }
+
+  getLocationImage(location: AbstractControl): string {
+    return location.get('iconDirectory')?.value || '';
+  }
+
+  toggleImagePicker(locationIndex: number): void {
+    this.expandedPickerIndex = this.expandedPickerIndex === locationIndex ? null : locationIndex;
+  }
+
+  selectLocationImage(locationIndex: number, imageUrl: string): void {
+    this.locations.at(locationIndex).get('iconDirectory')?.setValue(imageUrl);
+    this.expandedPickerIndex = null;
+  }
+
+  getImageName(imageUrl: string): string {
+    const fileName = imageUrl.split('/').pop() || '';
+    return fileName.replace('.png', '').replace(/_/g, ' ');
   }
   
   createOptionGroup(): FormGroup {
@@ -254,6 +329,13 @@ export class AdventureMapFormComponent implements OnInit {
             optionText: [opt.optionText],
             attemptText: [opt.attemptText],
             successResults: [opt.successResults.map(res => res.playerStat.statType.id)]
+          })
+        )),
+        traits: this.fb.array((loc.traits || []).map(trait =>
+          this.fb.group({
+            traitId: [trait.traitId],
+            traitLabel: [trait.traitLabel],
+            traitType: [trait.traitType || 'STANDARD']
           })
         ))
       })

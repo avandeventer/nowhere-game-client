@@ -145,6 +145,9 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   getInstructionDisplay() {
+    if (this.collaborativeTextPhaseInfo?.phaseInstructions) {
+      return this.collaborativeTextPhaseInfo?.phaseInstructions;
+    }
     switch (this.gameState) {
       case GameState.PREAMBLE:
         return `The barrier between reality and fiction is thin here. You'll work together to define the things that inhabit ${this.adventureMap.name} and then you'll each decide the path you take through it.`;

@@ -3,130 +3,202 @@
       <mat-label>What do we call this place?</mat-label>
       <input matInput formControlName="name">
     </mat-form-field><br>
-    <fieldset formGroupName="gameSessionDisplay">
-      <legend>Game Session Display</legend>
-      <h3>The Map</h3>
-      <mat-form-field class="game-session-display" appearance="fill">
-        <mat-label>What is it like here?</mat-label>
-        <textarea matInput formControlName="mapDescription"></textarea>
-      </mat-form-field><br>
-      <h3>The Players</h3>
-      <mat-form-field class="game-session-display" appearance="fill">
-        <mat-label>What are we called?</mat-label>
-        <input matInput formControlName="playerTitle">
-      </mat-form-field><br>
-      <mat-form-field  class="game-session-display" appearance="fill">
-        <mat-label>What are we like?</mat-label>
-        <textarea matInput formControlName="playerDescription"></textarea>
-      </mat-form-field><br>
-      <h3>The Ending</h3>
-      <mat-form-field class="game-session-display" appearance="fill">
-        <mat-label>Something is coming. What will happen when it gets here?</mat-label>
-        <textarea matInput formControlName="endingDescription"></textarea>
-      </mat-form-field><br>
-      <mat-form-field  class="game-session-display" appearance="fill">
-        <mat-label>What is our goal when it gets here?</mat-label>
-        <textarea matInput formControlName="goalDescription"></textarea>
-      </mat-form-field><br>
-    </fieldset>
-  
-    <div formArrayName="statTypes">
-      <h3>Stat Types</h3>
-      @for (stat of statTypes.controls; track stat; let i = $index) {
-        <div [formGroupName]="i">
-          @if (stat.get('favorType')?.value) {
-            <h4>
-                Who must we overcome to reach our goal?
-            </h4>
-          } @else {
-            <h4>Stat Type {{i}}</h4>
-          }
-          <mat-form-field appearance="fill">
-            <mat-label>Stat Name</mat-label>
-            <input matInput formControlName="label">
-          </mat-form-field>
-          @if (!stat.get('favorType')?.value) {
-            <button mat-icon-button color="warn" type="button" (click)="removeStatType(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          }
-          <br>
-          <mat-form-field appearance="fill">
-            <mat-label>Description</mat-label>
-            <input matInput formControlName="description">
-          </mat-form-field>
-        
-          @if (stat.get('favorType')?.value) {
-            <br><mat-form-field appearance="fill">
-              <mat-label>Who/what opposes us?</mat-label>
-              <input matInput formControlName="favorEntity">
-            </mat-form-field>
-          }
-          <mat-divider></mat-divider><br>
-          
-        </div>
+
+    <div formGroupName="gameSessionDisplay">
+      <h3 class="collapsible-legend" (click)="gameSessionDisplayCollapsed = !gameSessionDisplayCollapsed">
+        Game Session Display
+        <mat-icon>{{ gameSessionDisplayCollapsed ? 'expand_more' : 'expand_less' }}</mat-icon>
+      </h3>
+      @if (!gameSessionDisplayCollapsed) {
+        <h3>The Map</h3>
+        <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>What is it like here?</mat-label>
+          <textarea matInput formControlName="mapDescription"></textarea>
+        </mat-form-field><br>
+        <h3>The Players</h3>
+        <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>What are we called?</mat-label>
+          <input matInput formControlName="playerTitle">
+        </mat-form-field><br>
+        <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>What are we like?</mat-label>
+          <textarea matInput formControlName="playerDescription"></textarea>
+        </mat-form-field><br>
+        <h3>The Ending</h3>
+        <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>Something is coming. What will happen when it gets here?</mat-label>
+          <textarea matInput formControlName="endingDescription"></textarea>
+        </mat-form-field><br>
+        <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>What is our goal when it gets here?</mat-label>
+          <textarea matInput formControlName="goalDescription"></textarea>
+        </mat-form-field><br>
       }
-      <button mat-flat-button color="primary" type="button" (click)="addStatType()">Add Stat</button><br><br>
+    </div>
+
+    <div formArrayName="statTypes">
+      <h3 class="collapsible-legend" (click)="statsCollapsed = !statsCollapsed">
+        Stat Types
+        <mat-icon>{{ statsCollapsed ? 'expand_more' : 'expand_less' }}</mat-icon>
+      </h3>
+      @if (!statsCollapsed) {
+        @for (stat of statTypes.controls; track stat; let i = $index) {
+          <div [formGroupName]="i">
+            @if (stat.get('favorType')?.value) {
+              <h4>Who must we overcome to reach our goal?</h4>
+            } @else {
+              <h4>Stat Type {{i}}</h4>
+            }
+            <mat-form-field appearance="fill">
+              <mat-label>Stat Name</mat-label>
+              <input matInput formControlName="label">
+            </mat-form-field>
+            @if (!stat.get('favorType')?.value) {
+              <button mat-icon-button color="warn" type="button" (click)="removeStatType(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+            <br>
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <input matInput formControlName="description">
+            </mat-form-field>
+            @if (stat.get('favorType')?.value) {
+              <br><mat-form-field appearance="fill">
+                <mat-label>Who/what opposes us?</mat-label>
+                <input matInput formControlName="favorEntity">
+              </mat-form-field>
+            }
+            <mat-divider></mat-divider><br>
+          </div>
+        }
+        <button mat-flat-button color="primary" type="button" (click)="addStatType()">Add Stat</button><br><br>
+      }
     </div>
 
     @if (!locationsFormActivated) {
       <button mat-flat-button type="button" (click)="submit()">Next</button> <br><br>
     } @else {
       <div formArrayName="locations">
-        <h3>Locations</h3>
-      
-        @for (location of locations.controls; track location; let i = $index) {
-          <div [formGroupName]="i">
-            <h4>Location {{i + 1}}
-              <button mat-icon-button color="warn" type="button" (click)="removeLocation(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </h4>
-            
-            <mat-form-field appearance="fill">
-              <mat-label>Label</mat-label>
-              <input matInput formControlName="label" />
-            </mat-form-field><br>
+        <h3 class="collapsible-legend" (click)="locationsCollapsed = !locationsCollapsed">
+          Locations
+          <mat-icon>{{ locationsCollapsed ? 'expand_more' : 'expand_less' }}</mat-icon>
+        </h3>
+        @if (!locationsCollapsed) {
+          @for (location of locations.controls; track location; let i = $index) {
+            <div [formGroupName]="i">
+              <div class="section-header location-header">
+                <h4>
+                  {{ location.get('label')?.value || 'Location ' + (i + 1) }}
+                </h4>
+                <div class="location-header-actions">
+                  <button mat-icon-button color="warn" type="button" (click)="removeLocation(i); $event.stopPropagation()">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="toggleLocation(i)">
+                    <mat-icon>{{ expandedLocationIndices.has(i) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  </button>
+                </div>
+              </div>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description"></textarea>
-            </mat-form-field>
-      
-            <div formArrayName="options">
-              @for (option of getOptions(location).controls; track option; let j = $index) {                
-                <div [formGroupName]="j">
-                  <h4>Option {{ j + 1 }}</h4>
-            
-                  <mat-form-field appearance="fill">
-                    <mat-label>Occupation Name</mat-label>
-                    <input matInput formControlName="optionText" />
-                  </mat-form-field><br>
-            
-                  <mat-form-field appearance="fill">
-                    <mat-label>Occupation Description</mat-label>
-                    <textarea matInput formControlName="attemptText"></textarea>
-                  </mat-form-field><br>
-            
-                  <mat-form-field appearance="fill">
-                    <mat-label>Result Stats</mat-label>
-                    <mat-select formControlName="successResults" multiple>
-                      @for (stat of statTypes.controls; track stat; let i = $index) {
-                        <mat-option [value]="stat.get('id')?.value">
-                          {{ stat.get('label')?.value }}
-                        </mat-option>
+              @if (expandedLocationIndices.has(i)) {
+                <mat-form-field appearance="fill">
+                  <mat-label>Label</mat-label>
+                  <input matInput formControlName="label" />
+                </mat-form-field><br>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput formControlName="description"></textarea>
+                </mat-form-field>
+
+                <div class="image-picker-section">
+                  @if (getLocationImage(location)) {
+                    <div class="current-image-preview">
+                      <img [src]="getLocationImage(location)" [alt]="getImageName(getLocationImage(location))" class="location-icon-preview">
+                      <span class="current-image-name">{{ getImageName(getLocationImage(location)) }}</span>
+                    </div>
+                  }
+                  <button mat-stroked-button type="button" (click)="toggleImagePicker(i)">
+                    {{ expandedPickerIndex === i ? 'Close' : (getLocationImage(location) ? 'Change Icon' : 'Pick Icon') }}
+                  </button>
+                  @if (expandedPickerIndex === i) {
+                    <div class="image-grid">
+                      @for (imageUrl of availableImages; track imageUrl) {
+                        <div class="image-option"
+                             [class.selected]="getLocationImage(location) === imageUrl"
+                             (click)="selectLocationImage(i, imageUrl)">
+                          <img [src]="imageUrl" [alt]="getImageName(imageUrl)" class="location-icon-thumb">
+                          <span class="image-label">{{ getImageName(imageUrl) }}</span>
+                        </div>
                       }
-                    </mat-select>
-                  </mat-form-field>
+                    </div>
+                  }
+                </div>
+
+                <div formArrayName="options">
+                  @for (option of getOptions(location).controls; track option; let j = $index) {
+                    <div [formGroupName]="j">
+                      <h4 class="collapsible-legend" (click)="toggleOption(i, j)">
+                        {{ option.get('optionText')?.value || 'Option ' + (j + 1) }}
+                        <mat-icon>{{ isOptionExpanded(i, j) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                      </h4>
+                      @if (isOptionExpanded(i, j)) {
+                        <mat-form-field appearance="fill">
+                          <mat-label>Occupation Name</mat-label>
+                          <input matInput formControlName="optionText" />
+                        </mat-form-field><br>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Occupation Description</mat-label>
+                          <textarea matInput formControlName="attemptText"></textarea>
+                        </mat-form-field><br>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Result Stats</mat-label>
+                          <mat-select formControlName="successResults" multiple>
+                            @for (stat of statTypes.controls; track stat; let i = $index) {
+                              <mat-option [value]="stat.get('id')?.value">
+                                {{ stat.get('label')?.value }}
+                              </mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div formArrayName="traits">
+                  <h4>Location Traits</h4>
+                  @for (trait of getTraits(location).controls; track trait; let k = $index) {
+                    <div [formGroupName]="k" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                      <mat-form-field appearance="fill">
+                        <mat-label>Trait Label</mat-label>
+                        <input matInput formControlName="traitLabel" />
+                      </mat-form-field>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Trait Type</mat-label>
+                        <mat-select formControlName="traitType">
+                          @for (type of traitTypes; track type) {
+                            <mat-option [value]="type">{{ type }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                      <button mat-icon-button color="warn" type="button" (click)="removeTrait(i, k)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                  <button mat-stroked-button type="button" (click)="addTrait(i)">+ Add Trait</button>
                 </div>
               }
+
+              <mat-divider></mat-divider><br>
             </div>
-            <mat-divider></mat-divider><br>
-          </div>
+          }
+          <button mat-flat-button color="primary" type="button" (click)="addLocation()">Add Location</button><br><br>
         }
-        <button mat-flat-button color="primary" type="button" (click)="addLocation()">Add Location</button><br><br>
       </div>
     }
-  
+
     <button mat-flat-button type="button" (click)="update()">Submit</button>
 </form>

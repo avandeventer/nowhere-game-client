@@ -6,9 +6,9 @@
       
       @if (phaseInfo?.showGameBoard) {
         <app-location-display
-          [iconDirectory]="phaseInfo?.storyToIterateOn?.location?.iconDirectory?.toString() || ''"
-          [label]="phaseInfo?.storyToIterateOn?.location?.label?.toString() || ''"
-          [players]="phaseInfo?.playersAtLocation || []">
+          [location]="phaseInfo?.storyToIterateOn?.location || null"
+          [players]="phaseInfo?.playersAtLocation || []"
+          [outcomeDisplay]="outcomeDisplay">
         </app-location-display>
       } @else if (isLocationVotingPhase() && phaseInfo?.locationVotingSubmissions?.length) {
         <div class="fork-container">

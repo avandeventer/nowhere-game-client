@@ -1,4 +1,5 @@
 import { Option } from './option';
+import { Trait } from './trait';
 
 export class Location {
     locationId: number;
@@ -10,6 +11,7 @@ export class Location {
     options: Option[];
     iconDirectory: String;
     selectedOptionId: string;
+    traits: Trait[];
 
     constructor () {
         this.locationId = 0;
@@ -20,5 +22,6 @@ export class Location {
         this.options = [];
         this.iconDirectory = "";
         this.selectedOptionId = "";
+        this.traits = [];
     }
 }

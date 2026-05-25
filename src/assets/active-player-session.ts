@@ -3,15 +3,15 @@ import { Story } from "./story";
 import { Location } from "./location";
 
 export class ActivePlayerSession {
-    playerId: String;
-    playerChoiceOptionId: String;
+    playerId: string;
+    playerChoiceOptionId: string;
     story: Story;
     location: Location | null;
-    selectedLocationOptionId: String;
-    locationOutcomeDisplay: String[];
+    selectedLocationOptionId: string;
+    locationOutcomeDisplay: string[];
     setNextPlayerTurn: boolean;
-    gameCode: String;
-    outcomeDisplay: String[];
+    gameCode: string;
+    outcomeDisplay: string[];
     repercussions: RepercussionOutput | null;
     startTimer: boolean;
 

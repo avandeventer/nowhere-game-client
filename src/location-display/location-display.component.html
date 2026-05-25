@@ -1,9 +1,19 @@
-@if (iconDirectory) {
+@if (location?.iconDirectory) {
   <div class="location-display">
     <div class="location-icon-circle">
-      <img [src]="iconDirectory" [alt]="label" class="location-icon" />
+      <img [src]="location!.iconDirectory.toString()" [alt]="location!.label.toString()" class="location-icon" />
     </div>
-    <span class="location-label">{{ label }}</span>
+    <span class="location-label">{{ location!.label }}</span>
+    @if (location?.description) {
+      <p class="location-description">{{ location!.description }}</p>
+    }
+    @if (outcomeDisplay.length) {
+      <div class="location-outcome-display">
+        @for (line of outcomeDisplay; track $index) {
+          <p class="outcome-line">{{ line }}</p>
+        }
+      </div>
+    }
     @if (players.length) {
       <div class="players-here">
         <div class="player-bubbles">

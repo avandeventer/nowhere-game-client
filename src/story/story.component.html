@@ -4,9 +4,9 @@
       <h2>{{ getEncounterHeader() }}</h2>
       <mat-card class="story-card">
         @if (isLocationOptionChoicePhase()) {
-          @if (story.location?.label) {
+          @if (story.location.label) {
             <mat-card-header>
-              <h1>{{ story.location?.label }}</h1>
+              <h1>{{ story.location.label }}</h1>
             </mat-card-header>
           }
         } @else if (story.encounterLabel?.encounterLabel) {

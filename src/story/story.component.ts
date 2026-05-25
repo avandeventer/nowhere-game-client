@@ -16,7 +16,7 @@ import { GameState } from 'src/assets/game-state';
 export class StoryComponent implements OnChanges {
   @Input() story: Story | undefined = new Story();
   @Input() gameState: GameState = GameState.INIT;
-  @Input() outcomeDisplay: String[] = [];
+  @Input() outcomeDisplay: string[] = [];
   @Input() activePlayers: { authorId: string; displayName: string }[] = [];
 
   getEncounterHeader(): string {

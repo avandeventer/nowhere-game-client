@@ -16,4 +16,5 @@ export abstract class HttpConstants {
     static readonly DISPLAY_PATH: string = "/display";
     static readonly ADVENTURE_MAP_PATH: string = "/adventure-map";
     static readonly VICTORY_PATH: string = "/victory";
+    static readonly LOCATION_IMAGES_PATH: string = "/location-images";
 }

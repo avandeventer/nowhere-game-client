@@ -2,6 +2,32 @@
     width: 100%
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+
+  h3, h4 { margin: 0; }
+}
+
+.location-header {
+  .location-header-actions {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.collapsible-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--mat-pseudo-checkbox-full-selected-icon-color);
+}
+
 input {
     width: 100%
 }
@@ -22,8 +48,67 @@ input, textarea {
     width: 100%; // optional, but doesn’t hurt
 }
 
-fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
+
+.image-picker-section {
+  margin: 8px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.current-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.location-icon-preview {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--mat-sys-primary);
+}
+
+.current-image-name {
+  font-size: 0.9em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.image-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover { border-color: var(--mat-sys-primary); }
+  &.selected { border-color: var(--mat-sys-primary); background: rgba(0,0,0,0.06); }
+}
+
+.location-icon-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.image-label {
+  font-size: 0.7em;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  word-break: break-word;
 }
