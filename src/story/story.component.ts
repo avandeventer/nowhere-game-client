@@ -40,7 +40,7 @@ export class StoryComponent implements OnChanges {
       );
 
       if (newOptions.length > 0) {
-        this.displayedOptions = [...this.displayedOptions, ...newOptions];
+        this.displayedOptions = [...newOptions];
       }
 
       currentOptions.forEach(currentOption => {

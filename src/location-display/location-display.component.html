@@ -1,14 +1,17 @@
 @if (location?.iconDirectory) {
   <div class="location-display">
+    <h3 class="location-label">{{ location!.label }}</h3>
     <div class="location-icon-circle">
       <img [src]="location!.iconDirectory.toString()" [alt]="location!.label.toString()" class="location-icon" />
     </div>
-    <span class="location-label">{{ location!.label }}</span>
-    @if (location?.description) {
-      <p class="location-description">{{ location!.description }}</p>
-    }
-    @if (outcomeDisplay.length) {
+    @if (location?.description || outcomeDisplay.length) {
       <div class="location-outcome-display">
+        @if (location?.description) {
+          <p class="outcome-line">{{ location!.description }}</p>
+        }
+        @if (location?.description && outcomeDisplay.length) {
+          <br />
+        }
         @for (line of outcomeDisplay; track $index) {
           <p class="outcome-line">{{ line }}</p>
         }

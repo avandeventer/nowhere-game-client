@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 4px;
   border-radius: 10px;
   backdrop-filter: blur(4px);
   gap: 8px;
@@ -12,7 +12,7 @@
 .location-icon-circle {
   width: 70%;
   aspect-ratio: 1;
-  max-height: 300px;
+  max-width: 300px;
   border-radius: 50%;
   background-color: var(--mat-option-selected-state-layer-color);
   display: flex;
@@ -50,9 +50,11 @@
 }
 
 .location-label {
-  font-size: 1rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
   color: #fff;
   text-align: center;
+  margin: 0;
 }
 
 .players-here {
