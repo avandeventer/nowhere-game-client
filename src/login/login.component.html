@@ -14,10 +14,19 @@
         <mat-form-field class="full-width">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" placeholder="Your Password" />
+          @if (loginFailed) {
+            <mat-hint class="login-error">Incorrect email or password.</mat-hint>
+          }
         </mat-form-field>
 
         @if(!createNewProfile) {
-          <button mat-flat-button (click)="login()">Login</button> &nbsp;
+          <button mat-flat-button (click)="login()" [disabled]="isLoggingIn" class="login-btn">
+            @if (isLoggingIn) {
+              <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+            } @else {
+              Login
+            }
+          </button> &nbsp;
           <button mat-stroked-button (click)="getNewProfileForm()">New Profile</button>
         } @else {
           <mat-form-field class="full-width">

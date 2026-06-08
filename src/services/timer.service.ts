@@ -49,4 +49,16 @@ export class TimerService {
       activePlayerSession
     );
   }
+
+  setContributionPhaseActive(gameCode: string): Observable<any> {
+    console.log('Setting contributionPhaseActive to true for game:', gameCode);
+    const activePlayerSession = {
+      gameCode: gameCode,
+      contributionPhaseActive: true
+    };
+    return this.http.put(
+      environment.nowhereBackendUrl + HttpConstants.ACTIVE_PLAYER_SESSION_PATH,
+      activePlayerSession
+    );
+  }
 }

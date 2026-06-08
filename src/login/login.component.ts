@@ -9,12 +9,13 @@ import { UserProfile } from "src/assets/user-profile";
 import { environment } from "src/environments/environments";
 import { GameSessionComponent } from "src/game-session/game-session.component";
 import { MatChipSet, MatChip } from '@angular/material/chips'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
-    imports: [GameSessionComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatChipSet, MatChip]
+    imports: [GameSessionComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatChipSet, MatChip, MatProgressSpinnerModule]
 })
 export class LoginComponent {
 
@@ -29,6 +30,8 @@ export class LoginComponent {
     loginForm: FormGroup;
     createNewProfile: boolean = false;
     loginSuccessful: boolean = false;
+    isLoggingIn: boolean = false;
+    loginFailed: boolean = false;
     userProfile: UserProfile = new UserProfile();
     gameSessionCreated: boolean = false;
 
@@ -145,6 +148,8 @@ export class LoginComponent {
     }
 
     private loginWithCredentials(email: string, password: string) {
+        this.isLoggingIn = true;
+        this.loginFailed = false;
         this.http.get<UserProfile>(
             environment.nowhereBackendUrl + HttpConstants.USER_PROFILE,
             { params: { email, password } })
@@ -153,10 +158,13 @@ export class LoginComponent {
                     console.log('User login succeeded!', response);
                     this.userProfile = response;
                     this.loginSuccessful = true;
+                    this.isLoggingIn = false;
                     this.saveLoginCache(email, password);
                 },
                 error: (error) => {
                     console.error('Error logging in', error);
+                    this.isLoggingIn = false;
+                    this.loginFailed = true;
                     this.clearLoginCache();
                 },
             });

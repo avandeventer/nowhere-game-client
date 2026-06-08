@@ -28,3 +28,14 @@
         margin-bottom: 1.25rem;
     }
 }
+
+.login-error {
+    color: #c62828 !important;
+}
+
+.login-btn {
+    min-width: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -277,6 +277,9 @@ export class GameStateManagerComponent implements OnInit {
       if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.RAPID_FIRE) {
         return 60;
       }
+      if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.SHARE_TEXT) {
+        return 90;
+      }
     }
     return 150;
   }
@@ -362,35 +365,39 @@ export class GameStateManagerComponent implements OnInit {
       });
   }
 
-  /**
-   * Handles timer completion for all game phases
-   */
+  isGameInShareTextCollaborativeWritingPhase(): boolean {
+    return this.isGameInCollaborativeTextWritingPhase()
+        && this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.SHARE_TEXT;
+  }
+
+  onContributionPhaseTimerComplete() {
+    this.timerService.setWriteTimerDone(this.gameCode).subscribe({
+      next: (response) => console.log('writeTimerDone set', response),
+      error: (error) => console.error('Error setting writeTimerDone:', error)
+    });
+  }
+
   onTimerComplete() {
-    console.log(`Timer completed for game phase: ${this.gameState}, advancing to next phase...`);
-    
-    // For write phases, set writeTimerDone instead of advancing
-    if (this.isGameInWritingPhase() 
-      || this.isGameInLocationCreationPhase() 
+    console.log(`Timer completed for game phase: ${this.gameState}`);
+
+    if (this.isGameInShareTextCollaborativeWritingPhase()) {
+      this.timerService.setContributionPhaseActive(this.gameCode).subscribe({
+        next: (response) => console.log('contributionPhaseActive set', response),
+        error: (error) => console.error('Error setting contributionPhaseActive:', error)
+      });
+    } else if (this.isGameInWritingPhase()
+      || this.isGameInLocationCreationPhase()
       || this.isGameInWriteEndingsPhase()
       || this.isGameInCollaborativeTextWritingPhase()
     ) {
       this.timerService.setWriteTimerDone(this.gameCode).subscribe({
-        next: (response) => {
-          console.log('writeTimerDone set successfully', response);
-        },
-        error: (error) => {
-          console.error('Error setting writeTimerDone:', error);
-        }
+        next: (response) => console.log('writeTimerDone set', response),
+        error: (error) => console.error('Error setting writeTimerDone:', error)
       });
     } else {
-      // For other phases, advance to next phase
       this.timerService.onTimerComplete(this.gameCode).subscribe({
-        next: (response) => {
-          console.log('Game phase advanced successfully', response);
-        },
-        error: (error) => {
-          console.error('Error advancing game phase:', error);
-        }
+        next: (response) => console.log('Game phase advanced', response),
+        error: (error) => console.error('Error advancing game phase:', error)
       });
     }
   }

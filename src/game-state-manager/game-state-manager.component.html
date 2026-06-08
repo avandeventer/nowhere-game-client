@@ -68,12 +68,15 @@
     </app-collaborative-text>
     
     @if (isGameInCollaborativeTextWritingPhase()) {
-        <app-timer 
-            [duration]="getTimerDuration()" 
-            [label]="'Collaborative Writing'"
+        <app-timer
+            [duration]="getTimerDuration()"
+            [topPx]="80"
             [autoStart]="false"
             [manualStart]="activePlayerSession.startTimer"
-            (timerComplete)="onTimerComplete()">
+            [innerDuration]="isGameInShareTextCollaborativeWritingPhase() ? 60 : null"
+            [innerManualStart]="activePlayerSession.contributionPhaseActive"
+            (timerComplete)="onTimerComplete()"
+            (innerTimerComplete)="onContributionPhaseTimerComplete()">
         </app-timer>
     }
 }

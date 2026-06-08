@@ -1,10 +1,27 @@
-<div class="timer-container">
-  <div class="timer-display">
-    <span class="timer-label">{{ getDisplayLabel() }}:</span>
-    <span class="timer-value" 
-          [class.timer-warning]="currentCountdown <= 10 && hasTimerStarted()"
+<div class="timer-container" [style.top.px]="topPx" [style.left.px]="leftPx">
+  <div class="timer-inner">
+    <mat-progress-spinner
+      class="timer-spinner"
+      [class.spinner-faded]="innerHasStarted"
+      mode="determinate"
+      [value]="getProgressValue()"
+      [diameter]="72"
+      color="primary">
+    </mat-progress-spinner>
+    @if (innerDuration !== null) {
+      <mat-progress-spinner
+        class="inner-spinner"
+        mode="determinate"
+        [value]="getInnerProgressValue()"
+        [diameter]="58"
+        color="accent">
+      </mat-progress-spinner>
+    }
+    <span class="timer-value"
+          [class.timer-warning]="isWarning()"
           [class.timer-not-started]="!hasTimerStarted()">
-      {{ formatTime(currentCountdown) }}
+      {{ getDisplayCountdown() }}
     </span>
   </div>
+  <span class="timer-label">{{ getDisplayLabel() }}</span>
 </div>

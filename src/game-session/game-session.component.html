@@ -3,7 +3,13 @@
     <div class="resume-game-prompt">
       <span>You have a previous game session (<strong>{{ cachedGameCode }}</strong>). Rejoin it?</span>
       <div class="resume-game-actions">
-        <button mat-flat-button (click)="resumeCachedGame()">Rejoin Previous Game</button>
+        <button mat-flat-button (click)="resumeCachedGame()" [disabled]="isInitializingGame" style="min-width: 160px; display: inline-flex; align-items: center; justify-content: center;">
+          @if (isInitializingGame) {
+            <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+          } @else {
+            Rejoin Previous Game
+          }
+        </button>
         <button mat-stroked-button (click)="discardCachedGame()">Dismiss</button>
       </div>
     </div>
@@ -171,7 +177,13 @@
         </mat-form-field>
     </form>
     <div class="create-game-row">
-      <button mat-flat-button (click)="initializeGame()" [disabled]="!rejoinCode.value && (!adventureId || !saveGameId)">{{ rejoinCode.value ? 'Rejoin Game' : 'Create Game' }}</button>
+      <button mat-flat-button (click)="initializeGame()" [disabled]="isInitializingGame || (!rejoinCode.value && (!adventureId || !saveGameId))" style="min-width: 120px; display: inline-flex; align-items: center; justify-content: center;">
+        @if (isInitializingGame) {
+          <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+        } @else {
+          {{ rejoinCode.value ? 'Rejoin Game' : 'Create Game' }}
+        }
+      </button>
       @if (!rejoinCode.value && adventureId) {
         <span class="selection-summary">
           <span class="selected-name">{{ selectedAdventureMapName }}</span>

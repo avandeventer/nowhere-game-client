@@ -23,18 +23,20 @@ import { MatChip } from '@angular/material/chips';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { GameMode } from 'src/assets/game-mode';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'game-session',
     styleUrl: './game-session.component.scss',
     templateUrl: './game-session.component.html',
-    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, MatButtonToggleModule, MatSlideToggleModule]
+    imports: [GameStateManagerComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CdkAccordionModule, MatExpansionModule, MatListModule, MatIconModule, MatCheckboxModule, AdventureMapFormComponent, MatChip, MatButtonToggleModule, MatSlideToggleModule, MatProgressSpinnerModule]
 })
 export class GameSessionComponent {
   @Input() userProfile = new UserProfile();
   gameCode: string = '';
   qrCodeUrl: string = '';
   gameSessionCreated: boolean = false;
+  isInitializingGame: boolean = false;
   @Output() startGame = new EventEmitter<boolean>();
   @Output() refreshLogin = new EventEmitter<string>();
   gameState: GameState = GameState.INIT;
@@ -194,9 +196,10 @@ export class GameSessionComponent {
   }
     
   createGame() {
+    this.isInitializingGame = true;
     const gameMode = this.getGameMode(this.adventureId);
-    const createGameParameters = "?userProfileId=" + this.userProfile.id 
-    + "&adventureId=" + this.adventureId 
+    const createGameParameters = "?userProfileId=" + this.userProfile.id
+    + "&adventureId=" + this.adventureId
     + "&saveGameId=" + this.saveGameId
     + "&storiesToWritePerRound=" + this.storiesToWritePerRound
     + "&storiesToPlayPerRound=" + this.storiesToPlayPerRound
@@ -207,14 +210,15 @@ export class GameSessionComponent {
       .subscribe({
         next: (response) => {
           console.log('Game created!', response);
-          
           this.gameCode = response.gameCode;
           this.saveGameCodeCache(response.gameCode);
           this.gameSessionCreated = true;
+          this.isInitializingGame = false;
           this.startGame.emit(true);
         },
         error: (error) => {
           console.error('Error creating game', error);
+          this.isInitializingGame = false;
         },
       });
   }
@@ -255,6 +259,7 @@ export class GameSessionComponent {
   }
 
   rejoinGame() {
+    this.isInitializingGame = true;
     const params = {
       gameCode: this.rejoinCode.value ?? ''
     };
@@ -268,10 +273,12 @@ export class GameSessionComponent {
           this.saveGameCodeCache(response.gameCode);
           this.qrCodeUrl = `https://nowhere-player-client-556057816518.us-east4.run.app/game/${response.gameCode}`;
           this.gameSessionCreated = true;
+          this.isInitializingGame = false;
           this.startGame.emit(true);
         },
         error: (error) => {
           console.error('Error creating game', error);
+          this.isInitializingGame = false;
         },
       });
   }
