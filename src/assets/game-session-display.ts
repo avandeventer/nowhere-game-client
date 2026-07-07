@@ -3,6 +3,7 @@ export class GameSessionDisplay {
     goalDescription: string;
     playerTitle: string;
     playerDescription: string;
+    midwayDescription: any;
     endingDescription: string;
     successText: string;
     neutralText: string;
@@ -14,6 +15,7 @@ export class GameSessionDisplay {
         this.goalDescription = "";
         this.playerTitle = "";
         this.playerDescription = "";
+        this.midwayDescription = "";
         this.endingDescription = "";
         this.successText = "";
         this.neutralText = "";

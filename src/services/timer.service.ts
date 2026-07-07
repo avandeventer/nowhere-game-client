@@ -54,6 +54,7 @@ export class TimerService {
     console.log('Setting contributionPhaseActive to true for game:', gameCode);
     const activePlayerSession = {
       gameCode: gameCode,
+      startTimer: true,
       contributionPhaseActive: true
     };
     return this.http.put(

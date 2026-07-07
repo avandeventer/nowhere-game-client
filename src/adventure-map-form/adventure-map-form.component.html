@@ -21,6 +21,10 @@
           <input matInput formControlName="playerTitle">
         </mat-form-field><br>
         <mat-form-field class="game-session-display" appearance="fill">
+          <mat-label>What happens when we're at our midway point?</mat-label>
+          <textarea matInput formControlName="midwayDescription"></textarea>
+        </mat-form-field><br>
+        <mat-form-field class="game-session-display" appearance="fill">
           <mat-label>What are we like?</mat-label>
           <textarea matInput formControlName="playerDescription"></textarea>
         </mat-form-field><br>
@@ -190,6 +194,61 @@
                   }
                   <button mat-stroked-button type="button" (click)="addTrait(i)">+ Add Trait</button>
                 </div>
+
+                <div style="margin-top:16px;">
+                  <mat-slide-toggle formControlName="startingLocation">Starting Location (tutorial round)</mat-slide-toggle>
+                </div>
+
+                @if (location.get('startingLocation')?.value) {
+                  <div formArrayName="startingStories" style="margin-top:12px;">
+                    <h4>Starting Stories</h4>
+                    <p style="color:gray;font-size:12px;">Add 1–2 pre-authored stories. First player gets story 0, additional players get story 1.</p>
+                    @for (story of getStartingStories(location).controls; track story; let s = $index) {
+                      <div [formGroupName]="s" style="border:1px solid #ccc;padding:12px;border-radius:4px;margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                          <strong>Story {{ s + 1 }}</strong>
+                          <button mat-icon-button color="warn" type="button" (click)="removeStartingStory(i, s)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                        <mat-form-field appearance="fill" style="width:100%;">
+                          <mat-label>Encounter Label</mat-label>
+                          <input matInput formControlName="encounterLabel" />
+                        </mat-form-field>
+                        <mat-form-field appearance="fill" style="width:100%;">
+                          <mat-label>Scene Prompt</mat-label>
+                          <textarea matInput formControlName="prompt" rows="3"></textarea>
+                        </mat-form-field>
+                        <div formArrayName="options">
+                          @for (opt of getStartingStoryOptions(story).controls; track opt; let o = $index) {
+                            <div [formGroupName]="o" style="border-left:3px solid #aaa;padding-left:8px;margin-bottom:8px;">
+                              <div style="display:flex;align-items:center;gap:8px;">
+                                <strong>Option {{ o + 1 }}</strong>
+                                <button mat-icon-button color="warn" type="button" (click)="removeStartingStoryOption(i, s, o)">
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </div>
+                              <mat-form-field appearance="fill">
+                                <mat-label>Option Text</mat-label>
+                                <input matInput formControlName="optionText" />
+                              </mat-form-field>
+                              <mat-form-field appearance="fill">
+                                <mat-label>Success Text</mat-label>
+                                <textarea matInput formControlName="successText" rows="2"></textarea>
+                              </mat-form-field>
+                              <mat-form-field appearance="fill">
+                                <mat-label>Destiny Trait Name</mat-label>
+                                <input matInput formControlName="destinyTraitName" placeholder="e.g. The Chosen One" />
+                              </mat-form-field>
+                            </div>
+                          }
+                          <button mat-stroked-button type="button" (click)="addStartingStoryOption(i, s)">+ Add Option</button>
+                        </div>
+                      </div>
+                    }
+                    <button mat-stroked-button type="button" (click)="addStartingStory(i)">+ Add Starting Story</button>
+                  </div>
+                }
               }
 
               <mat-divider></mat-divider><br>

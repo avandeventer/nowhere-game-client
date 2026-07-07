@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { OutcomeStat } from 'src/assets/outcome-stat';
 import { PlayerStat } from 'src/assets/player-stat';
@@ -24,6 +25,7 @@ import { AdventureMapService } from 'src/services/adventure-map.service';
         MatIconModule,
         MatOptionModule,
         MatSelectModule,
+        MatSlideToggleModule,
         MatDividerModule
     ],
     styleUrl: './adventure-map-form.component.scss',
@@ -89,6 +91,7 @@ export class AdventureMapFormComponent implements OnInit {
         goalDescription: [''],
         playerTitle: [''],
         playerDescription: [''],
+        midwayDescription: [''],
         endingDescription: [''],
         successText: [''],
         neutralText: [''],
@@ -168,9 +171,51 @@ export class AdventureMapFormComponent implements OnInit {
         description: [''],
         iconDirectory: [''],
         options: this.fb.array([this.createOptionGroup(), this.createOptionGroup()]),
-        traits: this.fb.array([])
+        traits: this.fb.array([]),
+        startingLocation: [false],
+        startingStories: this.fb.array([])
       })
     );
+  }
+
+  getStartingStories(location: AbstractControl): FormArray {
+    return location.get('startingStories') as FormArray;
+  }
+
+  addStartingStory(locationIndex: number): void {
+    const location = this.locations.at(locationIndex);
+    this.getStartingStories(location).push(this.fb.group({
+      encounterLabel: [''],
+      prompt: [''],
+      options: this.fb.array([this.createStartingStoryOptionGroup()])
+    }));
+  }
+
+  removeStartingStory(locationIndex: number, storyIndex: number): void {
+    const location = this.locations.at(locationIndex);
+    this.getStartingStories(location).removeAt(storyIndex);
+  }
+
+  getStartingStoryOptions(story: AbstractControl): FormArray {
+    return story.get('options') as FormArray;
+  }
+
+  addStartingStoryOption(locationIndex: number, storyIndex: number): void {
+    const story = this.getStartingStories(this.locations.at(locationIndex)).at(storyIndex);
+    this.getStartingStoryOptions(story).push(this.createStartingStoryOptionGroup());
+  }
+
+  removeStartingStoryOption(locationIndex: number, storyIndex: number, optionIndex: number): void {
+    const story = this.getStartingStories(this.locations.at(locationIndex)).at(storyIndex);
+    this.getStartingStoryOptions(story).removeAt(optionIndex);
+  }
+
+  private createStartingStoryOptionGroup(): FormGroup {
+    return this.fb.group({
+      optionText: [''],
+      successText: [''],
+      destinyTraitName: ['']
+    });
   }
 
   getOptions(location: AbstractControl): FormArray {
@@ -255,6 +300,20 @@ export class AdventureMapFormComponent implements OnInit {
       loc.options.forEach((opt: any) => {
         opt.successResults = this.toOutcomeStats(opt.successResults);
       });
+      (loc.startingStories || []).forEach((story: any) => {
+        const encounterLabelText = story.encounterLabel;
+        story.encounterLabel = encounterLabelText ? { encounterLabel: encounterLabelText } : null;
+        (story.options || []).forEach((opt: any) => {
+          const destinyTraitName = opt.destinyTraitName;
+          delete opt.destinyTraitName;
+          opt.outcomeForks = destinyTraitName ? [{
+            repercussions: [{
+              repercussionSubmission: destinyTraitName,
+              repercussionType: 'Destiny'
+            }]
+          }] : [];
+        });
+      });
     });
     
     formValue.adventureId = this.adventureMap.adventureId;
@@ -299,6 +358,7 @@ export class AdventureMapFormComponent implements OnInit {
         mapDescription: map.gameSessionDisplay?.mapDescription,
         playerTitle: map.gameSessionDisplay?.playerTitle,
         playerDescription: map.gameSessionDisplay?.playerDescription,
+        midwayDescription: map.gameSessionDisplay?.midwayDescription,
         endingDescription: map.gameSessionDisplay?.endingDescription,
         goalDescription: map.gameSessionDisplay?.goalDescription,
         successText: map.gameSessionDisplay?.successText,
@@ -336,6 +396,22 @@ export class AdventureMapFormComponent implements OnInit {
             traitId: [trait.traitId],
             traitLabel: [trait.traitLabel],
             traitType: [trait.traitType || 'STANDARD']
+          })
+        )),
+        startingLocation: [loc.startingLocation || false],
+        startingStories: this.fb.array((loc.startingStories || []).map((story: any) =>
+          this.fb.group({
+            encounterLabel: [story.encounterLabel?.encounterLabel || ''],
+            prompt: [story.prompt || ''],
+            options: this.fb.array((story.options || []).map((opt: any) => {
+              const firstFork = opt.outcomeForks?.[0];
+              const firstRepercussion = firstFork?.repercussions?.[0];
+              return this.fb.group({
+                optionText: [opt.optionText || ''],
+                successText: [opt.successText || ''],
+                destinyTraitName: [firstRepercussion?.repercussionSubmission || '']
+              });
+            }))
           })
         ))
       })

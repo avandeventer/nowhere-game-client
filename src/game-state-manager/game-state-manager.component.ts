@@ -163,6 +163,10 @@ export class GameStateManagerComponent implements OnInit {
   }
 
   getGameSessionDisplay() {
+    if (this.collaborativeTextPhaseInfo?.phaseQuestion) {
+      return this.collaborativeTextPhaseInfo?.phaseQuestion;
+    }
+
     switch (this.gameState) {
       case GameState.PREAMBLE:
         return this.gameSessionDisplay.mapDescription;
@@ -309,7 +313,10 @@ export class GameStateManagerComponent implements OnInit {
       return 'Nowhere_Epilogue_Loop_V1.wav';
     }
 
-    if (this.isGameInRitualPhase() || this.isGameInFearQuestions() || (this.roundNumber === 4 && !this.isGameInCampfirePhase())) {
+    if (this.isGameInRitualPhase() || this.isGameInFearQuestions() || (this.roundNumber === 4 && !this.isGameInCampfirePhase())
+      || (this.gameState === GameState.PREAMBLE_AGAIN && this.roundNumber == 1) 
+      || this.gameState === GameState.ENDING_PREAMBLE
+    ) {
       return 'Ritual_TestLoop.wav';
     }
     
@@ -317,7 +324,7 @@ export class GameStateManagerComponent implements OnInit {
       || this.isGameInLocationSelectPhase() 
       || this.gameState === GameState.ROUND1
       || this.isStoryOverDungeonMode()
-      || (this.isGameInVotingOrWinningPhase() && this.roundNumber == 1 && this.gameState !== GameState.LOCATION_VOTING)
+      || (this.isGameInVotingOrWinningPhase() && this.roundNumber < 2 && this.gameState !== GameState.LOCATION_VOTING)
     ) {
       return 'JustTryYourBest_NoTension.wav';
     }
