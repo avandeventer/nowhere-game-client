@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AdventureMap } from 'src/assets/adventure-map';
 import { OutcomeStat } from 'src/assets/outcome-stat';
 import { PlayerStat } from 'src/assets/player-stat';
+import { TraitType } from 'src/assets/trait';
 import { AdventureMapService } from 'src/services/adventure-map.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class AdventureMapFormComponent implements OnInit {
   @Input() adventureMap: AdventureMap = new AdventureMap();
   adventureMapForm!: FormGroup;
   locationsFormActivated: boolean = false;
-  traitTypes: string[] = [];
+  traitTypes: TraitType[] = [];
   availableImages: string[] = [];
   expandedPickerIndex: number | null = null;
   gameSessionDisplayCollapsed = true;
@@ -231,7 +232,7 @@ export class AdventureMapFormComponent implements OnInit {
     this.getTraits(location).push(this.fb.group({
       traitId: [crypto.randomUUID()],
       traitLabel: [''],
-      traitType: ['STANDARD']
+      traitType: ['Trait']
     }));
   }
 
@@ -395,7 +396,7 @@ export class AdventureMapFormComponent implements OnInit {
           this.fb.group({
             traitId: [trait.traitId],
             traitLabel: [trait.traitLabel],
-            traitType: [trait.traitType || 'STANDARD']
+            traitType: [trait.traitType?.name || 'Trait']
           })
         )),
         startingLocation: [loc.startingLocation || false],

@@ -182,8 +182,8 @@
                       <mat-form-field appearance="fill">
                         <mat-label>Trait Type</mat-label>
                         <mat-select formControlName="traitType">
-                          @for (type of traitTypes; track type) {
-                            <mat-option [value]="type">{{ type }}</mat-option>
+                          @for (type of traitTypes; track type.name) {
+                            <mat-option [value]="type.name">{{ type.name }}</mat-option>
                           }
                         </mat-select>
                       </mat-form-field>

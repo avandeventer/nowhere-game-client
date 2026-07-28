@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AdventureMap } from "src/assets/adventure-map";
 import { HttpConstants } from "src/assets/http-constants";
+import { TraitType } from "src/assets/trait";
 
 import { environment } from "src/environments/environments";
 
@@ -39,8 +40,8 @@ export class AdventureMapService {
         );
     }
 
-    public getTraitTypes(): Observable<string[]> {
-        return this.http.get<string[]>(
+    public getTraitTypes(): Observable<TraitType[]> {
+        return this.http.get<TraitType[]>(
             environment.nowhereBackendUrl + '/trait-types'
         );
     }
