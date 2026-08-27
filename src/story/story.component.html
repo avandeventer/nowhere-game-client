@@ -23,8 +23,10 @@
           }
 
           @if (gameState === 'ACCEPT_PARTNER_CHOICE_WINNER') {
-            @if (story.partnerIds && story.partnerIds.length > 0) {
-              <div class="success-text">Partnership accepted!</div>
+            @if (isLoading) {
+              <mat-spinner diameter="36" style="margin: 0 auto;"></mat-spinner>
+            } @else if (story.partnerIds && story.partnerIds.length > 0) {
+              <div class="success-text">Partnership accepted! Partners play each others' stories and they get to vote on any forking paths that occur.</div>
             } @else {
               <div class="success-text">Not trustworthy enough! Partnership rejected!</div>
             }
@@ -53,13 +55,16 @@
                   }
                 }
               </div>
-              @if (getEffectiveDisplayText()) {
+
+              @if (getEffectiveDisplayText() && !isMakeOutcomeChoiceVotingState()) {
                 <div class="success-text">
                   <p>{{ getEffectiveDisplayText() }}</p>
                   @for (line of outcomeDisplay; track $index) {
                     <p class="outcome-display-line">{{ line }}</p>
                   }
                 </div>
+              } @else if (isMakeOutcomeChoiceVotingState()) {
+                <div class="story-prompt">The fates must vote to reveal what happens next...</div>
               }
             </div>
           }

@@ -5,7 +5,6 @@ import { GameState } from '../assets/game-state';
 import { TextSubmission } from '../assets/collaborative-text-phase';
 import { GameSessionDisplay } from 'src/assets/game-session-display';
 import { CollaborativeTextPhaseInfo, CollaborativeMode, PhaseType } from '../assets/collaborative-text-phase-info';
-import { GameBoardComponent } from '../game-board/game-board.component';
 import { StoryComponent } from '../story/story.component';
 import { LocationDisplayComponent } from '../location-display/location-display.component';
 import { GameBoard } from '../assets/game-board';
@@ -28,6 +27,8 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   @Output() winningSubmissionLoaded = new EventEmitter<void>();
 
   winningSubmissions: TextSubmission[] = [];
+  storyLoading = false;
+  submissionsLoading = false;
   isAnimating = false;
   currentDisplayText = '';
   displayIndex = 0;
@@ -50,8 +51,9 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['gameState']) {
-      // Reset flag when gameState changes
       this.hasLoadedWinningSubmission = false;
+      this.storyLoading = true;
+      this.submissionsLoading = true;
       if (this.isWinningPhase()) {
         this.loadWinningSubmission();
       }
@@ -68,6 +70,10 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
           && !this.hasLoadedWinningSubmission) {
         this.loadWinningSubmission();
       }
+    }
+
+    if (changes['phaseInfo']) {
+      this.storyLoading = false;
     }
 
     // Trigger animation when phaseInfo changes from non-writing to writing phase
@@ -240,10 +246,6 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
 
   isLocationVotingPhase(): boolean {
     return this.gameState === GameState.LOCATION_VOTING || this.gameState === GameState.LOCATION_WINNING;
-  }
-
-  isVotingPhase(): boolean {
-    return this.phaseInfo?.phaseType === PhaseType.VOTING;
   }
 
   isCollaborativeTextWritingPhase(): boolean {

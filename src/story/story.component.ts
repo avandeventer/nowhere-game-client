@@ -2,25 +2,28 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Story } from '../assets/story';
 import { Option } from '../assets/option';
 import { GameState } from 'src/assets/game-state';
+import { CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
 
 @Component({
   selector: 'app-story',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: './story.component.html',
   styleUrl: './story.component.scss'
 })
 export class StoryComponent implements OnChanges {
   @Input() story: Story | undefined = new Story();
   @Input() gameState: GameState = GameState.INIT;
+  @Input() isLoading: boolean = false;
   @Input() outcomeDisplay: string[] = [];
-  @Input() activePlayers: { authorId: string; displayName: string }[] = [];
+  @Input() phaseInfo: CollaborativeTextPhaseInfo | null = null;
 
   getEncounterHeader(): string {
-    const names = this.activePlayers.map(p => p.displayName);
+    const names = this.phaseInfo?.activePlayers?.map(p => p.displayName) || [];
     if (names.length === 0) return "You've encountered";
     if (names.length === 1) return `${names[0]} has encountered`;
     if (names.length === 2) return `${names[0]} and ${names[1]} have encountered`;
@@ -57,6 +60,10 @@ export class StoryComponent implements OnChanges {
   isLocationOptionChoicePhase(): boolean {
     return this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_VOTING
       || this.gameState === GameState.LOCATION_OPTION_MAKE_CHOICE_WINNER;
+  }
+
+  isMakeOutcomeChoiceVotingState(): boolean {
+    return this.gameState === GameState.MAKE_OUTCOME_CHOICE_VOTING;
   }
 
   isPartnerChoicePhase(): boolean {

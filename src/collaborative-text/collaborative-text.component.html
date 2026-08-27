@@ -32,7 +32,12 @@
       } @else if (isMakeChoicePhase() && phaseInfo?.storyToIterateOn && (phaseInfo?.storyToIterateOn?.prompt || phaseInfo?.storyToIterateOn?.location?.options?.length)) {
         <div class="story-with-location">
           <div class="story-location-story">
-            <app-story [story]="phaseInfo?.storyToIterateOn" [gameState]="gameState" [outcomeDisplay]="outcomeDisplay" [activePlayers]="phaseInfo?.activePlayers || []"></app-story>
+            <app-story 
+              [story]="phaseInfo?.storyToIterateOn" 
+              [gameState]="gameState" 
+              [isLoading]="storyLoading" 
+              [outcomeDisplay]="outcomeDisplay"
+              [phaseInfo]="phaseInfo"></app-story>
           </div>
         </div>
       } @else if (isWinningPhase() && winningSubmissions.length > 0 && !isSecretWinningPhase()) {
