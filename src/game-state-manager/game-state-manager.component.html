@@ -1,4 +1,4 @@
-@if (collaborativeTextPhaseInfo?.storyToIterateOn?.location?.iconDirectory) {
+@if (!isGameInCollaborativeTextWritingPhase() && collaborativeTextPhaseInfo?.storyToIterateOn?.location?.iconDirectory) {
   <div class="location-background"
     [style.background-image]="'url(' + collaborativeTextPhaseInfo!.storyToIterateOn!.location!.iconDirectory!.toString() + ')'">
   </div>
@@ -47,11 +47,11 @@
         </div>
 
         <div class="card-column">
-            <mat-card class="game-session-display">
-                {{getGameSessionDisplay()}}
-            </mat-card>
             <mat-card class="instructions" appearance="outlined">
                 {{getInstructionDisplay()}}
+            </mat-card>
+            <mat-card class="game-session-display">
+                {{getGameSessionDisplay()}}
             </mat-card>
         </div>
     </div>

@@ -61,7 +61,9 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
       if (!this.hasStarted) {
         this.currentCountdown = this.duration;
       }
-      this.stopInnerTimer();
+      if (!this.innerManualStart) {
+        this.stopInnerTimer();
+      }
     }
   }
 
@@ -88,6 +90,7 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
 
   startInnerTimer() {
     if (!this.innerDuration) return;
+    this.unsubscribeOuterTimer();
     this.stopInnerTimer();
     this.innerHasStarted = true;
     this.innerCountdown = this.innerDuration;
@@ -103,10 +106,14 @@ export class TimerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   stopTimer() {
-    this.timerSubscription?.unsubscribe();
-    this.timerSubscription = undefined;
+    this.unsubscribeOuterTimer();
     this.currentCountdown = this.duration;
     this.hasStarted = false;
+  }
+
+  private unsubscribeOuterTimer() {
+    this.timerSubscription?.unsubscribe();
+    this.timerSubscription = undefined;
   }
 
   stopInnerTimer() {

@@ -22,10 +22,10 @@
             </div>
           }
 
-          @if (gameState === 'ACCEPT_PARTNER_CHOICE_WINNER') {
-            @if (isLoading) {
+          @if (isLoading) {
               <mat-spinner diameter="36" style="margin: 0 auto;"></mat-spinner>
-            } @else if (story.partnerIds && story.partnerIds.length > 0) {
+          } @else if (gameState === 'ACCEPT_PARTNER_CHOICE_WINNER') {
+            @if (story.partnerIds && story.partnerIds.length > 0) {
               <div class="success-text">Partnership accepted! Partners play each others' stories and they get to vote on any forking paths that occur.</div>
             } @else {
               <div class="success-text">Not trustworthy enough! Partnership rejected!</div>

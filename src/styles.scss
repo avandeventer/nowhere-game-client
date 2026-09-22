@@ -71,6 +71,7 @@ mat-flat-button button {
 
 .instructions {
   font-size: clamp(1rem, 1.5vw, 2rem) !important;
+  white-space: pre-line;
 }
 
 .instructions,

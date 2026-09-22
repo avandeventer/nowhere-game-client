@@ -251,4 +251,11 @@ export class CollaborativeTextComponent implements OnInit, OnChanges {
   isCollaborativeTextWritingPhase(): boolean {
     return this.phaseInfo?.phaseType === PhaseType.SUBMISSION;
   }
+
+  isWideContentLayout(): boolean {
+    const hasLocationVotingFork = this.isLocationVotingPhase() && !!this.phaseInfo?.locationVotingSubmissions?.length;
+    const hasMultipleWinnersGrid = this.isWinningPhase() && this.winningSubmissions.length > 0
+      && !this.isSecretWinningPhase() && this.isInMultipleWinnersPhase();
+    return hasLocationVotingFork || hasMultipleWinnersGrid;
+  }
 }
