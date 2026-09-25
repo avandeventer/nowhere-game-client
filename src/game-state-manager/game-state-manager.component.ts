@@ -275,7 +275,7 @@ export class GameStateManagerComponent implements OnInit {
     if (this.gameState === GameState.WHAT_DO_WE_FEAR || this.gameState === GameState.WHAT_ARE_WE_CAPABLE_OF) {
       return 90;
     }
-    if (this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase()) {
+    if ((this.isGameInWritingPhase() || this.isGameInLocationCreationPhase() || this.isGameInWriteEndingsPhase() || this.isGameInWriteEpiloguesPhase())) {
       return 180; // 3 minutes for writing, location creation, and ending text phases
     } else if (this.isGameInCollaborativeTextWritingPhase()) {
       if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.RAPID_FIRE) {
@@ -284,8 +284,6 @@ export class GameStateManagerComponent implements OnInit {
       if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.SHARE_TEXT) {
         return 90;
       }
-    } else if (this.isGameInWriteEpiloguesPhase()) {
-      return 180; // 3 minutes for writing epilogues phase
     }
     return 150;
   }
