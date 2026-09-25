@@ -284,8 +284,20 @@ export class GameStateManagerComponent implements OnInit {
       if (this.collaborativeTextPhaseInfo?.collaborativeMode === CollaborativeMode.SHARE_TEXT) {
         return 90;
       }
+    } else if (this.isGameInWriteEpiloguesPhase()) {
+      return 180; // 3 minutes for writing epilogues phase
     }
     return 150;
+  }
+  isGameInWriteEpiloguesPhase() {
+    return this.gameState === GameState.WRITE_EPILOGUES;
+  }
+
+  getInnerTimerDuration(): number | null {
+    if (!this.isGameInShareTextCollaborativeWritingPhase()) {
+      return null;
+    }
+    return this.isGameInWriteEpiloguesPhase() ? 90 : 60; // extra 30s during epilogue writing
   }
 
   toggleMusic(): void {

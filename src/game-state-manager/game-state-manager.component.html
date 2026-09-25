@@ -73,14 +73,13 @@
             [topPx]="80"
             [autoStart]="false"
             [manualStart]="activePlayerSession.startTimer"
-            [innerDuration]="isGameInShareTextCollaborativeWritingPhase() ? 60 : null"
+            [innerDuration]="getInnerTimerDuration()"
             [innerManualStart]="activePlayerSession.contributionPhaseActive"
             (timerComplete)="onTimerComplete()"
             (innerTimerComplete)="onContributionPhaseTimerComplete()">
         </app-timer>
     }
 }
-
 
 @if (isGameInLocationCreationPhase()) {
     <div class="location-layout">
