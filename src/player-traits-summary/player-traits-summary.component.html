@@ -1,0 +1,24 @@
+@if (player) {
+  <mat-card class="player-traits-summary">
+    <div class="player-name">{{ player.displayName }}</div>
+
+    @if (definingTrait || priceTrait) {
+      <div class="defining-cards">
+        @if (definingTrait) {
+          <div class="defining-card defining">
+            <span class="defining-label">Defining</span>
+            <span class="defining-value">{{ definingTrait.traitName }}</span>
+          </div>
+        }
+        @if (priceTrait) {
+          <div class="defining-card price">
+            <span class="defining-label">Price</span>
+            <span class="defining-value">{{ priceTrait.traitName }}</span>
+          </div>
+        }
+      </div>
+    }
+
+    <trait-badges [traits]="player.traits"></trait-badges>
+  </mat-card>
+}

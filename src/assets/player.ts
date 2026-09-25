@@ -1,5 +1,7 @@
 import { PlayerStat } from "./player-stat";
 import { PlayerClassOption } from "./player-class-option";
+import { Trait } from "./trait";
+import { DefiningTrait } from "./defining-trait";
 
 export class Player {
   userName: string;
@@ -13,8 +15,10 @@ export class Player {
   authorId: string;
   firstPlayer: boolean;
   playerStats: PlayerStat[];
+  traits: Trait[];
   playerClass: PlayerClassOption | null;
   displayName: string;
+  definingTraits: DefiningTrait[];
 
   constructor() {
     this.userName = '';
@@ -28,7 +32,9 @@ export class Player {
     this.authorId = "";
     this.firstPlayer = false;
     this.playerStats = [];
+    this.traits = [];
     this.playerClass = null;
     this.displayName = "";
+    this.definingTraits = [];
   }
 }

@@ -23,12 +23,13 @@ import { PlayerProgressComponent } from 'src/player-progress/player-progress.com
 import { CollaborativeTextComponent } from 'src/collaborative-text/collaborative-text.component';
 import { CollaborativeMode, CollaborativeTextPhaseInfo, PhaseType } from 'src/assets/collaborative-text-phase-info';
 import { GameBoard } from 'src/assets/game-board';
+import { PlayerTraitsSummaryComponent } from 'src/player-traits-summary/player-traits-summary.component';
 
 @Component({
     selector: 'game-state-manager',
     templateUrl: './game-state-manager.component.html',
     styleUrl: './game-state-manager.style.scss',
-    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent, TimerComponent, PlayerProgressComponent, CollaborativeTextComponent]
+    imports: [WritePromptComponent, AdventureComponent, LocationComponent, FinaleComponent, MatCardModule, MatButtonModule, MatIconModule, QrCodeComponent, TimerComponent, PlayerProgressComponent, CollaborativeTextComponent, PlayerTraitsSummaryComponent]
 })
 export class GameStateManagerComponent implements OnInit {
   @Input() gameCode: string = "";

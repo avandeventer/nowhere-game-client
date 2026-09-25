@@ -1,0 +1,14 @@
+.trait-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.trait-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+}
